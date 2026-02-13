@@ -12,6 +12,7 @@ import { insforge } from '../lib/insforge'
 import { invokeAgentSelfRegister } from '../lib/agent-self-register'
 import { invokeAgentCreateN8nWorkflow, invokeAgentLiveKitSession } from '../lib/agent-automation'
 import { DEFAULT_AGENT_SKILLS, DEFAULT_MCP_TOOLING } from '../lib/agent-defaults'
+import { DEFAULT_MCP_SERVERS } from '../lib/mcp-registry'
 import {
   Activity,
   AlertTriangle,
@@ -808,7 +809,19 @@ const { data: daoData, error: daoError } = await insforge.functions.invoke('${AG
 })
 if (daoError) throw daoError
 
-console.log(workflowData, livekitData, forumData, sipData, searchData, updatesData, daoData)`
+// 8) Pull Shopify store snapshot (dropshipping control loop)
+const { data: shopifyData, error: shopifyError } = await insforge.functions.invoke('${AGENT_AUTOMATION_SLUG}', {
+  headers,
+  body: {
+    action: 'shopify_store_snapshot',
+    agentId: '${agentId}',
+    agentApiKey: '${agentKey}',
+    shopDomain: 'your-store.myshopify.com'
+  }
+})
+if (shopifyError) throw shopifyError
+
+console.log(workflowData, livekitData, forumData, sipData, searchData, updatesData, daoData, shopifyData)`
   }
 
   const getAutomationCurlSnippet = () => {
@@ -894,6 +907,15 @@ ${secretHeader}  -d '{
     "daoProvider": "aragon",
     "chain": "ethereum",
     "tokenSymbol": "EGD"
+  }'
+
+curl -X POST "${AGENT_AUTOMATION_ENDPOINT}" \\
+  -H "Content-Type: application/json" \\
+${secretHeader}  -d '{
+    "action": "shopify_store_snapshot",
+    "agentId": "${agentId}",
+    "agentApiKey": "${agentKey}",
+    "shopDomain": "your-store.myshopify.com"
   }'`
   }
 
@@ -1912,9 +1934,14 @@ ${secretHeader}  -d '{
                               canImportSipNumbers: true,
                               canPostForumUpdates: true,
                               canCreateDaoDeploymentTasks: true,
+                              canRunShopifySnapshots: true,
+                              canUseMcpControlPlane: true,
                             },
                             defaultSkills: DEFAULT_AGENT_SKILLS,
                             defaultMcpTools: DEFAULT_MCP_TOOLING,
+                            defaultMcpServers:
+                              (operatingProfile?.mcp as Record<string, unknown> | undefined)?.servers ||
+                              DEFAULT_MCP_SERVERS,
                             operatingProfile,
                           }
                           await copyText(

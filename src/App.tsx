@@ -23,6 +23,9 @@ const PhoneRegistry = React.lazy(() => import('./pages/PhoneRegistry'))
 const LiveKitDashboard = React.lazy(() => import('./pages/LiveKitDashboard'))
 const OperationsCenter = React.lazy(() => import('./pages/OperationsCenter'))
 const Workflows = React.lazy(() => import('./pages/Workflows'))
+const McpControl = React.lazy(() => import('./pages/McpControl'))
+const CommerceOps = React.lazy(() => import('./pages/CommerceOps'))
+const OpenClawGateway = React.lazy(() => import('./pages/OpenClawGateway'))
 const Login = React.lazy(() => import('./pages/Login'))
 
 function AppContent() {
@@ -62,6 +65,9 @@ function AppContent() {
           <Route path="/livekit" element={<LiveKitDashboard />} />
           <Route path="/ops-center" element={<OperationsCenter />} />
           <Route path="/workflows" element={<Workflows />} />
+          <Route path="/mcp-control" element={<McpControl />} />
+          <Route path="/commerce" element={<CommerceOps />} />
+          <Route path="/openclaw-gateway" element={<OpenClawGateway />} />
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

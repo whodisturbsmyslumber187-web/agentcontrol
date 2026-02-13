@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Settings as SettingsIcon, Key, Bell, Database, Brain, Globe, Zap, Search, RefreshCw, Shield, Rocket } from 'lucide-react'
 import { UserButton, useUser } from '@insforge/react'
@@ -284,6 +285,26 @@ export default function Settings() {
               <p className="text-xs text-cyber-gray">Managed by InsForge Auth</p>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-cyber-card border-cyber-border">
+        <CardHeader>
+          <CardTitle className="text-cyber-white text-sm">Control Centers</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-2 md:grid-cols-3">
+          <Link to="/mcp-control" className="rounded-lg border border-cyber-border bg-cyber-dark px-3 py-2 text-sm text-cyber-white hover:border-cyber-green/40">
+            MCP Control
+            <p className="text-[11px] text-cyber-gray">Deploy MCP stack to all agents</p>
+          </Link>
+          <Link to="/commerce" className="rounded-lg border border-cyber-border bg-cyber-dark px-3 py-2 text-sm text-cyber-white hover:border-cyber-green/40">
+            Commerce Ops
+            <p className="text-[11px] text-cyber-gray">Shopify dropshipping automation</p>
+          </Link>
+          <Link to="/openclaw-gateway" className="rounded-lg border border-cyber-border bg-cyber-dark px-3 py-2 text-sm text-cyber-white hover:border-cyber-green/40">
+            OpenClaw Gateway
+            <p className="text-[11px] text-cyber-gray">Hostinger SSH/API onboarding</p>
+          </Link>
         </CardContent>
       </Card>
 

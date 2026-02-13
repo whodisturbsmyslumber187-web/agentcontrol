@@ -24,7 +24,10 @@ import {
   Headphones,
   Radar,
   Webhook,
+  Server,
   Shield,
+  Blocks,
+  ShoppingBag,
   Search,
   X
 } from 'lucide-react'
@@ -43,6 +46,9 @@ const navItems = [
   { path: '/livekit', label: 'LiveKit', icon: Headphones },
   { path: '/ops-center', label: 'Ops Center', icon: Radar },
   { path: '/workflows', label: 'Workflows', icon: Webhook },
+  { path: '/commerce', label: 'Commerce Ops', icon: ShoppingBag },
+  { path: '/mcp-control', label: 'MCP Control', icon: Blocks },
+  { path: '/openclaw-gateway', label: 'OpenClaw Gateway', icon: Server },
   { path: '/cron-jobs', label: 'Cron Jobs', icon: Clock },
   { path: '/logs', label: 'Overnight Logs', icon: ScrollText },
   { path: '/documentation', label: 'Docs', icon: BookOpen },

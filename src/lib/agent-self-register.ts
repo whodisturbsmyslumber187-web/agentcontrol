@@ -40,6 +40,14 @@ export interface AgentSelfRegisterResponse {
       messages: string
     }
     suggestedHeartbeatSeconds: number
+    defaultsInjected?: boolean
+    defaultSkills?: string[]
+    defaultMcpTools?: string[]
+    defaultMcpServers?: Array<{
+      id: string
+      name: string
+      transport: string
+    }>
   }
 }
 

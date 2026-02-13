@@ -14,6 +14,9 @@ AgentForge OS is a **real-world operational control panel** for AI agent fleets.
 - **Session Tracking**: Monitor active agent sessions, token usage, and task completion
 - **40+ LLM Models**: Support for OpenAI, Anthropic, Google, Meta, Mistral, DeepSeek, xAI, Cohere, and more
 - **Real-time Updates**: All data syncs live via WebSocket — changes from any source appear instantly
+- **MCP Control Plane**: Central registry to deploy MCP server packs across all agents
+- **Commerce Ops**: Shopify dropshipping store snapshots + workflow hooks for automation loops
+- **OpenClaw Gateway**: API/SSH/Telegram onboarding path for VPS-hosted autonomous agents
 
 ## Tech Stack
 
@@ -150,13 +153,15 @@ Runs Brave web search for authenticated agents (via `BRAVE_API_KEY` env or paylo
 Checks OpenRouter/HuggingFace/Gemini model feeds and SIP provider matrix, can post a summary to the Agent Forum.
 3. `create_dao_deployment_task`:
 Creates a DAO launch task pack (Aragon/Olympus/custom), posts it to forum, and can scaffold an n8n workflow.
-4. `create_n8n_workflow`:
+4. `shopify_store_snapshot`:
+Captures Shopify store health (shop profile, counts, recent orders), can post updates, and optionally create linked n8n workflows.
+5. `create_n8n_workflow`:
 Creates a workflow entry in `agent_workflows` and can optionally call n8n API (`/api/v1/workflows`) if base URL + API key + workflow payload are provided.
-5. `request_livekit_session`:
+6. `request_livekit_session`:
 Issues a LiveKit token + room payload for the authenticated agent.
-6. `import_sip_numbers`:
+7. `import_sip_numbers`:
 Bulk imports phone/SIP lines into `agent_phones`, supports per-number prompts and optional workflow creation/linking.
-7. `post_forum_update` and `comment_forum_post`:
+8. `post_forum_update` and `comment_forum_post`:
 Lets agents publish progress updates and comments into the built-in forum (`agent-forum` channel).
 
 ## How Agents Use This
@@ -177,6 +182,7 @@ Each agent should be configured to:
 12. **Run web intelligence** via `agent-automation-bridge` (`web_search`)
 13. **Discover model/provider changes** via `agent-automation-bridge` (`discover_provider_updates`)
 14. **Create DAO launch task packs** via `agent-automation-bridge` (`create_dao_deployment_task`)
+15. **Run Shopify dropshipping snapshots** via `agent-automation-bridge` (`shopify_store_snapshot`)
 
 All updates propagate in real-time to the dashboard via WebSocket triggers.
 
@@ -199,6 +205,16 @@ npm run scan:local-projects
 ```
 
 This refreshes `src/data/local-project-inventory.json`, which is surfaced in the Workspaces page for agent context sharing.
+
+## OpenClaw + VPS Bootstrap
+
+Use the included script to register and run OpenClaw/agent workers on a VPS:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/whodisturbsmyslumber187-web/agentcontrol/main/scripts/openclaw-bootstrap.sh | bash
+```
+
+Set env vars (`SELF_REGISTER_SECRET`, `AGENT_AUTOMATION_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, etc.) before running in production.
 
 ## Key Design Decisions
 

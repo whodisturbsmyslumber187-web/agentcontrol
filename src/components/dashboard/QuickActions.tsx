@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Zap, RefreshCw, Download, Sparkles, Radar } from 'lucide-react'
+import { Zap, RefreshCw, Download, Sparkles, Radar, Blocks, ShoppingBag, Link2 } from 'lucide-react'
 import { useAgentStore } from '../../stores/agent-store'
 import { useOpenClawStore } from '../../stores/openclaw-store'
 import { useBusinessStore } from '../../stores/business-store'
@@ -59,6 +59,21 @@ export default function QuickActions() {
       label: 'Empire Control',
       icon: Radar,
       onClick: () => navigate('/'),
+    },
+    {
+      label: 'MCP Control',
+      icon: Blocks,
+      onClick: () => navigate('/mcp-control'),
+    },
+    {
+      label: 'Commerce Ops',
+      icon: ShoppingBag,
+      onClick: () => navigate('/commerce'),
+    },
+    {
+      label: 'OpenClaw Gateway',
+      icon: Link2,
+      onClick: () => navigate('/openclaw-gateway'),
     },
   ]
 

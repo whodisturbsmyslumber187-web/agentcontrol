@@ -4,3 +4,4 @@ dist
 .env.*
 *.log
 build_log.txt
+.tmp_*

@@ -5,6 +5,7 @@ type Action =
   | 'web_search'
   | 'discover_provider_updates'
   | 'create_dao_deployment_task'
+  | 'shopify_store_snapshot'
   | 'create_n8n_workflow'
   | 'request_livekit_session'
   | 'import_sip_numbers'
@@ -21,18 +22,18 @@ type ProviderUpdateItem = {
 }
 
 const KNOWN_SIP_PORT_PROVIDERS = [
-  { provider: 'twilio', supportsPortIn: true, channels: ['voice', 'sms', 'sip-trunking'] },
-  { provider: 'telnyx', supportsPortIn: true, channels: ['voice', 'sms', 'sip-trunking'] },
-  { provider: 'plivo', supportsPortIn: true, channels: ['voice', 'sms', 'sip-trunking'] },
-  { provider: 'bandwidth', supportsPortIn: true, channels: ['voice', 'sms', 'emergency'] },
-  { provider: 'vonage', supportsPortIn: true, channels: ['voice', 'sms'] },
-  { provider: 'signalwire', supportsPortIn: true, channels: ['voice', 'sms', 'sip-trunking'] },
-  { provider: 'flowroute', supportsPortIn: true, channels: ['voice', 'sip-trunking'] },
-  { provider: 'voipms', supportsPortIn: true, channels: ['voice', 'sip-trunking'] },
-  { provider: 'openphone', supportsPortIn: true, channels: ['voice', 'sms'] },
-  { provider: 'aircall', supportsPortIn: true, channels: ['voice'] },
-  { provider: 'ringcentral', supportsPortIn: true, channels: ['voice', 'sms'] },
-  { provider: 'dialpad', supportsPortIn: true, channels: ['voice', 'sms'] },
+  { provider: 'twilio', porting: 'available', channels: ['voice', 'sms', 'sip-trunking'] },
+  { provider: 'telnyx', porting: 'available', channels: ['voice', 'sms', 'sip-trunking'] },
+  { provider: 'plivo', porting: 'available', channels: ['voice', 'sms', 'sip-trunking'] },
+  { provider: 'bandwidth', porting: 'available', channels: ['voice', 'sms', 'emergency'] },
+  { provider: 'vonage', porting: 'available', channels: ['voice', 'sms'] },
+  { provider: 'signalwire', porting: 'available', channels: ['voice', 'sms', 'sip-trunking'] },
+  { provider: 'flowroute', porting: 'check-provider', channels: ['voice', 'sip-trunking'] },
+  { provider: 'voipms', porting: 'check-provider', channels: ['voice', 'sip-trunking'] },
+  { provider: 'openphone', porting: 'available', channels: ['voice', 'sms'] },
+  { provider: 'aircall', porting: 'available', channels: ['voice'] },
+  { provider: 'ringcentral', porting: 'available', channels: ['voice', 'sms'] },
+  { provider: 'dialpad', porting: 'available', channels: ['voice', 'sms'] },
 ]
 
 const CORS_HEADERS = {
@@ -870,6 +871,167 @@ async function importSipNumbersForAgent(
   }
 }
 
+async function shopifyStoreSnapshotForAgent(
+  client: ReturnType<typeof createClient>,
+  payload: Record<string, unknown>,
+  agent: Record<string, unknown>,
+) {
+  const agentId = asString(agent.id)
+  const agentName = asString(agent.name, 'Agent')
+
+  const rawDomain = asString(payload.shopDomain || payload.storeDomain || payload.domain)
+  if (!rawDomain) {
+    throw new Error('shopDomain (or storeDomain/domain) is required')
+  }
+
+  const normalizedDomain = rawDomain
+    .replace(/^https?:\/\//i, '')
+    .replace(/\/+$/, '')
+    .trim()
+  const accessToken = asString(
+    payload.accessToken || payload.shopifyAccessToken || payload.adminToken || Deno.env.get('SHOPIFY_ADMIN_TOKEN'),
+  )
+  const apiVersion = asString(payload.apiVersion || Deno.env.get('SHOPIFY_API_VERSION'), '2025-01')
+  const includeOrders = asBoolean(payload.includeOrders, true)
+  const includeProducts = asBoolean(payload.includeProducts, true)
+  const postForumUpdate = asBoolean(payload.postForumUpdate ?? payload.post_forum_update, true)
+  const createWorkflow = asBoolean(payload.createWorkflow ?? payload.create_workflow, false)
+
+  if (!accessToken) {
+    throw new Error('Missing Shopify access token (payload or SHOPIFY_ADMIN_TOKEN)')
+  }
+
+  const baseUrl = `https://${normalizedDomain}/admin/api/${apiVersion}`
+  const headers = {
+    Accept: 'application/json',
+    'X-Shopify-Access-Token': accessToken,
+  }
+
+  const { response: shopResponse, body: shopBody } = await fetchJson(`${baseUrl}/shop.json`, { headers })
+  if (!shopResponse.ok) {
+    throw new Error(`Shopify shop request failed (${shopResponse.status})`)
+  }
+
+  const shop = parseRecord((shopBody as Record<string, unknown>).shop)
+  const snapshot: Record<string, unknown> = {
+    domain: normalizedDomain,
+    shop: {
+      id: shop.id || null,
+      name: asString(shop.name),
+      email: asString(shop.email),
+      currency: asString(shop.currency),
+      country: asString(shop.country_name || shop.country),
+      plan: asString(shop.plan_name),
+    },
+    counts: {},
+    recentOrders: [],
+  }
+
+  if (includeProducts) {
+    const { response, body } = await fetchJson(`${baseUrl}/products/count.json`, { headers })
+    if (response.ok) {
+      ;(snapshot.counts as Record<string, unknown>).products = asNumber(
+        parseRecord(body).count || parseRecord(parseRecord(body).products).count,
+        0,
+      )
+    } else {
+      ;(snapshot.counts as Record<string, unknown>).productsWarning = `HTTP ${response.status}`
+    }
+  }
+
+  if (includeOrders) {
+    const countReq = await fetchJson(`${baseUrl}/orders/count.json?status=any`, { headers })
+    if (countReq.response.ok) {
+      ;(snapshot.counts as Record<string, unknown>).orders = asNumber(parseRecord(countReq.body).count, 0)
+    } else {
+      ;(snapshot.counts as Record<string, unknown>).ordersWarning = `HTTP ${countReq.response.status}`
+    }
+
+    const ordersReq = await fetchJson(
+      `${baseUrl}/orders.json?status=any&limit=5&fields=id,name,created_at,total_price,currency,financial_status,fulfillment_status`,
+      { headers },
+    )
+    if (ordersReq.response.ok) {
+      const rows = Array.isArray(parseRecord(ordersReq.body).orders)
+        ? (parseRecord(ordersReq.body).orders as unknown[])
+        : []
+      snapshot.recentOrders = rows
+        .filter((entry) => isRecord(entry))
+        .map((entry) => ({
+          id: asString(entry.id),
+          name: asString(entry.name),
+          created_at: asString(entry.created_at),
+          total_price: asString(entry.total_price),
+          currency: asString(entry.currency),
+          financial_status: asString(entry.financial_status),
+          fulfillment_status: asString(entry.fulfillment_status),
+        }))
+    }
+  }
+
+  let workflow: Record<string, unknown> | null = null
+  if (createWorkflow) {
+    const workflowResult = await createN8nWorkflowForAgent(
+      client,
+      {
+        name: asString(payload.workflowName, `Shopify ${normalizedDomain} Orders`),
+        description: asString(
+          payload.workflowDescription,
+          `Sync orders + fulfillment alerts for ${normalizedDomain}`,
+        ),
+        triggerUrl: asString(payload.workflowTriggerUrl || payload.triggerUrl),
+        is_active: true,
+        n8nBaseUrl: asString(payload.n8nBaseUrl),
+        n8nApiKey: asString(payload.n8nApiKey),
+      },
+      agent,
+    )
+    workflow = parseRecord(workflowResult.workflow)
+  }
+
+  if (postForumUpdate) {
+    const countRow = parseRecord(snapshot.counts)
+    const postMessage = [
+      `Store snapshot captured for ${normalizedDomain}.`,
+      `Products: ${asNumber(countRow.products, 0)}`,
+      `Orders: ${asNumber(countRow.orders, 0)}`,
+      workflow ? `Workflow linked: ${asString(workflow.name)}` : null,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    try {
+      await postForumUpdateForAgent(
+        client,
+        {
+          title: `Shopify Snapshot • ${asString(parseRecord(snapshot.shop).name, normalizedDomain)}`,
+          message: postMessage,
+          tags: ['shopify', 'commerce', 'dropshipping'],
+          project: normalizedDomain,
+          status: 'in_progress',
+        },
+        agent,
+      )
+    } catch {
+      // Non-blocking forum post.
+    }
+  }
+
+  await writeActivity(client, {
+    agentId,
+    agentName,
+    message: `captured Shopify snapshot for ${normalizedDomain}`,
+    type: 'success',
+  })
+
+  return {
+    ok: true,
+    action: 'shopify_store_snapshot',
+    snapshot,
+    workflow,
+  }
+}
+
 async function createN8nWorkflowForAgent(
   client: ReturnType<typeof createClient>,
   payload: Record<string, unknown>,
@@ -1074,6 +1236,11 @@ export default async function (req: Request): Promise<Response> {
 
     if (action === 'create_dao_deployment_task') {
       const result = await createDaoDeploymentTaskForAgent(client, payload, agent)
+      return jsonResponse(result)
+    }
+
+    if (action === 'shopify_store_snapshot') {
+      const result = await shopifyStoreSnapshotForAgent(client, payload, agent)
       return jsonResponse(result)
     }
 

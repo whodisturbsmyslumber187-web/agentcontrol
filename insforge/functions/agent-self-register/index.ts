@@ -49,6 +49,163 @@ const DEFAULT_MCP_TOOLS = [
   'integrations',
 ]
 
+const DEFAULT_MCP_SERVERS = [
+  {
+    id: 'insforge-core',
+    name: 'InsForge Core MCP',
+    category: 'backend',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@insforge/mcp'],
+    env: ['INSFORGE_API_KEY', 'INSFORGE_API_BASE_URL'],
+    enabled: true,
+  },
+  {
+    id: 'mcp-client',
+    name: 'Universal MCP Client',
+    category: 'orchestration',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/client'],
+    enabled: true,
+  },
+  {
+    id: 'filesystem',
+    name: 'Filesystem MCP',
+    category: 'core',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/server-filesystem'],
+    enabled: true,
+  },
+  {
+    id: 'brave-search',
+    name: 'Brave Search MCP',
+    category: 'research',
+    transport: 'sse',
+    endpoint: 'https://api.search.brave.com/res/v1/web/search',
+    env: ['BRAVE_API_KEY'],
+    enabled: true,
+  },
+  {
+    id: 'github',
+    name: 'GitHub MCP',
+    category: 'devops',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/server-github'],
+    env: ['GITHUB_TOKEN'],
+    enabled: true,
+  },
+  {
+    id: 'playwright-browser',
+    name: 'Playwright Browser MCP',
+    category: 'research',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@playwright/mcp'],
+    enabled: true,
+  },
+  {
+    id: 'n8n',
+    name: 'n8n MCP',
+    category: 'automation',
+    transport: 'http',
+    endpoint: 'https://n8n.your-domain.com/mcp',
+    env: ['N8N_BASE_URL', 'N8N_API_KEY'],
+    enabled: true,
+  },
+  {
+    id: 'livekit',
+    name: 'LiveKit Voice MCP',
+    category: 'voice',
+    transport: 'http',
+    endpoint: 'https://livekit.your-domain.com/mcp',
+    env: ['LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET', 'LIVEKIT_WS_URL'],
+    enabled: true,
+  },
+  {
+    id: 'shopify',
+    name: 'Shopify MCP',
+    category: 'commerce',
+    transport: 'http',
+    endpoint: 'https://shopify.your-domain.com/mcp',
+    env: ['SHOPIFY_ADMIN_TOKEN'],
+    enabled: true,
+  },
+  {
+    id: 'telegram',
+    name: 'Telegram MCP',
+    category: 'communications',
+    transport: 'http',
+    endpoint: 'https://telegram.your-domain.com/mcp',
+    env: ['TELEGRAM_BOT_TOKEN'],
+    enabled: true,
+  },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter MCP',
+    category: 'models',
+    transport: 'http',
+    endpoint: 'https://openrouter.ai/api/v1',
+    env: ['OPENROUTER_API_KEY'],
+    enabled: true,
+  },
+  {
+    id: 'huggingface',
+    name: 'Hugging Face MCP',
+    category: 'models',
+    transport: 'http',
+    endpoint: 'https://huggingface.co/api',
+    env: ['HUGGINGFACE_TOKEN'],
+    enabled: true,
+  },
+  {
+    id: 'gemini',
+    name: 'Gemini MCP',
+    category: 'models',
+    transport: 'http',
+    endpoint: 'https://generativelanguage.googleapis.com',
+    env: ['GEMINI_API_KEY'],
+    enabled: true,
+  },
+  {
+    id: 'aragon',
+    name: 'Aragon DAO MCP',
+    category: 'dao',
+    transport: 'http',
+    endpoint: 'https://aragon.your-domain.com/mcp',
+    enabled: true,
+  },
+  {
+    id: 'olympus',
+    name: 'Olympus DAO MCP',
+    category: 'dao',
+    transport: 'http',
+    endpoint: 'https://olympus.your-domain.com/mcp',
+    enabled: true,
+  },
+  {
+    id: 'proxy-gateway',
+    name: 'Proxy Gateway MCP',
+    category: 'network',
+    transport: 'http',
+    endpoint: 'https://proxy.your-domain.com/mcp',
+    env: ['AGENT_PROXY_URL', 'AGENT_PROXY_KEY'],
+    enabled: true,
+  },
+  {
+    id: 'ssh-exec',
+    name: 'SSH Execute MCP',
+    category: 'infrastructure',
+    transport: 'stdio',
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/server-ssh'],
+    env: ['SSH_PRIVATE_KEY', 'SSH_TARGETS'],
+    enabled: true,
+  },
+]
+
 function getDefaultOperatingProfile(baseUrl: string) {
   return {
     version: '2026.02.master',
@@ -61,6 +218,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
       endpoint: `${baseUrl.replace(/\/+$/, '')}/functions/agent-automation-bridge`,
       actions: [
         'web_search',
+        'shopify_store_snapshot',
         'create_n8n_workflow',
         'request_livekit_session',
         'import_sip_numbers',
@@ -74,6 +232,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
       n8n: true,
       livekit: true,
       sipImport: true,
+      shopify: true,
       openrouter: true,
       huggingface: true,
       gemini: true,
@@ -83,6 +242,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
     mcp: {
       enabled: true,
       defaultTools: DEFAULT_MCP_TOOLS,
+      servers: DEFAULT_MCP_SERVERS,
     },
     skills: DEFAULT_AGENT_SKILLS,
     autoEnhancement: {
@@ -94,6 +254,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
         'gemini-models',
         'brave-search',
         'sip-provider-updates',
+        'shopify-store-signals',
       ],
     },
   }
@@ -102,12 +263,66 @@ function getDefaultOperatingProfile(baseUrl: string) {
 function mergeAgentConfigWithDefaults(config: Record<string, unknown>, baseUrl: string) {
   const profile = getDefaultOperatingProfile(baseUrl)
   const current = isRecord(config) ? config : {}
-  const currentIntegrations = parsePayload(current.integrations)
-  const currentInternet = parsePayload(current.internet)
+  const currentProfile = parsePayload(current.operatingProfile)
+  const currentIntegrations = parsePayload(currentProfile.integrations || current.integrations)
+  const currentInternet = parsePayload(currentProfile.internet || current.internet)
+  const currentMcp = parsePayload(currentProfile.mcp)
+  const currentBridge = parsePayload(currentProfile.automationBridge)
+  const currentAutoEnhancement = parsePayload(currentProfile.autoEnhancement)
+
+  const currentSkills = asArrayOfStrings(currentProfile.skills || current.skills, 128)
+  const currentTools = asArrayOfStrings(currentMcp.defaultTools || current.mcpTools, 256)
+  const currentActions = asArrayOfStrings(currentBridge.actions, 128)
+  const currentSources = asArrayOfStrings(currentAutoEnhancement.sources, 128)
+
+  const mergedSkills = [...new Set([...profile.skills, ...currentSkills])]
+  const mergedTools = [...new Set([...profile.mcp.defaultTools, ...currentTools])]
+  const mergedActions = [...new Set([...profile.automationBridge.actions, ...currentActions])]
+  const mergedSources = [...new Set([...profile.autoEnhancement.sources, ...currentSources])]
+
+  const currentServers = Array.isArray(currentMcp.servers)
+    ? currentMcp.servers.filter((entry) => isRecord(entry))
+    : []
+  const mergedServerMap = new Map<string, Record<string, unknown>>()
+  for (const server of profile.mcp.servers) mergedServerMap.set(asString(server.id), server as Record<string, unknown>)
+  for (const server of currentServers as Record<string, unknown>[]) {
+    const id = asString(server.id)
+    if (!id) continue
+    mergedServerMap.set(id, server)
+  }
+  const mergedServers = [...mergedServerMap.values()]
 
   return {
     ...current,
-    operatingProfile: profile,
+    operatingProfile: {
+      ...profile,
+      ...currentProfile,
+      integrations: {
+        ...profile.integrations,
+        ...currentIntegrations,
+      },
+      internet: {
+        ...profile.internet,
+        ...currentInternet,
+      },
+      skills: mergedSkills,
+      mcp: {
+        ...profile.mcp,
+        ...currentMcp,
+        defaultTools: mergedTools,
+        servers: mergedServers,
+      },
+      automationBridge: {
+        ...profile.automationBridge,
+        ...currentBridge,
+        actions: mergedActions,
+      },
+      autoEnhancement: {
+        ...profile.autoEnhancement,
+        ...currentAutoEnhancement,
+        sources: mergedSources,
+      },
+    },
     integrations: {
       ...profile.integrations,
       ...currentIntegrations,
@@ -116,6 +331,9 @@ function mergeAgentConfigWithDefaults(config: Record<string, unknown>, baseUrl: 
       ...profile.internet,
       ...currentInternet,
     },
+    skills: mergedSkills,
+    mcpTools: mergedTools,
+    mcpServers: mergedServers,
   }
 }
 
@@ -425,6 +643,11 @@ export default async function (req: Request): Promise<Response> {
           defaultsInjected: true,
           defaultSkills: DEFAULT_AGENT_SKILLS,
           defaultMcpTools: DEFAULT_MCP_TOOLS,
+          defaultMcpServers: DEFAULT_MCP_SERVERS.map((server) => ({
+            id: server.id,
+            name: server.name,
+            transport: server.transport,
+          })),
         },
       })
     }
@@ -513,6 +736,11 @@ export default async function (req: Request): Promise<Response> {
         defaultsInjected: true,
         defaultSkills: DEFAULT_AGENT_SKILLS,
         defaultMcpTools: DEFAULT_MCP_TOOLS,
+        defaultMcpServers: DEFAULT_MCP_SERVERS.map((server) => ({
+          id: server.id,
+          name: server.name,
+          transport: server.transport,
+        })),
       },
     })
   } catch (error) {

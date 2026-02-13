@@ -1,3 +1,5 @@
+import { DEFAULT_MCP_SERVERS, type McpServerConfig } from './mcp-registry'
+
 export interface AgentOperatingProfile {
   version: string
   internet: {
@@ -13,6 +15,7 @@ export interface AgentOperatingProfile {
     n8n: boolean
     livekit: boolean
     sipImport: boolean
+    shopify: boolean
     openrouter: boolean
     huggingface: boolean
     gemini: boolean
@@ -22,6 +25,7 @@ export interface AgentOperatingProfile {
   mcp: {
     enabled: boolean
     defaultTools: string[]
+    servers: McpServerConfig[]
   }
   skills: string[]
   autoEnhancement: {
@@ -83,6 +87,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
     endpoint: `${DEFAULT_BASE_URL}/functions/agent-automation-bridge`,
     actions: [
       'web_search',
+      'shopify_store_snapshot',
       'create_n8n_workflow',
       'request_livekit_session',
       'import_sip_numbers',
@@ -96,6 +101,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
     n8n: true,
     livekit: true,
     sipImport: true,
+    shopify: true,
     openrouter: true,
     huggingface: true,
     gemini: true,
@@ -105,6 +111,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
   mcp: {
     enabled: true,
     defaultTools: DEFAULT_MCP_TOOLING,
+    servers: DEFAULT_MCP_SERVERS,
   },
   skills: DEFAULT_AGENT_SKILLS,
   autoEnhancement: {
@@ -116,6 +123,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
       'gemini-models',
       'brave-search',
       'sip-provider-updates',
+      'shopify-store-signals',
     ],
   },
 }
@@ -129,6 +137,32 @@ function asStringArray(value: unknown): string[] {
   return value
     .map((entry) => (typeof entry === 'string' ? entry.trim() : ''))
     .filter(Boolean)
+}
+
+function asMcpServers(value: unknown): McpServerConfig[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry))
+    .map((entry) => {
+      const row = entry as Record<string, unknown>
+      return {
+        id: typeof row.id === 'string' ? row.id : '',
+        name: typeof row.name === 'string' ? row.name : '',
+        category: typeof row.category === 'string' ? row.category : 'custom',
+        description: typeof row.description === 'string' ? row.description : '',
+        transport:
+          row.transport === 'http' || row.transport === 'sse' || row.transport === 'stdio'
+            ? row.transport
+            : 'http',
+        endpoint: typeof row.endpoint === 'string' ? row.endpoint : undefined,
+        command: typeof row.command === 'string' ? row.command : undefined,
+        args: asStringArray(row.args),
+        env: asStringArray(row.env),
+        enabled: typeof row.enabled === 'boolean' ? row.enabled : true,
+        source: row.source === 'custom' ? 'custom' : 'default',
+      } as McpServerConfig
+    })
+    .filter((server) => server.id && server.name)
 }
 
 export function mergeAgentConfigWithDefaults(config: Record<string, unknown> | undefined | null) {
@@ -180,6 +214,12 @@ export function mergeAgentConfigWithDefaults(config: Record<string, unknown> | u
     ...asRecord(current.internet),
   }
 
+  const mergedMcpServersMap = new Map<string, McpServerConfig>()
+  for (const server of DEFAULT_AGENT_OPERATING_PROFILE.mcp.servers) mergedMcpServersMap.set(server.id, server)
+  for (const server of asMcpServers(currentMcp.servers)) mergedMcpServersMap.set(server.id, server)
+  for (const server of asMcpServers(asRecord(current).mcpServers)) mergedMcpServersMap.set(server.id, server)
+  const mergedMcpServers = [...mergedMcpServersMap.values()]
+
   return {
     ...current,
     operatingProfile: {
@@ -192,6 +232,7 @@ export function mergeAgentConfigWithDefaults(config: Record<string, unknown> | u
         ...DEFAULT_AGENT_OPERATING_PROFILE.mcp,
         ...currentMcp,
         defaultTools: mergedMcpTools,
+        servers: mergedMcpServers,
       },
       automationBridge: {
         ...DEFAULT_AGENT_OPERATING_PROFILE.automationBridge,
@@ -208,5 +249,6 @@ export function mergeAgentConfigWithDefaults(config: Record<string, unknown> | u
     internet: mergedInternet,
     skills: mergedSkills,
     mcpTools: mergedMcpTools,
+    mcpServers: mergedMcpServers,
   }
 }

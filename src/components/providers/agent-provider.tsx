@@ -3,7 +3,7 @@ import { useAuth } from '@insforge/react'
 import { useAgentStore } from '../../stores/agent-store'
 import { useOpenClawStore } from '../../stores/openclaw-store'
 import { useBusinessStore } from '../../stores/business-store'
-import { invokeAgentDiscoverProviderUpdates } from '../../lib/agent-automation'
+import { invokeAgentDiscoverProviderUpdates, invokeAgentShopifySnapshot } from '../../lib/agent-automation'
 
 async function runAutoEnhancementSweep() {
   const enabled = (localStorage.getItem('agentforge-auto-enhance-enabled') || 'true') === 'true'
@@ -30,6 +30,34 @@ async function runAutoEnhancementSweep() {
         huggingFaceToken: localStorage.getItem('agentforge-huggingface-token') || undefined,
       },
     )
+
+    // Optional commerce sweep for configured Shopify stores.
+    const rawStores = localStorage.getItem('agentforge-shopify-stores') || '[]'
+    const stores = JSON.parse(rawStores)
+    if (Array.isArray(stores)) {
+      for (const store of stores.slice(0, 3)) {
+        const row = store && typeof store === 'object' ? (store as Record<string, unknown>) : null
+        const domain = typeof row?.domain === 'string' ? row.domain.trim() : ''
+        const accessToken = typeof row?.accessToken === 'string' ? row.accessToken.trim() : ''
+        if (!domain || !accessToken) continue
+
+        await invokeAgentShopifySnapshot(
+          {
+            agentId: automationAgent.id,
+            agentApiKey: automationAgent.api_key,
+            automationSecret: localStorage.getItem('agentforge-automation-secret') || undefined,
+          },
+          {
+            shopDomain: domain,
+            accessToken,
+            includeOrders: true,
+            includeProducts: true,
+            postForumUpdate: false,
+            createWorkflow: false,
+          },
+        )
+      }
+    }
   } catch (error) {
     console.warn('Auto enhancement sweep failed:', error)
   }

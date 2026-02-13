@@ -136,6 +136,48 @@ export interface AgentDaoTaskResponse {
   workflow: Record<string, unknown> | null
 }
 
+export interface AgentShopifySnapshotRequest {
+  shopDomain: string
+  accessToken?: string
+  apiVersion?: string
+  includeOrders?: boolean
+  includeProducts?: boolean
+  postForumUpdate?: boolean
+  createWorkflow?: boolean
+  workflowName?: string
+  workflowDescription?: string
+  workflowTriggerUrl?: string
+  n8nBaseUrl?: string
+  n8nApiKey?: string
+}
+
+export interface AgentShopifySnapshotResponse {
+  ok: boolean
+  action: 'shopify_store_snapshot'
+  snapshot: {
+    domain: string
+    shop: {
+      id?: string | null
+      name: string
+      email: string
+      currency: string
+      country: string
+      plan: string
+    }
+    counts: Record<string, unknown>
+    recentOrders: Array<{
+      id: string
+      name: string
+      created_at: string
+      total_price: string
+      currency: string
+      financial_status: string
+      fulfillment_status: string
+    }>
+  }
+  workflow: Record<string, unknown> | null
+}
+
 export interface AgentSipImportEntry {
   phone_number: string
   provider?: 'twilio' | 'openphone' | 'voip_sip' | 'other' | string
@@ -349,6 +391,38 @@ export async function invokeAgentCreateDaoDeploymentTask(
   }
 
   return data as AgentDaoTaskResponse
+}
+
+export async function invokeAgentShopifySnapshot(
+  auth: AgentAutomationAuth,
+  request: AgentShopifySnapshotRequest,
+): Promise<AgentShopifySnapshotResponse> {
+  const { data, error } = await insforge.functions.invoke('agent-automation-bridge', {
+    body: {
+      action: 'shopify_store_snapshot',
+      agentId: auth.agentId,
+      agentApiKey: auth.agentApiKey,
+      shopDomain: request.shopDomain,
+      accessToken: request.accessToken,
+      apiVersion: request.apiVersion,
+      includeOrders: request.includeOrders,
+      includeProducts: request.includeProducts,
+      postForumUpdate: request.postForumUpdate,
+      createWorkflow: request.createWorkflow,
+      workflowName: request.workflowName,
+      workflowDescription: request.workflowDescription,
+      workflowTriggerUrl: request.workflowTriggerUrl,
+      n8nBaseUrl: request.n8nBaseUrl,
+      n8nApiKey: request.n8nApiKey,
+    },
+    headers: buildHeaders(auth),
+  })
+
+  if (error) {
+    throw error
+  }
+
+  return data as AgentShopifySnapshotResponse
 }
 
 export async function invokeAgentImportSipNumbers(

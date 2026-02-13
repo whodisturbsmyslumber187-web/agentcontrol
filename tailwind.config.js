@@ -53,11 +53,16 @@ export default {
           yellow: '#FFD700',
           orange: '#FF6B35',
           teal: '#00D4AA',
+          green: '#00D4AA',
           purple: '#9D4EDD',
           pink: '#FF2E63',
           blue: '#4361EE',
           black: '#0A0A0A',
-          gray: '#1A1A1A',
+          dark: '#111111',
+          card: '#1A1A1A',
+          border: '#2A2A2A',
+          gray: '#888888',
+          white: '#E8E8E8',
           'gray-light': '#2A2A2A',
         },
         // Status colors
@@ -204,9 +209,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
-  ],
+  plugins: [],
 }

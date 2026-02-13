@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { useAgentStore } from '../stores/agent-store'
@@ -172,12 +172,26 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="text-cyber-white">Report Generation</CardTitle>
               <CardDescription className="text-cyber-gray">
-                Generate detailed reports from your agent activities
+                Click to generate and download detailed reports
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Card className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors">
+                <Card 
+                  className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors"
+                  onClick={() => {
+                    const report = {
+                      title: 'Revenue Report',
+                      generatedAt: new Date().toISOString(),
+                      businesses: businesses.map(b => ({ name: b.name, type: b.type, revenue: b.revenue, expenses: b.expenses, profit: b.profit, status: b.status })),
+                      totals: { revenue: totalRevenue, businesses: businesses.length, active: activeBusinesses },
+                    }
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a'); a.href = url; a.download = `revenue-report-${new Date().toISOString().split('T')[0]}.json`; a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                >
                   <CardContent className="pt-6">
                     <div className="flex items-center space-x-3">
                       <div className="h-10 w-10 rounded-full bg-cyber-green/20 flex items-center justify-center">
@@ -185,13 +199,27 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="font-medium text-cyber-white">Revenue Report</p>
-                        <p className="text-sm text-cyber-gray">Daily business earnings</p>
+                        <p className="text-sm text-cyber-gray">Click to download earnings data</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors">
+                <Card 
+                  className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors"
+                  onClick={() => {
+                    const report = {
+                      title: 'Agent Performance Report',
+                      generatedAt: new Date().toISOString(),
+                      agents: agents.map(a => ({ name: a.name, role: a.role, status: a.status, model: a.model, tokenUsage: a.tokenUsage || a.token_usage, tasks: a.tasks, completed: a.completed_tasks })),
+                      totals: { agents: agents.length, active: activeAgents.length, totalTokens: totalTokenUsage, sessions: activeSessions.length },
+                    }
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a'); a.href = url; a.download = `agent-report-${new Date().toISOString().split('T')[0]}.json`; a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                >
                   <CardContent className="pt-6">
                     <div className="flex items-center space-x-3">
                       <div className="h-10 w-10 rounded-full bg-cyber-green/20 flex items-center justify-center">
@@ -199,13 +227,30 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="font-medium text-cyber-white">Agent Performance</p>
-                        <p className="text-sm text-cyber-gray">Token usage & efficiency</p>
+                        <p className="text-sm text-cyber-gray">Click to download agent metrics</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors">
+                <Card 
+                  className="bg-cyber-dark border-cyber-border hover:border-cyber-green cursor-pointer transition-colors"
+                  onClick={() => {
+                    const report = {
+                      title: 'Standup Summary',
+                      generatedAt: new Date().toISOString(),
+                      agentCount: agents.length,
+                      activeCount: activeAgents.length,
+                      sessionsActive: activeSessions.length,
+                      businesses: businesses.length,
+                      note: 'Full standup transcripts available in the Logs tab',
+                    }
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a'); a.href = url; a.download = `standup-summary-${new Date().toISOString().split('T')[0]}.json`; a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                >
                   <CardContent className="pt-6">
                     <div className="flex items-center space-x-3">
                       <div className="h-10 w-10 rounded-full bg-cyber-green/20 flex items-center justify-center">
@@ -213,7 +258,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="font-medium text-cyber-white">Standup Summary</p>
-                        <p className="text-sm text-cyber-gray">Voice meeting transcripts</p>
+                        <p className="text-sm text-cyber-gray">Click to download summary</p>
                       </div>
                     </div>
                   </CardContent>

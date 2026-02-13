@@ -1,89 +1,38 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useTheme } from './components/providers/theme-provider'
-import { useAgentStore } from './stores/agent-store'
-import { useWebSocket } from './components/providers/websocket-provider'
+import { useAuth } from '@insforge/react'
 import Layout from './components/layout/Layout'
 import LoadingScreen from './components/common/LoadingScreen'
 import ErrorBoundary from './components/common/ErrorBoundary'
-import { Toaster } from './components/ui/toaster'
-import { useToast } from './components/ui/use-toast'
 
-// Lazy load pages for code splitting
-const TaskManager = lazy(() => import('./pages/TaskManager'))
-const OrgChart = lazy(() => import('./pages/OrgChart'))
-const VoiceStandups = lazy(() => import('./pages/VoiceStandups'))
-const Workspaces = lazy(() => import('./pages/Workspaces'))
-const Documentation = lazy(() => import('./pages/Documentation'))
-const Settings = lazy(() => import('./pages/Settings'))
-const Login = lazy(() => import('./pages/Login'))
+// Lazy-loaded pages
+const EmpireControl = React.lazy(() => import('./pages/EmpireControl'))
+const Dashboard = React.lazy(() => import('./pages/Dashboard'))
+const TaskManager = React.lazy(() => import('./pages/TaskManager'))
+const OrgChart = React.lazy(() => import('./pages/OrgChart'))
+const VoiceStandups = React.lazy(() => import('./pages/VoiceStandups'))
+const Workspaces = React.lazy(() => import('./pages/Workspaces'))
+const Documentation = React.lazy(() => import('./pages/Documentation'))
+const Settings = React.lazy(() => import('./pages/Settings'))
+const Chat = React.lazy(() => import('./pages/Chat'))
+const AgentForum = React.lazy(() => import('./pages/AgentForum'))
+const CronJobs = React.lazy(() => import('./pages/CronJobs'))
+const Logs = React.lazy(() => import('./pages/Logs'))
+const Assignments = React.lazy(() => import('./pages/Assignments'))
+const PhoneRegistry = React.lazy(() => import('./pages/PhoneRegistry'))
+const LiveKitDashboard = React.lazy(() => import('./pages/LiveKitDashboard'))
+const OperationsCenter = React.lazy(() => import('./pages/OperationsCenter'))
+const Workflows = React.lazy(() => import('./pages/Workflows'))
+const Login = React.lazy(() => import('./pages/Login'))
 
 function AppContent() {
-  const { theme } = useTheme()
-  const { isConnected, connectionStatus } = useWebSocket()
-  const { agents, isLoading, error } = useAgentStore()
-  const { toast } = useToast()
+  const { isSignedIn, isLoaded } = useAuth()
 
-  // Show connection status toasts
-  React.useEffect(() => {
-    if (connectionStatus === 'connected') {
-      toast({
-        title: 'Connected',
-        description: 'Real-time updates enabled',
-        variant: 'default',
-      })
-    } else if (connectionStatus === 'disconnected') {
-      toast({
-        title: 'Disconnected',
-        description: 'Real-time updates paused',
-        variant: 'destructive',
-      })
-    } else if (connectionStatus === 'connecting') {
-      toast({
-        title: 'Connecting',
-        description: 'Establishing real-time connection...',
-        variant: 'default',
-      })
-    }
-  }, [connectionStatus, toast])
+  if (!isLoaded) {
+    return <LoadingScreen />
+  }
 
-  // Show agent loading status
-  React.useEffect(() => {
-    if (isLoading) {
-      toast({
-        title: 'Loading Agents',
-        description: 'Fetching agent data...',
-        variant: 'default',
-      })
-    }
-  }, [isLoading, toast])
-
-  // Show agent count on load
-  React.useEffect(() => {
-    if (agents.length > 0 && !isLoading) {
-      toast({
-        title: 'Agents Loaded',
-        description: `${agents.length} agents ready`,
-        variant: 'default',
-      })
-    }
-  }, [agents.length, isLoading, toast])
-
-  // Show errors
-  React.useEffect(() => {
-    if (error) {
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      })
-    }
-  }, [error, toast])
-
-  // Check authentication (simplified for now)
-  const isAuthenticated = true // TODO: Implement proper auth
-
-  if (!isAuthenticated) {
+  if (!isSignedIn) {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
@@ -95,35 +44,37 @@ function AppContent() {
   }
 
   return (
-    <div className={`min-h-screen bg-cyber-black ${theme === 'dark' ? 'dark' : ''}`}>
-      <Layout>
-        <ErrorBoundary>
-          <Suspense fallback={<LoadingScreen />}>
-            <Routes>
-              <Route path="/" element={<Navigate to="/task-manager" replace />} />
-              <Route path="/task-manager" element={<TaskManager />} />
-              <Route path="/org-chart" element={<OrgChart />} />
-              <Route path="/voice-standups" element={<VoiceStandups />} />
-              <Route path="/workspaces" element={<Workspaces />} />
-              <Route path="/documentation" element={<Documentation />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="*" element={<Navigate to="/task-manager" replace />} />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-      </Layout>
-      <Toaster />
-    </div>
+    <Layout>
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route path="/" element={<EmpireControl />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/task-manager" element={<TaskManager />} />
+          <Route path="/org-chart" element={<OrgChart />} />
+          <Route path="/voice-standups" element={<VoiceStandups />} />
+          <Route path="/workspaces" element={<Workspaces />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/forum" element={<AgentForum />} />
+          <Route path="/cron-jobs" element={<CronJobs />} />
+          <Route path="/logs" element={<Logs />} />
+          <Route path="/assignments" element={<Assignments />} />
+          <Route path="/phones" element={<PhoneRegistry />} />
+          <Route path="/livekit" element={<LiveKitDashboard />} />
+          <Route path="/ops-center" element={<OperationsCenter />} />
+          <Route path="/workflows" element={<Workflows />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </Layout>
   )
 }
 
-function App() {
+export default function App() {
   return (
     <ErrorBoundary>
       <AppContent />
     </ErrorBoundary>
   )
 }
-
-export default App

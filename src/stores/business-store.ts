@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { insforge } from '../lib/insforge'
 
 export interface Business {
   id: string
@@ -9,17 +9,32 @@ export interface Business {
   revenue: number
   expenses: number
   profit: number
-  agents: string[] // Agent IDs assigned to this business
-  pendingTasks: number
-  lastUpdated: string
+  agents: string[]
+  pending_tasks: number
   metrics: {
     conversionRate?: number
     customerCount?: number
     monthlyGrowth?: number
   }
+  created_at?: string
+  updated_at?: string
+
+  // Aliases for existing UI
+  pendingTasks?: number
+  lastUpdated?: string
 }
 
-interface BusinessMetrics {
+function normalizeBusiness(row: Record<string, unknown>): Business {
+  const b = row as unknown as Business
+  return {
+    ...b,
+    pendingTasks: b.pending_tasks ?? (b as any).pendingTasks ?? 0,
+    lastUpdated: b.updated_at ?? (b as any).lastUpdated ?? new Date().toISOString(),
+    metrics: typeof b.metrics === 'object' && b.metrics ? b.metrics : { conversionRate: 0, customerCount: 0, monthlyGrowth: 0 },
+  }
+}
+
+export interface BusinessMetrics {
   totalRevenue: number
   totalProfit: number
   activeBusinesses: number
@@ -32,182 +47,181 @@ interface BusinessStore {
   metrics: BusinessMetrics
   isLoading: boolean
   error: string | null
-  
-  // Actions
+
+  fetchBusinesses: () => Promise<void>
   setBusinesses: (businesses: Business[]) => void
-  addBusiness: (business: Omit<Business, 'id' | 'lastUpdated'>) => void
-  updateBusiness: (id: string, updates: Partial<Business>) => void
-  removeBusiness: (id: string) => void
-  assignAgent: (businessId: string, agentId: string) => void
-  unassignAgent: (businessId: string, agentId: string) => void
+  addBusiness: (business: Partial<Business> & { name: string }) => Promise<void>
+  updateBusiness: (id: string, updates: Partial<Business>) => Promise<void>
+  removeBusiness: (id: string) => Promise<void>
+  assignAgent: (businessId: string, agentId: string) => Promise<void>
+  unassignAgent: (businessId: string, agentId: string) => Promise<void>
   calculateMetrics: () => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
 }
 
-// Sample initial businesses
-const initialBusinesses: Business[] = [
-  {
-    id: 'biz-1',
-    name: 'Silver Trading Desk',
-    type: 'trading',
-    status: 'active',
-    revenue: 125000,
-    expenses: 25000,
-    profit: 100000,
-    agents: ['agent-silver-1', 'agent-silver-2'],
-    pendingTasks: 3,
-    lastUpdated: new Date().toISOString(),
-    metrics: {
-      conversionRate: 4.2,
-      customerCount: 42,
-      monthlyGrowth: 12.5
+export const useBusinessStore = create<BusinessStore>()((set, get) => ({
+  businesses: [],
+  metrics: {
+    totalRevenue: 0,
+    totalProfit: 0,
+    activeBusinesses: 0,
+    totalAgentsAssigned: 0,
+    averageConversionRate: 0,
+  },
+  isLoading: false,
+  error: null,
+
+  fetchBusinesses: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      const { data, error } = await insforge.database
+        .from('businesses')
+        .select()
+        .order('created_at', { ascending: true })
+      if (error) throw error
+      const businesses = (data || []).map(normalizeBusiness)
+      set({ businesses, isLoading: false })
+      get().calculateMetrics()
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to fetch businesses', isLoading: false })
     }
   },
-  {
-    id: 'biz-2',
-    name: 'AI Consulting',
-    type: 'consulting',
-    status: 'active',
-    revenue: 75000,
-    expenses: 15000,
-    profit: 60000,
-    agents: ['agent-consult-1'],
-    pendingTasks: 5,
-    lastUpdated: new Date().toISOString(),
-    metrics: {
-      conversionRate: 8.7,
-      customerCount: 15,
-      monthlyGrowth: 25.3
-    }
+
+  setBusinesses: (businesses) => {
+    set({ businesses })
+    get().calculateMetrics()
   },
-  {
-    id: 'biz-3',
-    name: 'E-commerce Store',
-    type: 'ecommerce',
-    status: 'active',
-    revenue: 50000,
-    expenses: 20000,
-    profit: 30000,
-    agents: ['agent-ecom-1', 'agent-ecom-2'],
-    pendingTasks: 8,
-    lastUpdated: new Date().toISOString(),
-    metrics: {
-      conversionRate: 2.8,
-      customerCount: 1200,
-      monthlyGrowth: 8.2
-    }
-  }
-]
 
-export const useBusinessStore = create<BusinessStore>()(
-  persist(
-    (set, get) => ({
-      businesses: initialBusinesses,
-      metrics: {
-        totalRevenue: 0,
-        totalProfit: 0,
-        activeBusinesses: 0,
-        totalAgentsAssigned: 0,
-        averageConversionRate: 0
-      },
-      isLoading: false,
-      error: null,
-
-      setBusinesses: (businesses) => {
-        set({ businesses })
-        get().calculateMetrics()
-      },
-
-      addBusiness: (businessData) => {
-        const newBusiness: Business = {
-          ...businessData,
-          id: `biz-${Date.now()}`,
-          lastUpdated: new Date().toISOString()
-        }
-        set((state) => ({
-          businesses: [...state.businesses, newBusiness]
-        }))
-        get().calculateMetrics()
-      },
-
-      updateBusiness: (id, updates) => {
-        set((state) => ({
-          businesses: state.businesses.map((biz) =>
-            biz.id === id
-              ? { ...biz, ...updates, lastUpdated: new Date().toISOString() }
-              : biz
-          )
-        }))
-        get().calculateMetrics()
-      },
-
-      removeBusiness: (id) => {
-        set((state) => ({
-          businesses: state.businesses.filter((biz) => biz.id !== id)
-        }))
-        get().calculateMetrics()
-      },
-
-      assignAgent: (businessId, agentId) => {
-        set((state) => ({
-          businesses: state.businesses.map((biz) =>
-            biz.id === businessId && !biz.agents.includes(agentId)
-              ? { ...biz, agents: [...biz.agents, agentId] }
-              : biz
-          )
-        }))
-        get().calculateMetrics()
-      },
-
-      unassignAgent: (businessId, agentId) => {
-        set((state) => ({
-          businesses: state.businesses.map((biz) =>
-            biz.id === businessId
-              ? { ...biz, agents: biz.agents.filter((id) => id !== agentId) }
-              : biz
-          )
-        }))
-        get().calculateMetrics()
-      },
-
-      calculateMetrics: () => {
-        const { businesses } = get()
-        
-        const activeBusinesses = businesses.filter(b => b.status === 'active')
-        const totalRevenue = activeBusinesses.reduce((sum, biz) => sum + biz.revenue, 0)
-        const totalProfit = activeBusinesses.reduce((sum, biz) => sum + biz.profit, 0)
-        const totalAgentsAssigned = activeBusinesses.reduce((sum, biz) => sum + biz.agents.length, 0)
-        
-        const conversionRates = activeBusinesses
-          .map(b => b.metrics.conversionRate || 0)
-          .filter(rate => rate > 0)
-        
-        const averageConversionRate = conversionRates.length > 0
-          ? conversionRates.reduce((sum, rate) => sum + rate, 0) / conversionRates.length
-          : 0
-
-        set({
-          metrics: {
-            totalRevenue,
-            totalProfit,
-            activeBusinesses: activeBusinesses.length,
-            totalAgentsAssigned,
-            averageConversionRate
-          }
+  addBusiness: async (businessData) => {
+    try {
+      const { data, error } = await insforge.database
+        .from('businesses')
+        .insert({
+          name: businessData.name,
+          type: businessData.type || 'other',
+          status: businessData.status || 'active',
+          revenue: businessData.revenue || 0,
+          expenses: businessData.expenses || 0,
+          profit: businessData.profit || 0,
+          agents: businessData.agents || [],
+          pending_tasks: businessData.pendingTasks || businessData.pending_tasks || 0,
+          metrics: businessData.metrics || { conversionRate: 0, customerCount: 0, monthlyGrowth: 0 },
         })
-      },
-
-      setLoading: (loading) => set({ isLoading: loading }),
-      setError: (error) => set({ error })
-    }),
-    {
-      name: 'business-store',
-      version: 1
+        .select()
+      if (error) throw error
+      if (data && data[0]) {
+        set((state) => ({ businesses: [...state.businesses, normalizeBusiness(data[0])] }))
+        get().calculateMetrics()
+      }
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to add business' })
     }
-  )
-)
+  },
 
-// Initialize metrics on store creation
-const store = useBusinessStore.getState()
-store.calculateMetrics()
+  updateBusiness: async (id, updates) => {
+    try {
+      const dbUpdates: Record<string, unknown> = { ...updates }
+      if ('pendingTasks' in updates) { dbUpdates.pending_tasks = updates.pendingTasks; delete dbUpdates.pendingTasks }
+      if ('lastUpdated' in updates) { delete dbUpdates.lastUpdated }
+
+      const { error } = await insforge.database
+        .from('businesses')
+        .update(dbUpdates)
+        .eq('id', id)
+      if (error) throw error
+      set((state) => ({
+        businesses: state.businesses.map((biz) =>
+          biz.id === id ? normalizeBusiness({ ...biz, ...updates }) : biz
+        ),
+      }))
+      get().calculateMetrics()
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to update business' })
+    }
+  },
+
+  removeBusiness: async (id) => {
+    try {
+      const { error } = await insforge.database
+        .from('businesses')
+        .delete()
+        .eq('id', id)
+      if (error) throw error
+      set((state) => ({ businesses: state.businesses.filter((biz) => biz.id !== id) }))
+      get().calculateMetrics()
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to remove business' })
+    }
+  },
+
+  assignAgent: async (businessId, agentId) => {
+    const biz = get().businesses.find((b) => b.id === businessId)
+    if (!biz || biz.agents.includes(agentId)) return
+    const newAgents = [...biz.agents, agentId]
+    try {
+      const { error } = await insforge.database
+        .from('businesses')
+        .update({ agents: newAgents })
+        .eq('id', businessId)
+      if (error) throw error
+      set((state) => ({
+        businesses: state.businesses.map((b) =>
+          b.id === businessId ? { ...b, agents: newAgents } : b
+        ),
+      }))
+      get().calculateMetrics()
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to assign agent' })
+    }
+  },
+
+  unassignAgent: async (businessId, agentId) => {
+    const biz = get().businesses.find((b) => b.id === businessId)
+    if (!biz) return
+    const newAgents = biz.agents.filter((id) => id !== agentId)
+    try {
+      const { error } = await insforge.database
+        .from('businesses')
+        .update({ agents: newAgents })
+        .eq('id', businessId)
+      if (error) throw error
+      set((state) => ({
+        businesses: state.businesses.map((b) =>
+          b.id === businessId ? { ...b, agents: newAgents } : b
+        ),
+      }))
+      get().calculateMetrics()
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to unassign agent' })
+    }
+  },
+
+  calculateMetrics: () => {
+    const { businesses } = get()
+    const activeBusinesses = businesses.filter((b) => b.status === 'active')
+    const totalRevenue = activeBusinesses.reduce((sum, biz) => sum + Number(biz.revenue), 0)
+    const totalProfit = activeBusinesses.reduce((sum, biz) => sum + Number(biz.profit), 0)
+    const totalAgentsAssigned = activeBusinesses.reduce((sum, biz) => sum + biz.agents.length, 0)
+    const conversionRates = activeBusinesses
+      .map((b) => b.metrics?.conversionRate || 0)
+      .filter((rate) => rate > 0)
+    const averageConversionRate =
+      conversionRates.length > 0
+        ? conversionRates.reduce((sum, rate) => sum + rate, 0) / conversionRates.length
+        : 0
+
+    set({
+      metrics: {
+        totalRevenue,
+        totalProfit,
+        activeBusinesses: activeBusinesses.length,
+        totalAgentsAssigned,
+        averageConversionRate,
+      },
+    })
+  },
+
+  setLoading: (loading) => set({ isLoading: loading }),
+  setError: (error) => set({ error }),
+}))

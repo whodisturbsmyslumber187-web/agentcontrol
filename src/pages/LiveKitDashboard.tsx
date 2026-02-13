@@ -10,7 +10,7 @@ import { VoiceAgentPanel } from '../components/voice/VoiceAgentPanel'
 import { useAgentStore } from '../stores/agent-store'
 import { insforge } from '../lib/insforge'
 import { generateLiveKitToken } from '../lib/livekit'
-import { invokeAgentImportSipNumbers } from '../lib/agent-automation'
+import { invokeAgentImportSipNumbers, invokeAgentSynthesizeTts } from '../lib/agent-automation'
 import { mergeAgentConfigWithDefaults } from '../lib/agent-defaults'
 import {
   Phone,
@@ -26,6 +26,7 @@ import {
   Link2,
   Upload,
   Save,
+  AudioLines,
 } from 'lucide-react'
 
 type PhoneProvider =
@@ -81,6 +82,14 @@ interface PhoneRoutingConfig {
   n8n_workflow_id?: string
   n8n_trigger_url?: string
   sip?: Record<string, unknown>
+}
+
+interface AgentTtsConfig {
+  provider: string
+  model: string
+  voice: string
+  endpoint?: string
+  apiKey?: string
 }
 
 const SUPPORTED_PHONE_PROVIDERS: PhoneProvider[] = [
@@ -200,6 +209,15 @@ export default function LiveKitDashboard() {
   const [participantName, setParticipantName] = useState('Operator')
   const [tokenResult, setTokenResult] = useState<{ token: string; url: string } | null>(null)
   const [generatingToken, setGeneratingToken] = useState(false)
+  const [ttsAgentId, setTtsAgentId] = useState('')
+  const [ttsText, setTtsText] = useState('Hello from your LiveKit voice agent network.')
+  const [ttsProvider, setTtsProvider] = useState('openai')
+  const [ttsModel, setTtsModel] = useState('gpt-4o-mini-tts')
+  const [ttsVoice, setTtsVoice] = useState('alloy')
+  const [ttsEndpoint, setTtsEndpoint] = useState('')
+  const [ttsApiKey, setTtsApiKey] = useState('')
+  const [ttsSynthesizing, setTtsSynthesizing] = useState(false)
+  const [ttsPreview, setTtsPreview] = useState<{ dataUrl: string; provider: string; voice: string } | null>(null)
 
   useEffect(() => {
     void refreshData()
@@ -212,7 +230,25 @@ export default function LiveKitDashboard() {
     if (!sipAutomationAgentId && agents.length > 0) {
       setSipAutomationAgentId(agents[0].id)
     }
-  }, [agents, sipAutomationAgentId, sipDefaultAgentId])
+    if (!ttsAgentId && agents.length > 0) {
+      setTtsAgentId(agents[0].id)
+    }
+  }, [agents, sipAutomationAgentId, sipDefaultAgentId, ttsAgentId])
+
+  useEffect(() => {
+    if (!ttsAgentId) return
+    const selected = agents.find((agent) => agent.id === ttsAgentId)
+    if (!selected) return
+    const config = asRecord(selected.config)
+    const voice = asRecord(config.voice)
+    const tts = asRecord(voice.tts)
+    if (Object.keys(tts).length === 0) return
+
+    setTtsProvider(asString(tts.provider, 'openai'))
+    setTtsModel(asString(tts.model, 'gpt-4o-mini-tts'))
+    setTtsVoice(asString(tts.voice, 'alloy'))
+    setTtsEndpoint(asString(tts.endpoint))
+  }, [agents, ttsAgentId])
 
   const refreshData = async () => {
     setRefreshing(true)
@@ -522,6 +558,109 @@ export default function LiveKitDashboard() {
 
     await updateAgent(agentId, { api_key: generated })
     return generated
+  }
+
+  const saveTtsConfigToAgent = async () => {
+    if (!ttsAgentId) {
+      toast({
+        title: 'Select a TTS agent',
+        description: 'Choose which LiveKit agent should receive this TTS server config.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    const target = agents.find((agent) => agent.id === ttsAgentId)
+    if (!target) {
+      toast({
+        title: 'Agent not found',
+        description: 'Selected agent no longer exists.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    const currentConfig = asRecord(target.config)
+    const currentVoice = asRecord(currentConfig.voice)
+    const ttsConfig: AgentTtsConfig = {
+      provider: ttsProvider.trim() || 'openai',
+      model: ttsModel.trim() || 'gpt-4o-mini-tts',
+      voice: ttsVoice.trim() || 'alloy',
+      endpoint: ttsEndpoint.trim() || undefined,
+      apiKey: ttsApiKey.trim() || undefined,
+    }
+
+    const nextConfig = mergeAgentConfigWithDefaults({
+      ...currentConfig,
+      voice: {
+        ...currentVoice,
+        provider: 'livekit',
+        tts: ttsConfig,
+      },
+    })
+
+    await updateAgent(ttsAgentId, { config: nextConfig })
+    toast({
+      title: 'TTS config saved',
+      description: 'LiveKit + TTS settings are now embedded in this agent config.',
+    })
+  }
+
+  const synthesizeTtsPreview = async () => {
+    if (!ttsAgentId) {
+      toast({
+        title: 'Select a TTS agent',
+        description: 'Choose which agent should execute TTS generation.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (!ttsText.trim()) {
+      toast({
+        title: 'TTS text required',
+        description: 'Enter a test sentence before synthesizing.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setTtsSynthesizing(true)
+    try {
+      const agentApiKey = await ensureAgentApiKey(ttsAgentId)
+      const result = await invokeAgentSynthesizeTts(
+        {
+          agentId: ttsAgentId,
+          agentApiKey,
+        },
+        {
+          text: ttsText.trim(),
+          provider: ttsProvider.trim() || 'openai',
+          model: ttsModel.trim() || undefined,
+          voice: ttsVoice.trim() || undefined,
+          endpoint: ttsEndpoint.trim() || undefined,
+          apiKey: ttsApiKey.trim() || undefined,
+        },
+      )
+
+      setTtsPreview({
+        dataUrl: result.audio.dataUrl,
+        provider: result.audio.provider,
+        voice: result.audio.voice,
+      })
+      toast({
+        title: 'TTS audio generated',
+        description: `${result.audio.provider}/${result.audio.voice} preview ready.`,
+      })
+    } catch (error: any) {
+      toast({
+        title: 'TTS synthesis failed',
+        description: error.message || 'Could not generate server-side TTS audio.',
+        variant: 'destructive',
+      })
+    } finally {
+      setTtsSynthesizing(false)
+    }
   }
 
   const parseSipImportPayload = () => {
@@ -970,7 +1109,7 @@ export default function LiveKitDashboard() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <Card className="border-cyber-border bg-cyber-card">
           <CardHeader>
             <CardTitle className="text-cyber-white">Create LiveKit Agent</CardTitle>
@@ -1219,6 +1358,98 @@ export default function LiveKitDashboard() {
                     </Button>
                   </div>
                 </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-cyber-border bg-cyber-card">
+          <CardHeader>
+            <CardTitle className="text-cyber-white">Voice Synthesis Studio (TTS + LiveKit)</CardTitle>
+            <CardDescription>
+              Bind a server-side TTS provider to an agent, then generate preview audio that can be used in voice flows.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <select
+              value={ttsAgentId}
+              onChange={(event) => setTtsAgentId(event.target.value)}
+              className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
+            >
+              <option value="">Select LiveKit agent</option>
+              {liveKitAgents.map((agent) => (
+                <option key={agent.id} value={agent.id}>
+                  {agent.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Input
+                value={ttsProvider}
+                onChange={(event) => setTtsProvider(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="Provider (openai / elevenlabs / custom)"
+              />
+              <Input
+                value={ttsModel}
+                onChange={(event) => setTtsModel(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="Model (e.g. gpt-4o-mini-tts)"
+              />
+              <Input
+                value={ttsVoice}
+                onChange={(event) => setTtsVoice(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="Voice (e.g. alloy)"
+              />
+              <Input
+                value={ttsEndpoint}
+                onChange={(event) => setTtsEndpoint(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="Optional custom endpoint"
+              />
+              <Input
+                type="password"
+                value={ttsApiKey}
+                onChange={(event) => setTtsApiKey(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="Optional API key override"
+              />
+              <textarea
+                value={ttsText}
+                onChange={(event) => setTtsText(event.target.value)}
+                rows={3}
+                className="w-full resize-none rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
+                placeholder="Test phrase for your voice agents..."
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={() => void saveTtsConfigToAgent()}
+                className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80"
+              >
+                <Save className="mr-2 h-4 w-4" />
+                Save To Agent
+              </Button>
+              <Button
+                onClick={() => void synthesizeTtsPreview()}
+                disabled={ttsSynthesizing}
+                className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400"
+              >
+                <AudioLines className="mr-2 h-4 w-4" />
+                {ttsSynthesizing ? 'Synthesizing...' : 'Generate TTS Preview'}
+              </Button>
+            </div>
+
+            {ttsPreview && (
+              <div className="space-y-2 rounded-lg border border-cyber-green/30 bg-cyber-green/5 p-3">
+                <p className="text-xs text-cyber-gray">
+                  Preview ready: <span className="text-cyber-white">{ttsPreview.provider}</span> /{' '}
+                  <span className="text-cyber-white">{ttsPreview.voice}</span>
+                </p>
+                <audio controls src={ttsPreview.dataUrl} className="h-8 w-full" />
               </div>
             )}
           </CardContent>

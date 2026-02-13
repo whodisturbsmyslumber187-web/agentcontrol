@@ -50,6 +50,31 @@ export interface AgentLiveKitSessionResponse {
   }
 }
 
+export interface AgentSynthesizeTtsRequest {
+  text: string
+  provider?: 'openai' | 'elevenlabs' | 'custom' | string
+  model?: string
+  voice?: string
+  format?: 'mp3' | 'wav' | 'flac' | string
+  endpoint?: string
+  apiKey?: string
+  metadata?: Record<string, unknown>
+}
+
+export interface AgentSynthesizeTtsResponse {
+  ok: boolean
+  action: 'synthesize_tts'
+  audio: {
+    provider: string
+    model: string
+    voice: string
+    mimeType: string
+    sizeBytes: number
+    dataBase64: string
+    dataUrl: string
+  }
+}
+
 export interface AgentWebSearchRequest {
   query: string
   count?: number
@@ -309,6 +334,34 @@ export async function invokeAgentLiveKitSession(
   }
 
   return data as AgentLiveKitSessionResponse
+}
+
+export async function invokeAgentSynthesizeTts(
+  auth: AgentAutomationAuth,
+  request: AgentSynthesizeTtsRequest,
+): Promise<AgentSynthesizeTtsResponse> {
+  const { data, error } = await insforge.functions.invoke('agent-automation-bridge', {
+    body: {
+      action: 'synthesize_tts',
+      agentId: auth.agentId,
+      agentApiKey: auth.agentApiKey,
+      text: request.text,
+      provider: request.provider,
+      model: request.model,
+      voice: request.voice,
+      format: request.format,
+      endpoint: request.endpoint,
+      apiKey: request.apiKey,
+      metadata: request.metadata,
+    },
+    headers: buildHeaders(auth),
+  })
+
+  if (error) {
+    throw error
+  }
+
+  return data as AgentSynthesizeTtsResponse
 }
 
 export async function invokeAgentWebSearch(

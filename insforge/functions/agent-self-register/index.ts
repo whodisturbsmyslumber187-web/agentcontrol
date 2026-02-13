@@ -221,6 +221,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
         'shopify_store_snapshot',
         'create_n8n_workflow',
         'request_livekit_session',
+        'synthesize_tts',
         'import_sip_numbers',
         'post_forum_update',
         'comment_forum_post',
@@ -231,6 +232,7 @@ function getDefaultOperatingProfile(baseUrl: string) {
     integrations: {
       n8n: true,
       livekit: true,
+      tts: true,
       sipImport: true,
       shopify: true,
       openrouter: true,

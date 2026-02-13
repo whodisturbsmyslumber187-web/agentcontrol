@@ -8,6 +8,7 @@ type Action =
   | 'shopify_store_snapshot'
   | 'create_n8n_workflow'
   | 'request_livekit_session'
+  | 'synthesize_tts'
   | 'import_sip_numbers'
   | 'post_forum_update'
   | 'comment_forum_post'
@@ -101,6 +102,16 @@ async function fetchJson(url: string, init?: RequestInit) {
   const response = await fetch(url, init)
   const body = await response.json().catch(() => ({}))
   return { response, body }
+}
+
+function toBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer)
+  let binary = ''
+  const chunk = 0x8000
+  for (let index = 0; index < bytes.length; index += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(index, Math.min(index + chunk, bytes.length)))
+  }
+  return btoa(binary)
 }
 
 function resolveAuthHeader(req: Request): string {
@@ -1179,6 +1190,150 @@ async function createLiveKitSessionForAgent(
   }
 }
 
+async function synthesizeTtsForAgent(
+  client: ReturnType<typeof createClient>,
+  payload: Record<string, unknown>,
+  agent: Record<string, unknown>,
+) {
+  const agentId = asString(agent.id)
+  const agentName = asString(agent.name, 'Agent')
+  const provider = asString(payload.provider, 'openai').toLowerCase()
+  const text = asString(payload.text || payload.input)
+  const format = asString(payload.format, 'mp3').toLowerCase()
+
+  if (!text) {
+    throw new Error('text is required for synthesize_tts')
+  }
+  if (text.length > 4000) {
+    throw new Error('text too long for synthesize_tts (max 4000 chars)')
+  }
+
+  let bytes: ArrayBuffer = new ArrayBuffer(0)
+  let mimeType = 'audio/mpeg'
+  const voice = asString(payload.voice, provider === 'openai' ? 'alloy' : 'Rachel')
+  const model = asString(payload.model, provider === 'openai' ? 'gpt-4o-mini-tts' : 'eleven_multilingual_v2')
+
+  if (provider === 'openai') {
+    const apiKey = asString(payload.apiKey || payload.openaiApiKey || Deno.env.get('OPENAI_API_KEY'))
+    if (!apiKey) throw new Error('Missing OPENAI_API_KEY (env) or apiKey in payload')
+
+    const endpoint = asString(payload.endpoint || payload.baseUrl, 'https://api.openai.com/v1/audio/speech')
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        voice,
+        input: text,
+        format,
+      }),
+    })
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => '')
+      throw new Error(`OpenAI TTS failed (${response.status}) ${details.slice(0, 220)}`)
+    }
+
+    mimeType = response.headers.get('content-type') || (format === 'wav' ? 'audio/wav' : 'audio/mpeg')
+    bytes = await response.arrayBuffer()
+  } else if (provider === 'elevenlabs') {
+    const apiKey = asString(payload.apiKey || payload.elevenlabsApiKey || Deno.env.get('ELEVENLABS_API_KEY'))
+    if (!apiKey) throw new Error('Missing ELEVENLABS_API_KEY (env) or apiKey in payload')
+
+    const endpoint = asString(
+      payload.endpoint,
+      `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}`,
+    )
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Accept: 'audio/mpeg',
+        'Content-Type': 'application/json',
+        'xi-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        model_id: model,
+        text,
+      }),
+    })
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => '')
+      throw new Error(`ElevenLabs TTS failed (${response.status}) ${details.slice(0, 220)}`)
+    }
+
+    mimeType = response.headers.get('content-type') || 'audio/mpeg'
+    bytes = await response.arrayBuffer()
+  } else if (provider === 'custom') {
+    const endpoint = asString(payload.endpoint)
+    if (!endpoint) throw new Error('custom provider requires endpoint')
+
+    const apiKey = asString(payload.apiKey)
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+      },
+      body: JSON.stringify({
+        text,
+        voice,
+        model,
+        format,
+        metadata: parseRecord(payload.metadata),
+      }),
+    })
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => '')
+      throw new Error(`Custom TTS failed (${response.status}) ${details.slice(0, 220)}`)
+    }
+
+    const contentType = asString(response.headers.get('content-type'))
+    if (contentType.includes('application/json')) {
+      const body = parseRecord(await response.json().catch(() => ({})))
+      const audioBase64 = asString(body.audioBase64 || body.audio_base64)
+      if (!audioBase64) {
+        throw new Error('Custom TTS JSON response missing audioBase64')
+      }
+      mimeType = asString(body.mimeType || body.mime_type, 'audio/mpeg')
+      bytes = Uint8Array.from(atob(audioBase64), (char) => char.charCodeAt(0)).buffer
+    } else {
+      mimeType = contentType || 'audio/mpeg'
+      bytes = await response.arrayBuffer()
+    }
+  } else {
+    throw new Error(`Unsupported tts provider: ${provider}`)
+  }
+
+  const base64 = toBase64(bytes)
+  const dataUrl = `data:${mimeType};base64,${base64}`
+
+  await writeActivity(client, {
+    agentId,
+    agentName,
+    message: `synthesized TTS audio (${provider}/${voice})`,
+    type: 'info',
+  })
+
+  return {
+    ok: true,
+    action: 'synthesize_tts',
+    audio: {
+      provider,
+      model,
+      voice,
+      mimeType,
+      sizeBytes: bytes.byteLength,
+      dataBase64: base64,
+      dataUrl,
+    },
+  }
+}
+
 export default async function (req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS })
@@ -1251,6 +1406,11 @@ export default async function (req: Request): Promise<Response> {
 
     if (action === 'request_livekit_session') {
       const result = await createLiveKitSessionForAgent(client, payload, agent)
+      return jsonResponse(result)
+    }
+
+    if (action === 'synthesize_tts') {
+      const result = await synthesizeTtsForAgent(client, payload, agent)
       return jsonResponse(result)
     }
 

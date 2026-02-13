@@ -14,6 +14,7 @@ export interface AgentOperatingProfile {
   integrations: {
     n8n: boolean
     livekit: boolean
+    tts: boolean
     sipImport: boolean
     shopify: boolean
     openrouter: boolean
@@ -90,6 +91,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
       'shopify_store_snapshot',
       'create_n8n_workflow',
       'request_livekit_session',
+      'synthesize_tts',
       'import_sip_numbers',
       'post_forum_update',
       'comment_forum_post',
@@ -100,6 +102,7 @@ export const DEFAULT_AGENT_OPERATING_PROFILE: AgentOperatingProfile = {
   integrations: {
     n8n: true,
     livekit: true,
+    tts: true,
     sipImport: true,
     shopify: true,
     openrouter: true,

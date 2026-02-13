@@ -1,9 +1,4063 @@
 {
-  "generatedAt": "2026-02-13T00:00:00.000Z",
+  "generatedAt": "2026-02-13T21:04:02.371Z",
   "roots": [
-    "C:/Users/<you>/Desktop",
-    "C:/Users/<you>/Downloads"
+    "C:/Users/p8tty/Desktop",
+    "C:/Users/p8tty/Downloads"
   ],
-  "total": 0,
-  "projects": []
+  "total": 400,
+  "projects": [
+    {
+      "name": "moltbolt  control panel",
+      "path": "C:/Users/p8tty/Downloads/moltbolt  control panel",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-02-13T21:03:15.657Z"
+    },
+    {
+      "name": "clawdbot-main-latest",
+      "path": "C:/Users/p8tty/Downloads/clawdbot-main/clawdbot-main-latest",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-02-12T22:55:25.313Z"
+    },
+    {
+      "name": "clawdbot-main",
+      "path": "C:/Users/p8tty/Downloads/clawdbot-main/clawdbot-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2026-02-12T22:06:28.753Z"
+    },
+    {
+      "name": "InsForge",
+      "path": "C:/Users/p8tty/Downloads/InsForge",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-02-12T19:03:03.505Z"
+    },
+    {
+      "name": "second-brain-skills-tmp",
+      "path": "C:/Users/p8tty/Downloads/second-brain-skills-tmp",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2026-02-12T18:11:17.548Z"
+    },
+    {
+      "name": "x402 crypto 30 trillion",
+      "path": "C:/Users/p8tty/Downloads/x402 crypto 30 trillion",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-02-11T18:09:52.194Z"
+    },
+    {
+      "name": "openclaw",
+      "path": "C:/Users/p8tty/Downloads/clawdbot-main/openclaw",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-01-30T19:34:14.907Z"
+    },
+    {
+      "name": "app",
+      "path": "C:/Users/p8tty/Downloads/AI-Powered_Ebook_Platform/ai_ebook_platform/app",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2026-01-29T19:05:16.338Z"
+    },
+    {
+      "name": "globe_tale_frontend",
+      "path": "C:/Users/p8tty/Downloads/globe_tale_frontend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2026-01-28T17:47:03.888Z"
+    },
+    {
+      "name": "prelaunch token and hedge fund",
+      "path": "C:/Users/p8tty/Downloads/prelaunch token and hedge fund",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2026-01-26T04:16:19.688Z"
+    },
+    {
+      "name": "project",
+      "path": "C:/Users/p8tty/Downloads/lux propertymangement from bolt/project",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2026-01-25T23:19:05.056Z"
+    },
+    {
+      "name": "Local_Trades_App_Development",
+      "path": "C:/Users/p8tty/Downloads/Local_Trades_App_Development",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2026-01-24T06:07:00.491Z"
+    },
+    {
+      "name": "property management cmr",
+      "path": "C:/Users/p8tty/Downloads/property management cmr",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2026-01-24T05:25:36.326Z"
+    },
+    {
+      "name": "trades-calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/trades-calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2026-01-21T16:18:39.647Z"
+    },
+    {
+      "name": "EtherHiding code on blockchain",
+      "path": "C:/Users/p8tty/Downloads/EtherHiding code on blockchain",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "requirements.txt"
+      ],
+      "updatedAt": "2026-01-21T00:02:41.418Z"
+    },
+    {
+      "name": "tradespro-web",
+      "path": "C:/Users/p8tty/Downloads/uber-main/tradespro-web",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.548Z"
+    },
+    {
+      "name": "New folder",
+      "path": "C:/Users/p8tty/Downloads/TTS-dev/New folder",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.507Z"
+    },
+    {
+      "name": "agency-swarm",
+      "path": "C:/Users/p8tty/Downloads/TTS-dev/agency-swarm",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.502Z"
+    },
+    {
+      "name": "freightflow_ai",
+      "path": "C:/Users/p8tty/Downloads/Truck_Shipping_Business_Plan/freightflow_ai",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.490Z"
+    },
+    {
+      "name": "shadcn-demo",
+      "path": "C:/Users/p8tty/Downloads/ShadCN/shadcn-demo",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.470Z"
+    },
+    {
+      "name": "stable-diffusion-webui",
+      "path": "C:/Users/p8tty/Downloads/stablediffusion/stable-diffusion-webui",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.470Z"
+    },
+    {
+      "name": "paragon-mcp",
+      "path": "C:/Users/p8tty/Downloads/ShadCN/paragon-mcp",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.466Z"
+    },
+    {
+      "name": "real-estate-valuator",
+      "path": "C:/Users/p8tty/Downloads/real estate tracker/real-estate-valuator",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.429Z"
+    },
+    {
+      "name": "temp_qwen_code",
+      "path": "C:/Users/p8tty/Downloads/qwen-code-main/temp_qwen_code",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.419Z"
+    },
+    {
+      "name": "react-grab",
+      "path": "C:/Users/p8tty/Downloads/react grab/react-grab",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.419Z"
+    },
+    {
+      "name": "Pump.Fun-Sniper-Bot-main",
+      "path": "C:/Users/p8tty/Downloads/Original Pump.Fun-Sniper-Bot-main/Pump.Fun-Sniper-Bot-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.413Z"
+    },
+    {
+      "name": "awesome-n8n-templates",
+      "path": "C:/Users/p8tty/Downloads/n8n templates/awesome-n8n-templates",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.411Z"
+    },
+    {
+      "name": "mcp-boilerplate",
+      "path": "C:/Users/p8tty/Downloads/mcp-boilerplate/mcp-boilerplate",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.409Z"
+    },
+    {
+      "name": "local-ai-packaged-main",
+      "path": "C:/Users/p8tty/Downloads/local-ai-packaged-main/local-ai-packaged-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.400Z"
+    },
+    {
+      "name": "local-ai-packaged",
+      "path": "C:/Users/p8tty/Downloads/local-ai-packaged-main/local-ai-packaged",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.398Z"
+    },
+    {
+      "name": "fraud_guard",
+      "path": "C:/Users/p8tty/Downloads/FraudGuard_MaxGuard_Style/fraud_guard",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.388Z"
+    },
+    {
+      "name": "flutter",
+      "path": "C:/Users/p8tty/Downloads/flutter-template-master/flutter",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.352Z"
+    },
+    {
+      "name": "espeak-ng-master",
+      "path": "C:/Users/p8tty/Downloads/Downloads/espeak-ng-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.349Z"
+    },
+    {
+      "name": "super-panel-ultimate",
+      "path": "C:/Users/p8tty/Downloads/drainer/super-panel-ultimate",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.347Z"
+    },
+    {
+      "name": "mcp-crawl4ai-rag",
+      "path": "C:/Users/p8tty/Downloads/crawl4rag/mcp-crawl4ai-rag",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.343Z"
+    },
+    {
+      "name": "bolt.diy-main",
+      "path": "C:/Users/p8tty/Downloads/bolt.diy-latest/bolt.diy-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.341Z"
+    },
+    {
+      "name": "Archon-updated",
+      "path": "C:/Users/p8tty/Downloads/Archon-main/Archon-updated",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.339Z"
+    },
+    {
+      "name": "agent-zero",
+      "path": "C:/Users/p8tty/Downloads/agent zero/agent-zero",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.337Z"
+    },
+    {
+      "name": "ACE-Step",
+      "path": "C:/Users/p8tty/Downloads/ACE-Step-main/ACE-Step",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.324Z"
+    },
+    {
+      "name": "suicoin.com clone",
+      "path": "C:/Users/p8tty/Downloads/suicoin.com clone",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.320Z"
+    },
+    {
+      "name": "streamlit-business-agent",
+      "path": "C:/Users/p8tty/Downloads/streamlit-business-agent",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.318Z"
+    },
+    {
+      "name": "specify spec kit",
+      "path": "C:/Users/p8tty/Downloads/specify spec kit",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.315Z"
+    },
+    {
+      "name": "smart safe security",
+      "path": "C:/Users/p8tty/Downloads/smart safe security",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.309Z"
+    },
+    {
+      "name": "open-lovable-main",
+      "path": "C:/Users/p8tty/Downloads/open-lovable-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.305Z"
+    },
+    {
+      "name": "making something better than mcp",
+      "path": "C:/Users/p8tty/Downloads/making something better than mcp",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.299Z"
+    },
+    {
+      "name": "IMMORTAL_BROTHERHOOD-main",
+      "path": "C:/Users/p8tty/Downloads/IMMORTAL_BROTHERHOOD-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.288Z"
+    },
+    {
+      "name": "Global_Realtor_App_Development",
+      "path": "C:/Users/p8tty/Downloads/Global_Realtor_App_Development",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.285Z"
+    },
+    {
+      "name": "git-mcp",
+      "path": "C:/Users/p8tty/Downloads/git-mcp",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.278Z"
+    },
+    {
+      "name": "gemini-ai",
+      "path": "C:/Users/p8tty/Downloads/gemini-ai",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.267Z"
+    },
+    {
+      "name": "espeak-ng-master",
+      "path": "C:/Users/p8tty/Downloads/espeak-ng-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.263Z"
+    },
+    {
+      "name": "crypto trading bot",
+      "path": "C:/Users/p8tty/Downloads/crypto trading bot",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.255Z"
+    },
+    {
+      "name": "coinverify-ai",
+      "path": "C:/Users/p8tty/Downloads/coinverify-ai",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.248Z"
+    },
+    {
+      "name": "claude-task-master",
+      "path": "C:/Users/p8tty/Downloads/claude-task-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.245Z"
+    },
+    {
+      "name": "Automated_E-Store_Creation",
+      "path": "C:/Users/p8tty/Downloads/Automated_E-Store_Creation",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "git",
+      "markers": [
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.237Z"
+    },
+    {
+      "name": "agent-zero",
+      "path": "C:/Users/p8tty/Downloads/agent-zero",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.235Z"
+    },
+    {
+      "name": "agency-swarm-0.2.0",
+      "path": "C:/Users/p8tty/Downloads/agency-swarm-0.2.0",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.225Z"
+    },
+    {
+      "name": "agency-swarm-backup",
+      "path": "C:/Users/p8tty/Downloads/agency-swarm-backup",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "updatedAt": "2025-12-29T23:24:35.217Z"
+    },
+    {
+      "name": "qwen-code-main",
+      "path": "C:/Users/p8tty/Downloads/qwen-code-main/qwen-code-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-29T19:14:55.281Z"
+    },
+    {
+      "name": "oh-my-opencode-dev",
+      "path": "C:/Users/p8tty/Downloads/oh-my-opencode-dev/oh-my-opencode-dev",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-27T15:45:14.126Z"
+    },
+    {
+      "name": "Railway",
+      "path": "C:/Users/p8tty/Downloads/Railway",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-26T07:24:26.648Z"
+    },
+    {
+      "name": "n8n-portable",
+      "path": "C:/Users/p8tty/Downloads/n8n-python-portable/n8n-portable",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-16T16:45:12.952Z"
+    },
+    {
+      "name": "agency-starter-template-main",
+      "path": "C:/Users/p8tty/Downloads/agency-starter-template-main/agency-starter-template-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml",
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-12-11T21:09:55.279Z"
+    },
+    {
+      "name": "uber-main",
+      "path": "C:/Users/p8tty/Downloads/uber-main/uber-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-07T01:12:08.176Z"
+    },
+    {
+      "name": "real estate-calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/real estate-calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T20:59:37.600Z"
+    },
+    {
+      "name": "law and legal products calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/law and legal products calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T19:41:05.651Z"
+    },
+    {
+      "name": "hotels-calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/hotels-calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T18:10:27.231Z"
+    },
+    {
+      "name": "resturant-calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/resturant-calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T18:10:20.286Z"
+    },
+    {
+      "name": "medical-calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/medical-calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T18:10:14.978Z"
+    },
+    {
+      "name": "digital products calculator-factory-global",
+      "path": "C:/Users/p8tty/Downloads/digital products calculator-factory-global",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-04T18:10:10.396Z"
+    },
+    {
+      "name": "luxeestate-management (1)",
+      "path": "C:/Users/p8tty/Downloads/luxeestate-management (1)",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-03T05:38:55.132Z"
+    },
+    {
+      "name": "elevenvoicedrops",
+      "path": "C:/Users/p8tty/Downloads/elevenvoicedrops",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-12-02T17:14:09.691Z"
+    },
+    {
+      "name": "2d to 3d app",
+      "path": "C:/Users/p8tty/Downloads/2d to 3d app",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-30T22:59:03.095Z"
+    },
+    {
+      "name": "remote-agentic-coding-system-main",
+      "path": "C:/Users/p8tty/Downloads/remote-agentic-coding-system-main/remote-agentic-coding-system-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-30T22:46:09.842Z"
+    },
+    {
+      "name": "docling-main",
+      "path": "C:/Users/p8tty/Downloads/docling-main/docling-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml"
+      ],
+      "updatedAt": "2025-11-28T17:21:29.409Z"
+    },
+    {
+      "name": "remotion-main",
+      "path": "C:/Users/p8tty/Downloads/remotion-main/remotion-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-28T17:20:52.478Z"
+    },
+    {
+      "name": "livekit-master",
+      "path": "C:/Users/p8tty/Downloads/livekit-master/livekit-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "go",
+      "markers": [
+        "go.mod"
+      ],
+      "updatedAt": "2025-11-28T17:20:34.542Z"
+    },
+    {
+      "name": "enhanced-aeo-saas",
+      "path": "C:/Users/p8tty/Downloads/ai-seed-master/enhanced-aeo-saas",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-27T01:31:39.824Z"
+    },
+    {
+      "name": "law panel",
+      "path": "C:/Users/p8tty/Downloads/law panel",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-26T20:17:25.785Z"
+    },
+    {
+      "name": "ai dropshipping store app",
+      "path": "C:/Users/p8tty/Downloads/ai dropshipping store app",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-26T16:05:16.616Z"
+    },
+    {
+      "name": "onlyfans-clone",
+      "path": "C:/Users/p8tty/Downloads/onlyfans/onlyfans-clone",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-25T14:41:56.957Z"
+    },
+    {
+      "name": "dissolving corporations canada",
+      "path": "C:/Users/p8tty/Downloads/dissolving corporations canada",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-25T13:57:12.180Z"
+    },
+    {
+      "name": "lotto ticket app",
+      "path": "C:/Users/p8tty/Downloads/lotto ticket app",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-25T03:40:22.349Z"
+    },
+    {
+      "name": "medical school",
+      "path": "C:/Users/p8tty/Downloads/medical school",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-25T02:22:33.491Z"
+    },
+    {
+      "name": "youtube_channel_management_dashboard_5zloaj",
+      "path": "C:/Users/p8tty/Downloads/youtube_channel_management_dashboard_5zloaj",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-25T01:55:56.533Z"
+    },
+    {
+      "name": "docdirect-worldwide",
+      "path": "C:/Users/p8tty/Downloads/docdirect-worldwide",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-24T02:15:06.474Z"
+    },
+    {
+      "name": "ai frontend gemini-empire",
+      "path": "C:/Users/p8tty/Downloads/ai frontend gemini-empire",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-23T18:06:53.032Z"
+    },
+    {
+      "name": "nuclei-dev",
+      "path": "C:/Users/p8tty/Downloads/drainer/nuclei-dev",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "go",
+      "markers": [
+        "go.mod"
+      ],
+      "updatedAt": "2025-11-21T06:47:07.877Z"
+    },
+    {
+      "name": "nuclei-dev",
+      "path": "C:/Users/p8tty/Downloads/nuclei-dev/nuclei-dev",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "go",
+      "markers": [
+        "go.mod"
+      ],
+      "updatedAt": "2025-11-21T06:46:48.931Z"
+    },
+    {
+      "name": "pegusas copy worm - Copy",
+      "path": "C:/Users/p8tty/Downloads/pegusas copy worm - Copy",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T05:31:26.003Z"
+    },
+    {
+      "name": "TDoS-Call-Flooder-master",
+      "path": "C:/Users/p8tty/Downloads/drainer/TDoS-Call-Flooder-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-21T04:58:27.813Z"
+    },
+    {
+      "name": "drain-main-BACKUP-SAFE",
+      "path": "C:/Users/p8tty/Downloads/drainer/drain-main-BACKUP-SAFE",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-21T04:46:06.969Z"
+    },
+    {
+      "name": "SuperToolkit",
+      "path": "C:/Users/p8tty/Downloads/drainer/SuperToolkit",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:31:30.409Z"
+    },
+    {
+      "name": "EST-main",
+      "path": "C:/Users/p8tty/Downloads/drainer/EST-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:29:51.721Z"
+    },
+    {
+      "name": "Facad1ng-main",
+      "path": "C:/Users/p8tty/Downloads/drainer/Facad1ng-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:29:34.932Z"
+    },
+    {
+      "name": "SkyRAT-main",
+      "path": "C:/Users/p8tty/Downloads/drainer/SkyRAT-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:29:23.910Z"
+    },
+    {
+      "name": "SocialFish-master",
+      "path": "C:/Users/p8tty/Downloads/drainer/SocialFish-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:29:01.708Z"
+    },
+    {
+      "name": "ULTIMATE_TOOLKIT",
+      "path": "C:/Users/p8tty/Downloads/ULTIMATE_TOOLKIT_GOD_LEVEL_20250718_174918/ULTIMATE_TOOLKIT",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-21T04:25:33.683Z"
+    },
+    {
+      "name": "Digital_Products_Empire",
+      "path": "C:/Users/p8tty/Downloads/Digital_Products_Empire",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-20T22:53:29.674Z"
+    },
+    {
+      "name": "YouTube-Viewer-master",
+      "path": "C:/Users/p8tty/Downloads/YouTube-Viewer-master/YouTube-Viewer-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-18T04:02:43.369Z"
+    },
+    {
+      "name": "RedditVideoMakerBot-master",
+      "path": "C:/Users/p8tty/Downloads/RedditVideoMakerBot-master/RedditVideoMakerBot-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-18T03:59:31.900Z"
+    },
+    {
+      "name": "emnlp22-re3-story-generation-main",
+      "path": "C:/Users/p8tty/Downloads/emnlp22-re3-story-generation-main/emnlp22-re3-story-generation-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-18T03:49:41.695Z"
+    },
+    {
+      "name": "chatty-main",
+      "path": "C:/Users/p8tty/Downloads/Downloads/chatty-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-18T03:44:40.399Z"
+    },
+    {
+      "name": "TDoS-Call-Flooder-master",
+      "path": "C:/Users/p8tty/Downloads/antiscammer/TDoS-Call-Flooder-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-18T03:35:40.286Z"
+    },
+    {
+      "name": "neo-call-flooder-main",
+      "path": "C:/Users/p8tty/Downloads/antiscammer/neo-call-flooder-main/neo-call-flooder-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-18T03:35:40.182Z"
+    },
+    {
+      "name": "ai-presentation-main",
+      "path": "C:/Users/p8tty/Downloads/ai-presentation-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-18T03:35:38.543Z"
+    },
+    {
+      "name": "contactless_overflow_code",
+      "path": "C:/Users/p8tty/Downloads/contactless_overflow_code/contactless_overflow_code",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-15T20:09:06.449Z"
+    },
+    {
+      "name": "ctr tool",
+      "path": "C:/Users/p8tty/Downloads/ctr tool",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-13T17:05:46.944Z"
+    },
+    {
+      "name": "claim gmb panel",
+      "path": "C:/Users/p8tty/Downloads/claim gmb panel",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-12T18:47:17.843Z"
+    },
+    {
+      "name": "pegusas copy worm",
+      "path": "C:/Users/p8tty/Downloads/pegusas copy worm",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-11T19:31:19.988Z"
+    },
+    {
+      "name": "drain-main",
+      "path": "C:/Users/p8tty/Downloads/drainer/drain-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-09T07:28:06.812Z"
+    },
+    {
+      "name": "SUPERDASHBOARD",
+      "path": "C:/Users/p8tty/Downloads/Tool_Enhancement_Project/SUPERDASHBOARD",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-06T16:27:53.729Z"
+    },
+    {
+      "name": "dashboard",
+      "path": "C:/Users/p8tty/Downloads/Video Repurposer/dashboard",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-05T13:49:50.203Z"
+    },
+    {
+      "name": "frontend",
+      "path": "C:/Users/p8tty/Downloads/apk-decompiler-main/enhanced-apk-decompiler/frontend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-04T03:51:00.978Z"
+    },
+    {
+      "name": "project",
+      "path": "C:/Users/p8tty/Downloads/X twitter clone/project",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-04T02:17:06.732Z"
+    },
+    {
+      "name": "project",
+      "path": "C:/Users/p8tty/Downloads/Sell your home website/project",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-04T02:16:58.782Z"
+    },
+    {
+      "name": "backend",
+      "path": "C:/Users/p8tty/Downloads/apk-decompiler-main/enhanced-apk-decompiler/backend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-04T01:54:04.404Z"
+    },
+    {
+      "name": "DemodAPK-main",
+      "path": "C:/Users/p8tty/Downloads/apk-decompiler-main/DemodAPK-main/DemodAPK-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml",
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-04T01:27:51.171Z"
+    },
+    {
+      "name": "apk-decompiler-master",
+      "path": "C:/Users/p8tty/Downloads/apk-decompiler-main/apk-decompiler-master/apk-decompiler-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "rust",
+      "markers": [
+        "Cargo.toml"
+      ],
+      "updatedAt": "2025-11-04T01:27:38.669Z"
+    },
+    {
+      "name": "modem safety tool",
+      "path": "C:/Users/p8tty/Downloads/modem safety tool",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-03T23:55:38.453Z"
+    },
+    {
+      "name": "imager",
+      "path": "C:/Users/p8tty/Downloads/Video Repurposer/imager",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-03T21:49:16.790Z"
+    },
+    {
+      "name": "BMAD-METHOD-main",
+      "path": "C:/Users/p8tty/Downloads/BMAD-METHOD-main/BMAD-METHOD-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-11-03T01:26:20.947Z"
+    },
+    {
+      "name": "voip_pbx_system",
+      "path": "C:/Users/p8tty/Downloads/voip_pbx_system_updated/voip_pbx_system",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-11-01T20:22:24.047Z"
+    },
+    {
+      "name": "deepagents-master",
+      "path": "C:/Users/p8tty/Downloads/deepagents-master/deepagents-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml"
+      ],
+      "updatedAt": "2025-11-01T19:54:06.218Z"
+    },
+    {
+      "name": "frontend",
+      "path": "C:/Users/p8tty/Downloads/ChaosEmpire-Full-126-Weapons/frontend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-30T17:28:26.476Z"
+    },
+    {
+      "name": "backend",
+      "path": "C:/Users/p8tty/Downloads/ChaosEmpire-Full-126-Weapons/backend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T17:24:40.109Z"
+    },
+    {
+      "name": "ZeroTrustVoid_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/ZeroTrustVoid_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.790Z"
+    },
+    {
+      "name": "XSSSwarm_controlled_len_responses_websites_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/XSSSwarm_controlled_len_responses_websites_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.788Z"
+    },
+    {
+      "name": "WebVortex_controlled_len_responses_websites_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/WebVortex_controlled_len_responses_websites_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.785Z"
+    },
+    {
+      "name": "WebSocketBlitz_controlled_len_responses_WebSockets_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/WebSocketBlitz_controlled_len_responses_WebSockets_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.782Z"
+    },
+    {
+      "name": "WalletVoid_controlled_len_responses_wallets_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/WalletVoid_controlled_len_responses_wallets_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.779Z"
+    },
+    {
+      "name": "Super_RAT_infecting_networks_full_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Super_RAT_infecting_networks_full_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.778Z"
+    },
+    {
+      "name": "SocialSwarm_controlled_len_responses_endpoints_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/SocialSwarm_controlled_len_responses_endpoints_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.775Z"
+    },
+    {
+      "name": "ScamVortex_controlled_len_responses_scams_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/ScamVortex_controlled_len_responses_scams_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.772Z"
+    },
+    {
+      "name": "RATSpecter_controlled_len_responses_devices_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/RATSpecter_controlled_len_responses_devices_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.770Z"
+    },
+    {
+      "name": "RansomCore_controlled_len_responses_clouds_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/RansomCore_controlled_len_responses_clouds_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.767Z"
+    },
+    {
+      "name": "QuantumForge_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/QuantumForge_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.764Z"
+    },
+    {
+      "name": "ProtocolSiphon_controlled_len_responses_protocols_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/ProtocolSiphon_controlled_len_responses_protocols_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.761Z"
+    },
+    {
+      "name": "POSTerminator_controlled_len_responses_terminals_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/POSTerminator_controlled_len_responses_terminals_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.760Z"
+    },
+    {
+      "name": "PhoneBlitz_controlled_len_responses_phones_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/PhoneBlitz_controlled_len_responses_phones_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.756Z"
+    },
+    {
+      "name": "PaymentBlitz_controlled_len_responses_payments_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/PaymentBlitz_controlled_len_responses_payments_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.754Z"
+    },
+    {
+      "name": "OAuthBlitz_controlled_len_responses_tokens_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/OAuthBlitz_controlled_len_responses_tokens_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.752Z"
+    },
+    {
+      "name": "NetReaver_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/NetReaver_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.750Z"
+    },
+    {
+      "name": "Mass_control_fucked_str_e",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_fucked_str_e",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.746Z"
+    },
+    {
+      "name": "Mass_control_failed_str_e",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_failed_str_e",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.744Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_WebSockets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_WebSockets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.741Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_websites",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_websites",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.738Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_wallets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_wallets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.736Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_transactions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_transactions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.734Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_tokens",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_tokens",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.731Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_terminals",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_terminals",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.728Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_sessions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_sessions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.726Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_scams",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_scams",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.723Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_protocols",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_protocols",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.720Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_phones",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_phones",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.718Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_payments",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_payments",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.715Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_networks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_networks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.713Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_launders",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_launders",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.709Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_exchanges",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_exchanges",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.707Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.703Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_devices",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_devices",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.701Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_DeFi_platforms",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_DeFi_platforms",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.698Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_datacenters",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_datacenters",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.696Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_clouds",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_clouds",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.694Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_banks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_banks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.692Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_ATMs",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_ATMs",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.689Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_accounts",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Mass_control_executed_len_responses_accounts",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.687Z"
+    },
+    {
+      "name": "mass_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/mass_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.685Z"
+    },
+    {
+      "name": "LaunderReaper_controlled_len_responses_launders_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/LaunderReaper_controlled_len_responses_launders_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.683Z"
+    },
+    {
+      "name": "Hacking_phone_number_Total_control_invisible",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Hacking_phone_number_Total_control_invisible",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.680Z"
+    },
+    {
+      "name": "Hacking_phone_number_Full_control_camera_mic",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Hacking_phone_number_Full_control_camera_mic",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.678Z"
+    },
+    {
+      "name": "FinanceSwarm_controlled_len_responses_accounts_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/FinanceSwarm_controlled_len_responses_accounts_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.675Z"
+    },
+    {
+      "name": "ExchangeReaper_controlled_len_responses_exchanges_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/ExchangeReaper_controlled_len_responses_exchanges_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.673Z"
+    },
+    {
+      "name": "DeFiReaver_controlled_len_responses_DeFi_platforms_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/DeFiReaver_controlled_len_responses_DeFi_platforms_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.671Z"
+    },
+    {
+      "name": "DataReaver_controlled_len_responses_datacenters_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/DataReaver_controlled_len_responses_datacenters_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.668Z"
+    },
+    {
+      "name": "dashboard",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/dashboard",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.666Z"
+    },
+    {
+      "name": "curl_X_POST_http_self_c2_server_self_c2_port_exfil_d_data_deploy_rat_target_device_control_attacker_c2",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/curl_X_POST_http_self_c2_server_self_c2_port_exfil_d_data_deploy_rat_target_device_control_attacker_c2",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.664Z"
+    },
+    {
+      "name": "CryptoSiphon_controlled_len_responses_transactions_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/CryptoSiphon_controlled_len_responses_transactions_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.662Z"
+    },
+    {
+      "name": "control_core",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/control_core",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.659Z"
+    },
+    {
+      "name": "Control_all_compromised_WebSocket_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_WebSocket_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.657Z"
+    },
+    {
+      "name": "Control_all_compromised_websites",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_websites",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.655Z"
+    },
+    {
+      "name": "Control_all_compromised_wallets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_wallets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.652Z"
+    },
+    {
+      "name": "Control_all_compromised_OAuth_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_OAuth_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.650Z"
+    },
+    {
+      "name": "Control_all_compromised_networks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_networks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.647Z"
+    },
+    {
+      "name": "Control_all_compromised_exchanges",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_exchanges",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.646Z"
+    },
+    {
+      "name": "Control_all_compromised_credential_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_credential_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.643Z"
+    },
+    {
+      "name": "Control_all_compromised_banking_systems",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Control_all_compromised_banking_systems",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.641Z"
+    },
+    {
+      "name": "Controlling_target_Leads_and_profits_owned",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Controlling_target_Leads_and_profits_owned",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.638Z"
+    },
+    {
+      "name": "Controlling_phone_number_All_data_invisible",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Controlling_phone_number_All_data_invisible",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.636Z"
+    },
+    {
+      "name": "control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.634Z"
+    },
+    {
+      "name": "console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.631Z"
+    },
+    {
+      "name": "Chaos_Lord_Mobile_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Chaos_Lord_Mobile_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.628Z"
+    },
+    {
+      "name": "Chaos_Lord_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Chaos_Lord_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.626Z"
+    },
+    {
+      "name": "Chaos_Emperor_Mobile_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Chaos_Emperor_Mobile_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.623Z"
+    },
+    {
+      "name": "Botnet_swarm_unleashed_controlling_thousands",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Botnet_swarm_unleashed_controlling_thousands",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.621Z"
+    },
+    {
+      "name": "Botnet_spreading_controlling_millions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Botnet_spreading_controlling_millions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.618Z"
+    },
+    {
+      "name": "Botnet_spreading_billions_under_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/Botnet_spreading_billions_under_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.616Z"
+    },
+    {
+      "name": "BankSpecter_controlled_len_responses_banks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/BankSpecter_controlled_len_responses_banks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.614Z"
+    },
+    {
+      "name": "BankShadow_controlled_len_responses_sessions_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/BankShadow_controlled_len_responses_sessions_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.611Z"
+    },
+    {
+      "name": "ATMSwarm_controlled_len_responses_ATMs_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/ATMSwarm_controlled_len_responses_ATMs_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.609Z"
+    },
+    {
+      "name": "alert_Controlling_document_getElementById_target_value",
+      "path": "C:/Users/p8tty/Downloads/chaos list/CLASSIC_DOCX_EXTRACT/alert_Controlling_document_getElementById_target_value",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-30T01:58:48.607Z"
+    },
+    {
+      "name": "control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:02.128Z"
+    },
+    {
+      "name": "DataReaver_controlled_len_responses_datacenters_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/DataReaver_controlled_len_responses_datacenters_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:02.029Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_datacenters",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_datacenters",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:02.025Z"
+    },
+    {
+      "name": "PhoneBlitz_controlled_len_responses_phones_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/PhoneBlitz_controlled_len_responses_phones_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.947Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_phones",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_phones",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.944Z"
+    },
+    {
+      "name": "RATSpecter_controlled_len_responses_devices_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/RATSpecter_controlled_len_responses_devices_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.863Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_devices",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_devices",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.860Z"
+    },
+    {
+      "name": "curl_X_POST_http_self_c2_server_self_c2_port_exfil_d_data_deploy_rat_target_device_control_attacker_c2",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/curl_X_POST_http_self_c2_server_self_c2_port_exfil_d_data_deploy_rat_target_device_control_attacker_c2",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.855Z"
+    },
+    {
+      "name": "RansomCore_controlled_len_responses_clouds_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/RansomCore_controlled_len_responses_clouds_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.766Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_clouds",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_clouds",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.761Z"
+    },
+    {
+      "name": "QuantumForge_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/QuantumForge_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.687Z"
+    },
+    {
+      "name": "ATMSwarm_controlled_len_responses_ATMs_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/ATMSwarm_controlled_len_responses_ATMs_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.541Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_ATMs",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_ATMs",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.538Z"
+    },
+    {
+      "name": "POSTerminator_controlled_len_responses_terminals_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/POSTerminator_controlled_len_responses_terminals_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.461Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_terminals",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_terminals",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.456Z"
+    },
+    {
+      "name": "DeFiReaver_controlled_len_responses_DeFi_platforms_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/DeFiReaver_controlled_len_responses_DeFi_platforms_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.373Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_DeFi_platforms",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_DeFi_platforms",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.370Z"
+    },
+    {
+      "name": "FinanceSwarm_controlled_len_responses_accounts_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/FinanceSwarm_controlled_len_responses_accounts_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.271Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_accounts",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_accounts",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.266Z"
+    },
+    {
+      "name": "ProtocolSiphon_controlled_len_responses_protocols_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/ProtocolSiphon_controlled_len_responses_protocols_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.185Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_protocols",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_protocols",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.181Z"
+    },
+    {
+      "name": "PaymentBlitz_controlled_len_responses_payments_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/PaymentBlitz_controlled_len_responses_payments_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.098Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_payments",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_payments",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:01.094Z"
+    },
+    {
+      "name": "LaunderReaper_controlled_len_responses_launders_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/LaunderReaper_controlled_len_responses_launders_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.991Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_launders",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_launders",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.987Z"
+    },
+    {
+      "name": "ScamVortex_controlled_len_responses_scams_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/ScamVortex_controlled_len_responses_scams_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.910Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_scams",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_scams",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.906Z"
+    },
+    {
+      "name": "WebVortex_controlled_len_responses_websites_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/WebVortex_controlled_len_responses_websites_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.793Z"
+    },
+    {
+      "name": "NetReaver_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/NetReaver_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.654Z"
+    },
+    {
+      "name": "BankShadow_controlled_len_responses_sessions_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/BankShadow_controlled_len_responses_sessions_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.516Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_sessions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_sessions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.512Z"
+    },
+    {
+      "name": "CryptoSiphon_controlled_len_responses_transactions_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/CryptoSiphon_controlled_len_responses_transactions_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.430Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_transactions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_transactions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.426Z"
+    },
+    {
+      "name": "XSSSwarm_controlled_len_responses_websites_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/XSSSwarm_controlled_len_responses_websites_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.335Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_websites",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_websites",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.330Z"
+    },
+    {
+      "name": "Control_all_compromised_websites",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_websites",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.326Z"
+    },
+    {
+      "name": "ZeroTrustVoid_controlled_len_responses_networks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/ZeroTrustVoid_controlled_len_responses_networks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.242Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_networks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_networks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.237Z"
+    },
+    {
+      "name": "Control_all_compromised_networks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_networks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.235Z"
+    },
+    {
+      "name": "OAuthBlitz_controlled_len_responses_tokens_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/OAuthBlitz_controlled_len_responses_tokens_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.141Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_tokens",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_tokens",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.132Z"
+    },
+    {
+      "name": "Control_all_compromised_OAuth_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_OAuth_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:59:00.125Z"
+    },
+    {
+      "name": "ExchangeReaper_controlled_len_responses_exchanges_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/ExchangeReaper_controlled_len_responses_exchanges_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.946Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_exchanges",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_exchanges",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.938Z"
+    },
+    {
+      "name": "Control_all_compromised_exchanges",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_exchanges",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.931Z"
+    },
+    {
+      "name": "SocialSwarm_controlled_len_responses_endpoints_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/SocialSwarm_controlled_len_responses_endpoints_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.830Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.827Z"
+    },
+    {
+      "name": "Control_all_compromised_credential_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_credential_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.823Z"
+    },
+    {
+      "name": "WebSocketBlitz_controlled_len_responses_WebSockets_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/WebSocketBlitz_controlled_len_responses_WebSockets_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.730Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_WebSockets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_WebSockets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.725Z"
+    },
+    {
+      "name": "Control_all_compromised_WebSocket_endpoints",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_WebSocket_endpoints",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.722Z"
+    },
+    {
+      "name": "BankSpecter_controlled_len_responses_banks_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/BankSpecter_controlled_len_responses_banks_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.628Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_banks",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_banks",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.626Z"
+    },
+    {
+      "name": "Control_all_compromised_banking_systems",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_banking_systems",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.623Z"
+    },
+    {
+      "name": "Mass_control_fucked_str_e",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_fucked_str_e",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.618Z"
+    },
+    {
+      "name": "Mass_control_failed_str_e",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_failed_str_e",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.615Z"
+    },
+    {
+      "name": "WalletVoid_controlled_len_responses_wallets_join_responses_500",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/WalletVoid_controlled_len_responses_wallets_join_responses_500",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.611Z"
+    },
+    {
+      "name": "Mass_control_executed_len_responses_wallets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Mass_control_executed_len_responses_wallets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.608Z"
+    },
+    {
+      "name": "Control_all_compromised_wallets",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Control_all_compromised_wallets",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:59.605Z"
+    },
+    {
+      "name": "control_core",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/control_core",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.992Z"
+    },
+    {
+      "name": "mass_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/mass_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.482Z"
+    },
+    {
+      "name": "Botnet_spreading_billions_under_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Botnet_spreading_billions_under_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.477Z"
+    },
+    {
+      "name": "Controlling_phone_number_All_data_invisible",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Controlling_phone_number_All_data_invisible",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.469Z"
+    },
+    {
+      "name": "alert_Controlling_document_getElementById_target_value",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/alert_Controlling_document_getElementById_target_value",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.373Z"
+    },
+    {
+      "name": "Botnet_spreading_controlling_millions",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Botnet_spreading_controlling_millions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.365Z"
+    },
+    {
+      "name": "Hacking_phone_number_Total_control_invisible",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Hacking_phone_number_Total_control_invisible",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.358Z"
+    },
+    {
+      "name": "Botnet_swarm_unleashed_controlling_thousands",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Botnet_swarm_unleashed_controlling_thousands",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.297Z"
+    },
+    {
+      "name": "Controlling_target_Leads_and_profits_owned",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Controlling_target_Leads_and_profits_owned",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.291Z"
+    },
+    {
+      "name": "Hacking_phone_number_Full_control_camera_mic",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Hacking_phone_number_Full_control_camera_mic",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.197Z"
+    },
+    {
+      "name": "Chaos_Emperor_Mobile_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Chaos_Emperor_Mobile_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.194Z"
+    },
+    {
+      "name": "Super_RAT_infecting_networks_full_control",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Super_RAT_infecting_networks_full_control",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.086Z"
+    },
+    {
+      "name": "Chaos_Lord_Mobile_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Chaos_Lord_Mobile_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.081Z"
+    },
+    {
+      "name": "console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.036Z"
+    },
+    {
+      "name": "Chaos_Lord_Console",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/Chaos_Lord_Console",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:58.032Z"
+    },
+    {
+      "name": "dashboard",
+      "path": "C:/Users/p8tty/Downloads/chaos list/ACTUAL_PROJECTS/dashboard",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:58:57.871Z"
+    },
+    {
+      "name": "Project_085",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_085",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.232Z"
+    },
+    {
+      "name": "Project_084",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_084",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.227Z"
+    },
+    {
+      "name": "Project_083",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_083",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.222Z"
+    },
+    {
+      "name": "Project_082",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_082",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.216Z"
+    },
+    {
+      "name": "Project_081",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_081",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.210Z"
+    },
+    {
+      "name": "Project_080",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_080",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.204Z"
+    },
+    {
+      "name": "Project_079",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_079",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.200Z"
+    },
+    {
+      "name": "Project_078",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_078",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.191Z"
+    },
+    {
+      "name": "Project_077",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_077",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.185Z"
+    },
+    {
+      "name": "Project_076",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_076",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.177Z"
+    },
+    {
+      "name": "Project_075",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_075",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.171Z"
+    },
+    {
+      "name": "Project_074",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_074",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.165Z"
+    },
+    {
+      "name": "Project_073",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_073",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.156Z"
+    },
+    {
+      "name": "Project_072",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_072",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.150Z"
+    },
+    {
+      "name": "Project_071",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_071",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.141Z"
+    },
+    {
+      "name": "Project_070",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_070",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.138Z"
+    },
+    {
+      "name": "Project_069",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_069",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.133Z"
+    },
+    {
+      "name": "Project_068",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_068",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.130Z"
+    },
+    {
+      "name": "Project_067",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_067",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.124Z"
+    },
+    {
+      "name": "Project_066",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_066",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.120Z"
+    },
+    {
+      "name": "Project_065",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_065",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.117Z"
+    },
+    {
+      "name": "Project_064",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_064",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.114Z"
+    },
+    {
+      "name": "Project_063",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_063",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.108Z"
+    },
+    {
+      "name": "Project_062",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_062",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.105Z"
+    },
+    {
+      "name": "Project_061",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_061",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.102Z"
+    },
+    {
+      "name": "Project_060",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_060",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.097Z"
+    },
+    {
+      "name": "Project_059",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_059",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.092Z"
+    },
+    {
+      "name": "Project_058",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_058",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.088Z"
+    },
+    {
+      "name": "Project_057",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_057",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.084Z"
+    },
+    {
+      "name": "Project_056",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_056",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.081Z"
+    },
+    {
+      "name": "Project_055",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_055",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.076Z"
+    },
+    {
+      "name": "Project_054",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_054",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.073Z"
+    },
+    {
+      "name": "Project_053",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_053",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.070Z"
+    },
+    {
+      "name": "Project_052",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_052",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.066Z"
+    },
+    {
+      "name": "Project_051",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_051",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.062Z"
+    },
+    {
+      "name": "Project_050",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_050",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.058Z"
+    },
+    {
+      "name": "Project_049",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_049",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.054Z"
+    },
+    {
+      "name": "Project_048",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_048",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.051Z"
+    },
+    {
+      "name": "Project_047",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_047",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.046Z"
+    },
+    {
+      "name": "Project_046",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_046",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.042Z"
+    },
+    {
+      "name": "Project_045",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_045",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.037Z"
+    },
+    {
+      "name": "Project_044",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_044",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.033Z"
+    },
+    {
+      "name": "Project_043",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_043",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.027Z"
+    },
+    {
+      "name": "Project_042",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_042",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.017Z"
+    },
+    {
+      "name": "Project_041",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_041",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.013Z"
+    },
+    {
+      "name": "Project_040",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_040",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.009Z"
+    },
+    {
+      "name": "Project_039",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_039",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.005Z"
+    },
+    {
+      "name": "Project_038",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_038",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:42.001Z"
+    },
+    {
+      "name": "Project_037",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_037",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.997Z"
+    },
+    {
+      "name": "Project_036",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_036",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.993Z"
+    },
+    {
+      "name": "Project_035",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_035",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.988Z"
+    },
+    {
+      "name": "Project_034",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_034",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.985Z"
+    },
+    {
+      "name": "Project_033",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_033",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.980Z"
+    },
+    {
+      "name": "Project_032",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_032",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.975Z"
+    },
+    {
+      "name": "Project_031",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_031",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.971Z"
+    },
+    {
+      "name": "Project_030",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_030",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.967Z"
+    },
+    {
+      "name": "Project_029",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_029",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.962Z"
+    },
+    {
+      "name": "Project_028",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_028",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.958Z"
+    },
+    {
+      "name": "Project_027",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_027",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.954Z"
+    },
+    {
+      "name": "Project_026",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_026",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.950Z"
+    },
+    {
+      "name": "Project_025",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_025",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.944Z"
+    },
+    {
+      "name": "Project_024",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_024",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.940Z"
+    },
+    {
+      "name": "Project_023",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_023",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.917Z"
+    },
+    {
+      "name": "Project_022",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_022",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.913Z"
+    },
+    {
+      "name": "Project_021",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_021",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.908Z"
+    },
+    {
+      "name": "Project_020",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_020",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.904Z"
+    },
+    {
+      "name": "Project_019",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_019",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.899Z"
+    },
+    {
+      "name": "Project_018",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_018",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.894Z"
+    },
+    {
+      "name": "Project_017",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_017",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.889Z"
+    },
+    {
+      "name": "Project_016",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_016",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.885Z"
+    },
+    {
+      "name": "Project_015",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_015",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.881Z"
+    },
+    {
+      "name": "Project_014",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_014",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.877Z"
+    },
+    {
+      "name": "Project_013",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_013",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.873Z"
+    },
+    {
+      "name": "Project_012",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_012",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.871Z"
+    },
+    {
+      "name": "Project_011",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_011",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.868Z"
+    },
+    {
+      "name": "Project_010",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_010",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.865Z"
+    },
+    {
+      "name": "Project_009",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_009",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.859Z"
+    },
+    {
+      "name": "Project_008",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_008",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.857Z"
+    },
+    {
+      "name": "Project_007",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_007",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.852Z"
+    },
+    {
+      "name": "Project_006",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_006",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.850Z"
+    },
+    {
+      "name": "Project_005",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_005",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.846Z"
+    },
+    {
+      "name": "Project_004",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_004",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.842Z"
+    },
+    {
+      "name": "Project_003",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_003",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.838Z"
+    },
+    {
+      "name": "Project_002",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_002",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.836Z"
+    },
+    {
+      "name": "Project_001",
+      "path": "C:/Users/p8tty/Downloads/chaos list/FINAL_EXTRACTED_PROJECTS/Project_001",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-29T18:24:41.831Z"
+    },
+    {
+      "name": "jadx-gui-1.5.3-with-jre-win",
+      "path": "C:/Users/p8tty/Downloads/jadx-gui-1.5.3-with-jre-win",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-24T05:15:36.223Z"
+    },
+    {
+      "name": "n8n-master",
+      "path": "C:/Users/p8tty/Downloads/n8n-master (1)/n8n-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-21T02:57:15.885Z"
+    },
+    {
+      "name": "proxy scanner",
+      "path": "C:/Users/p8tty/Downloads/proxy scanner",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-16T01:17:32.212Z"
+    },
+    {
+      "name": "iX browser extension",
+      "path": "C:/Users/p8tty/Downloads/iX browser extension",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-14T11:49:11.752Z"
+    },
+    {
+      "name": "sim-main",
+      "path": "C:/Users/p8tty/Downloads/sim-main/sim-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-13T23:48:10.906Z"
+    },
+    {
+      "name": "central-server",
+      "path": "C:/Users/p8tty/Downloads/ai-seed-master/central-server",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-10-04T00:06:43.913Z"
+    },
+    {
+      "name": "backend",
+      "path": "C:/Users/p8tty/Downloads/bank/backend",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-02T15:55:55.280Z"
+    },
+    {
+      "name": "petconnect_marketplace",
+      "path": "C:/Users/p8tty/Downloads/Pet_Marketplace_App_and_Website/petconnect_marketplace",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-10-01T15:16:38.963Z"
+    },
+    {
+      "name": "Best-Saas-Kit--V2-main",
+      "path": "C:/Users/p8tty/Downloads/Best-Saas-Kit--V2-main/Best-Saas-Kit--V2-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-09-30T22:20:54.230Z"
+    },
+    {
+      "name": "prelaunch token website",
+      "path": "C:/Users/p8tty/Downloads/prelaunch token website",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-09-30T21:43:41.299Z"
+    },
+    {
+      "name": "EST-main",
+      "path": "C:/Users/p8tty/Downloads/EST-main emailspoofingtool/EST-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-09-24T16:10:44.506Z"
+    },
+    {
+      "name": "SocialFish-master",
+      "path": "C:/Users/p8tty/Downloads/SocialFish-master/SocialFish-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-09-24T15:46:17.970Z"
+    },
+    {
+      "name": "SkyRAT-main",
+      "path": "C:/Users/p8tty/Downloads/SkyRAT-main/SkyRAT-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-09-24T15:46:11.661Z"
+    },
+    {
+      "name": "Facad1ng-main",
+      "path": "C:/Users/p8tty/Downloads/Facad1ng-main/Facad1ng-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-09-24T15:45:58.887Z"
+    },
+    {
+      "name": "working-project",
+      "path": "C:/Users/p8tty/Downloads/AgentUity/working-project",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-08-24T15:00:44.664Z"
+    },
+    {
+      "name": "cli-0.0.165",
+      "path": "C:/Users/p8tty/Downloads/AgentUity/cli-0.0.165/cli-0.0.165",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "go",
+      "markers": [
+        "go.mod"
+      ],
+      "updatedAt": "2025-08-24T13:50:19.879Z"
+    },
+    {
+      "name": "Archon-main",
+      "path": "C:/Users/p8tty/Downloads/Archon-main/Archon-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-08-20T02:44:24.221Z"
+    },
+    {
+      "name": "n8n-master",
+      "path": "C:/Users/p8tty/Downloads/n8n-master/n8n-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-08-16T17:57:10.928Z"
+    },
+    {
+      "name": "Pump.Fun-Sniper-Bot-main",
+      "path": "C:/Users/p8tty/Downloads/Pump.Fun-Sniper-Bot-main/Pump.Fun-Sniper-Bot-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-08-05T03:27:40.005Z"
+    },
+    {
+      "name": "ai_agent_system",
+      "path": "C:/Users/p8tty/Downloads/ai_agent_system",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-07-18T04:48:46.049Z"
+    },
+    {
+      "name": "TG-Tools v1.770",
+      "path": "C:/Users/p8tty/Downloads/TG-Tools v1.770 (1)/TG-Tools v1.770",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-07-09T17:12:27.191Z"
+    },
+    {
+      "name": "build-website-example-main",
+      "path": "C:/Users/p8tty/Downloads/build-website-example-main/build-website-example-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-05-25T22:04:43.453Z"
+    },
+    {
+      "name": "ACE-Step-main",
+      "path": "C:/Users/p8tty/Downloads/ACE-Step-main/ACE-Step-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-05-17T16:23:07.662Z"
+    },
+    {
+      "name": "crm test",
+      "path": "C:/Users/p8tty/Downloads/crm test",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-05-06T23:14:50.683Z"
+    },
+    {
+      "name": "food coupon app",
+      "path": "C:/Users/p8tty/Downloads/food coupon app",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-04-30T18:06:59.112Z"
+    },
+    {
+      "name": "Tiktok Tool",
+      "path": "C:/Users/p8tty/Downloads/Tiktok Tool/Tiktok Tool",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2025-04-30T00:00:30.772Z"
+    },
+    {
+      "name": "landing-page-generator-main",
+      "path": "C:/Users/p8tty/Downloads/landing-page-generator-main/landing-page-generator-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-04-22T14:50:36.268Z"
+    },
+    {
+      "name": "android-spyware-master",
+      "path": "C:/Users/p8tty/Downloads/android rat/android-spyware-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2025-03-11T19:26:00.122Z"
+    },
+    {
+      "name": "youtube_channel_management_dashboard backup before mix with saas",
+      "path": "C:/Users/p8tty/Downloads/youtube_channel_management_dashboard backup before mix with saas",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-12-11T12:49:47.956Z"
+    },
+    {
+      "name": "MoneyPrinter-Enhanced-main",
+      "path": "C:/Users/p8tty/Downloads/MoneyPrinter-Enhanced-main/MoneyPrinter-Enhanced-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2024-12-09T20:31:36.054Z"
+    },
+    {
+      "name": "game attempt",
+      "path": "C:/Users/p8tty/Downloads/game attempt",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json",
+        "requirements.txt"
+      ],
+      "updatedAt": "2024-12-06T15:48:51.883Z"
+    },
+    {
+      "name": "bolt.new-any-llm-main",
+      "path": "C:/Users/p8tty/Downloads/bolt.new-any-llm-main/bolt.new-any-llm-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-12-05T16:08:20.731Z"
+    },
+    {
+      "name": "image-to-3D-master",
+      "path": "C:/Users/p8tty/Downloads/image-to-3D-master/image-to-3D-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-12-02T20:52:11.360Z"
+    },
+    {
+      "name": "functions",
+      "path": "C:/Users/p8tty/Downloads/agency-swarm-custom-gpt-main/agency-swarm-custom-gpt-main/functions",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2024-12-02T03:45:32.489Z"
+    },
+    {
+      "name": "youtube website",
+      "path": "C:/Users/p8tty/Downloads/youtube website",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-11-14T02:15:25.990Z"
+    },
+    {
+      "name": "local business directory",
+      "path": "C:/Users/p8tty/Downloads/local business directory",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-11-07T22:32:42.254Z"
+    },
+    {
+      "name": "agency-voice-interface-main",
+      "path": "C:/Users/p8tty/Downloads/agency-voice-interface-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "node",
+      "markers": [
+        "package.json"
+      ],
+      "updatedAt": "2024-11-05T04:41:22.299Z"
+    },
+    {
+      "name": "TTS-dev",
+      "path": "C:/Users/p8tty/Downloads/TTS-dev/TTS-dev",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml",
+        "requirements.txt"
+      ],
+      "updatedAt": "2024-11-04T18:30:37.693Z"
+    },
+    {
+      "name": "OpenAdapt-main",
+      "path": "C:/Users/p8tty/Downloads/OpenAdapt-main/OpenAdapt-main",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "pyproject.toml"
+      ],
+      "updatedAt": "2024-10-28T20:23:21.525Z"
+    },
+    {
+      "name": "emotion-ai-sentiment-analysis-master",
+      "path": "C:/Users/p8tty/Downloads/emotion-ai-sentiment-analysis-master/emotion-ai-sentiment-analysis-master",
+      "root": "C:/Users/p8tty/Downloads",
+      "type": "python",
+      "markers": [
+        "requirements.txt"
+      ],
+      "updatedAt": "2024-01-04T18:01:40.607Z"
+    }
+  ]
 }

@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { useToast } from '../components/ui/use-toast'
+import { useAgentStore } from '../stores/agent-store'
 import {
   Webhook,
   Play,
@@ -17,6 +18,11 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
+  ExternalLink,
+  Link2,
+  Monitor,
+  Server,
+  TerminalSquare,
 } from 'lucide-react'
 import { insforge } from '../lib/insforge'
 
@@ -31,13 +37,36 @@ interface Workflow {
   created_at: string
 }
 
-interface WorkflowImportDraft {
+export interface WorkflowImportDraft {
   name: string
   description: string
   trigger_url: string
   is_active: boolean
   source: 'json' | 'n8n-export' | 'line'
+  n8n_workflow?: Record<string, unknown>
 }
+
+interface N8nWorkflowRecord {
+  id: string
+  name: string
+  active: boolean
+  updatedAt?: string
+  webhookPaths: string[]
+  triggerUrls: string[]
+  raw?: Record<string, unknown>
+}
+
+interface N8nFetchResult {
+  rows: N8nWorkflowRecord[]
+  warnings: string[]
+}
+
+const N8N_BASE_URL_KEY = 'agentforge-n8n-base-url'
+const N8N_API_KEY_KEY = 'agentforge-n8n-api-key'
+const N8N_MCP_ENDPOINT_KEY = 'agentforge-n8n-mcp-endpoint'
+const N8N_SSH_HOST_KEY = 'agentforge-n8n-ssh-host'
+const N8N_SSH_USER_KEY = 'agentforge-n8n-ssh-user'
+const N8N_SSH_PORT_KEY = 'agentforge-n8n-ssh-port'
 
 const SAMPLE_BULK_INPUT = `# CSV format (name,url,description)
 Daily SEO Report,https://n8n.example.com/webhook/daily-seo,Daily SEO automation
@@ -52,7 +81,7 @@ Lead Sync,https://n8n.example.com/webhook/lead-sync,Sync leads into CRM
 
 # n8n workflow export (object or array) also supported`
 
-function sanitizeBaseUrl(input: string) {
+export function sanitizeBaseUrl(input: string) {
   return input.trim().replace(/\/+$/, '')
 }
 
@@ -67,7 +96,7 @@ function isHttpUrl(value: string) {
   return /^https?:\/\//i.test(value.trim())
 }
 
-function normalizeUrl(raw: string, baseUrl: string) {
+export function normalizeUrl(raw: string, baseUrl: string) {
   const trimmed = raw.trim()
   if (!trimmed) return ''
 
@@ -149,6 +178,7 @@ function extractN8nDrafts(item: Record<string, unknown>, baseUrl: string): Workf
       trigger_url: triggerUrl,
       is_active: active,
       source: 'n8n-export',
+      n8n_workflow: item,
     })
   }
 
@@ -165,6 +195,7 @@ function extractN8nDrafts(item: Record<string, unknown>, baseUrl: string): Workf
       trigger_url: fallbackUrl,
       is_active: active,
       source: 'n8n-export',
+      n8n_workflow: item,
     },
   ]
 }
@@ -203,14 +234,162 @@ function toDraftsFromObject(item: Record<string, unknown>, baseUrl: string): Wor
   return []
 }
 
+export function extractN8nWebhookPaths(workflow: Record<string, unknown>): string[] {
+  const nodes = Array.isArray(workflow.nodes) ? workflow.nodes : []
+  const paths = new Set<string>()
+
+  for (const node of nodes) {
+    if (!node || typeof node !== 'object' || Array.isArray(node)) continue
+    const row = node as Record<string, unknown>
+    const type = typeof row.type === 'string' ? row.type.toLowerCase() : ''
+    if (!type.includes('webhook')) continue
+
+    const parameters =
+      row.parameters && typeof row.parameters === 'object' && !Array.isArray(row.parameters)
+        ? (row.parameters as Record<string, unknown>)
+        : {}
+    const path =
+      (typeof parameters.path === 'string' ? parameters.path : '') ||
+      (typeof parameters.webhookPath === 'string' ? parameters.webhookPath : '')
+
+    if (path) paths.add(path.replace(/^\/+/, ''))
+  }
+
+  return [...paths]
+}
+
+export function webhookPathFromTriggerUrl(triggerUrl: string, baseUrl: string): string {
+  try {
+    const parsed = new URL(triggerUrl)
+    const normalizedBase = sanitizeBaseUrl(baseUrl)
+    const baseHost = normalizedBase ? new URL(normalizedBase).host : ''
+    if (baseHost && parsed.host !== baseHost) return ''
+    const segments = parsed.pathname.split('/').filter(Boolean)
+    const webhookIndex = segments.indexOf('webhook')
+    if (webhookIndex === -1) return ''
+    const path = segments.slice(webhookIndex + 1).join('/')
+    return path
+  } catch {
+    return ''
+  }
+}
+
+export function createTemplateWorkflowFromDraft(
+  draft: WorkflowImportDraft,
+  n8nBaseUrl: string,
+): Record<string, unknown> {
+  const pathFromTrigger = webhookPathFromTriggerUrl(draft.trigger_url, n8nBaseUrl)
+  const fallbackPath = slugify(draft.name || deriveNameFromUrl(draft.trigger_url)) || `workflow-${Date.now()}`
+  const webhookPath = pathFromTrigger || fallbackPath
+
+  return {
+    name: draft.name,
+    active: draft.is_active,
+    settings: {},
+    nodes: [
+      {
+        name: 'Webhook',
+        type: 'n8n-nodes-base.webhook',
+        typeVersion: 1,
+        position: [260, 320],
+        parameters: {
+          path: webhookPath,
+          httpMethod: 'POST',
+          responseMode: 'responseNode',
+        },
+      },
+      {
+        name: 'Respond to Webhook',
+        type: 'n8n-nodes-base.respondToWebhook',
+        typeVersion: 1.2,
+        position: [560, 320],
+        parameters: {
+          respondWith: 'json',
+          responseBody: '={{ { "ok": true, "workflow": $workflow.name } }}',
+        },
+      },
+    ],
+    connections: {
+      Webhook: {
+        main: [
+          [
+            {
+              node: 'Respond to Webhook',
+              type: 'main',
+              index: 0,
+            },
+          ],
+        ],
+      },
+    },
+  }
+}
+
+export function normalizeN8nWorkflowRows(payload: unknown): N8nWorkflowRecord[] {
+  const records: N8nWorkflowRecord[] = []
+  const rows = (() => {
+    if (Array.isArray(payload)) return payload
+    if (payload && typeof payload === 'object') {
+      const root = payload as Record<string, unknown>
+      if (Array.isArray(root.data)) return root.data
+      if (Array.isArray(root.workflows)) return root.workflows
+    }
+    return []
+  })()
+
+  for (const entry of rows) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue
+    const row = entry as Record<string, unknown>
+    const id = typeof row.id === 'string' ? row.id : typeof row.id === 'number' ? String(row.id) : ''
+    const name = typeof row.name === 'string' ? row.name.trim() : 'n8n Workflow'
+    const active = typeof row.active === 'boolean' ? row.active : Boolean(row.isActive)
+    const updatedAt =
+      (typeof row.updatedAt === 'string' && row.updatedAt) ||
+      (typeof row.updated_at === 'string' && row.updated_at) ||
+      undefined
+    const webhookPaths = extractN8nWebhookPaths(row)
+    const webhookUrls = Array.isArray(row.webhookUrls)
+      ? row.webhookUrls
+          .map((entry) => (typeof entry === 'string' ? entry.trim() : ''))
+          .filter(Boolean)
+      : []
+
+    records.push({
+      id,
+      name,
+      active,
+      updatedAt,
+      webhookPaths,
+      triggerUrls: webhookUrls,
+      raw: row,
+    })
+  }
+
+  return records
+}
+
 export default function Workflows() {
   const { toast } = useToast()
+  const { agents, fetchAgents, updateAgent } = useAgentStore()
   const [workflows, setWorkflows] = useState<Workflow[]>([])
+  const [remoteWorkflows, setRemoteWorkflows] = useState<N8nWorkflowRecord[]>([])
+  const [remoteWarnings, setRemoteWarnings] = useState<string[]>([])
   const [refreshing, setRefreshing] = useState(false)
+  const [isSyncingN8n, setIsSyncingN8n] = useState(false)
+  const [isPushingBulkToN8n, setIsPushingBulkToN8n] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showBulkModal, setShowBulkModal] = useState(false)
   const [newWorkflow, setNewWorkflow] = useState({ name: '', description: '', trigger_url: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [n8nBaseUrl, setN8nBaseUrl] = useState('')
+  const [n8nApiKey, setN8nApiKey] = useState('')
+  const [n8nMcpEndpoint, setN8nMcpEndpoint] = useState('')
+  const [sshHost, setSshHost] = useState('')
+  const [sshUser, setSshUser] = useState('root')
+  const [sshPort, setSshPort] = useState('22')
+  const [automationAgentId, setAutomationAgentId] = useState('')
+  const [syncRemoteToLocal, setSyncRemoteToLocal] = useState(true)
+  const [activateRemoteImports, setActivateRemoteImports] = useState(true)
 
   const [bulkInput, setBulkInput] = useState('')
   const [bulkBaseUrl, setBulkBaseUrl] = useState('')
@@ -222,12 +401,213 @@ export default function Workflows() {
 
   useEffect(() => {
     void fetchWorkflows()
+    void fetchAgents()
   }, [])
+
+  useEffect(() => {
+    const storedBase = localStorage.getItem(N8N_BASE_URL_KEY) || ''
+    const storedApiKey = localStorage.getItem(N8N_API_KEY_KEY) || ''
+    const storedMcpEndpoint = localStorage.getItem(N8N_MCP_ENDPOINT_KEY) || ''
+    const storedSshHost = localStorage.getItem(N8N_SSH_HOST_KEY) || ''
+    const storedSshUser = localStorage.getItem(N8N_SSH_USER_KEY) || 'root'
+    const storedSshPort = localStorage.getItem(N8N_SSH_PORT_KEY) || '22'
+
+    setN8nBaseUrl(storedBase)
+    setN8nApiKey(storedApiKey)
+    setN8nMcpEndpoint(storedMcpEndpoint || (storedBase ? `${sanitizeBaseUrl(storedBase)}/mcp` : ''))
+    setSshHost(storedSshHost)
+    setSshUser(storedSshUser)
+    setSshPort(storedSshPort)
+  }, [])
+
+  useEffect(() => {
+    if (agents.length === 0 || automationAgentId) return
+    const withApiKey = agents.find((agent) => Boolean(agent.api_key))
+    setAutomationAgentId(withApiKey?.id || agents[0].id)
+  }, [agents, automationAgentId])
+
+  useEffect(() => {
+    if (!n8nBaseUrl.trim()) return
+    if (n8nMcpEndpoint.trim()) return
+    setN8nMcpEndpoint(`${sanitizeBaseUrl(n8nBaseUrl)}/mcp`)
+  }, [n8nBaseUrl, n8nMcpEndpoint])
 
   const existingTriggerSet = useMemo(
     () => new Set(workflows.map((workflow) => workflow.trigger_url.trim().toLowerCase())),
     [workflows],
   )
+
+  const sshConnectCommand = useMemo(() => {
+    if (!sshHost.trim()) return ''
+    const user = sshUser.trim() || 'root'
+    const port = sshPort.trim() || '22'
+    return `ssh -p ${port} ${user}@${sshHost.trim()}`
+  }, [sshHost, sshPort, sshUser])
+
+  const runbookCommand = useMemo(() => {
+    if (!sshConnectCommand) return ''
+    return `${sshConnectCommand} \"docker ps | grep n8n && docker logs --tail 80 n8n\"`
+  }, [sshConnectCommand])
+
+  const copyValue = async (value: string, label: string) => {
+    if (!value.trim()) {
+      toast({
+        title: `${label} is empty`,
+        variant: 'destructive',
+      })
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(value)
+      toast({ title: `${label} copied` })
+    } catch {
+      toast({
+        title: `Failed to copy ${label.toLowerCase()}`,
+        description: 'Clipboard access may be blocked by browser permissions.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const persistConnectionSettings = () => {
+    const normalizedBase = sanitizeBaseUrl(n8nBaseUrl)
+    const derivedMcp = n8nMcpEndpoint.trim() || (normalizedBase ? `${normalizedBase}/mcp` : '')
+
+    localStorage.setItem(N8N_BASE_URL_KEY, normalizedBase)
+    localStorage.setItem(N8N_API_KEY_KEY, n8nApiKey.trim())
+    localStorage.setItem(N8N_MCP_ENDPOINT_KEY, derivedMcp)
+    localStorage.setItem(N8N_SSH_HOST_KEY, sshHost.trim())
+    localStorage.setItem(N8N_SSH_USER_KEY, sshUser.trim() || 'root')
+    localStorage.setItem(N8N_SSH_PORT_KEY, sshPort.trim() || '22')
+
+    setN8nBaseUrl(normalizedBase)
+    setN8nMcpEndpoint(derivedMcp)
+    toast({
+      title: 'Connection settings saved',
+      description: 'n8n, MCP, and SSH defaults saved in this browser.',
+    })
+  }
+
+  const ensureAgentApiKey = async (agentId: string) => {
+    const target = agents.find((agent) => agent.id === agentId)
+    if (!target) throw new Error('Selected automation agent not found')
+    if (target.api_key) return target.api_key
+
+    const generated =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2) + Date.now().toString(36)
+
+    await updateAgent(agentId, { api_key: generated })
+    return generated
+  }
+
+  const openN8nPage = (path: string) => {
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    if (!base) {
+      toast({
+        title: 'n8n Base URL required',
+        description: 'Set and save your n8n base URL first.',
+        variant: 'destructive',
+      })
+      return
+    }
+    window.open(`${base}${path}`, '_blank', 'noopener,noreferrer')
+  }
+
+  const fetchN8nWorkflows = async (): Promise<N8nFetchResult> => {
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    const apiKey = n8nApiKey.trim()
+    if (!base || !apiKey) {
+      throw new Error('n8n base URL and API key are required')
+    }
+
+    const attempts = [`${base}/api/v1/workflows`, `${base}/rest/workflows`]
+    const warnings: string[] = []
+
+    for (const endpoint of attempts) {
+      try {
+        const response = await fetch(endpoint, {
+          headers: {
+            Accept: 'application/json',
+            'X-N8N-API-KEY': apiKey,
+          },
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          warnings.push(`${endpoint}: HTTP ${response.status}`)
+          continue
+        }
+        const rows = normalizeN8nWorkflowRows(payload)
+        if (rows.length === 0) {
+          warnings.push(`${endpoint}: no workflows returned`)
+        }
+        return { rows, warnings }
+      } catch (error: any) {
+        warnings.push(`${endpoint}: ${error.message || 'request failed'}`)
+      }
+    }
+
+    return { rows: [], warnings }
+  }
+
+  const syncRemoteWorkflows = async () => {
+    setIsSyncingN8n(true)
+    try {
+      const result = await fetchN8nWorkflows()
+      setRemoteWorkflows(result.rows)
+      setRemoteWarnings(result.warnings)
+
+      let importedCount = 0
+      if (syncRemoteToLocal && result.rows.length > 0) {
+        const existing = new Set(workflows.map((workflow) => workflow.trigger_url.trim().toLowerCase()))
+        const inserts: Array<{ name: string; description: string; trigger_url: string; is_active: boolean }> = []
+
+        for (const row of result.rows) {
+          const directUrls = row.triggerUrls.filter((entry) => isHttpUrl(entry))
+          const derivedUrls = row.webhookPaths
+            .map((path) => normalizeUrl(`/webhook/${path.replace(/^\/+/, '')}`, n8nBaseUrl))
+            .filter(Boolean)
+          const candidateUrls = [...directUrls, ...derivedUrls]
+
+          if (candidateUrls.length === 0) continue
+          const triggerUrl = candidateUrls[0]
+          const key = triggerUrl.toLowerCase()
+          if (existing.has(key)) continue
+
+          existing.add(key)
+          inserts.push({
+            name: row.name,
+            description: row.webhookPaths.length
+              ? `Synced from n8n (${row.webhookPaths.join(', ')})`
+              : 'Synced from n8n',
+            trigger_url: triggerUrl,
+            is_active: row.active,
+          })
+        }
+
+        if (inserts.length > 0) {
+          const { error } = await insforge.database.from('agent_workflows').insert(inserts)
+          if (error) throw error
+          importedCount = inserts.length
+          await fetchWorkflows()
+        }
+      }
+
+      toast({
+        title: `n8n sync complete (${result.rows.length} remote workflows)`,
+        description: importedCount > 0 ? `${importedCount} new workflows added locally.` : 'Local catalog is up to date.',
+      })
+    } catch (error: any) {
+      toast({
+        title: 'n8n sync failed',
+        description: error.message || 'Could not fetch workflows from n8n API.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsSyncingN8n(false)
+    }
+  }
 
   const fetchWorkflows = async () => {
     setRefreshing(true)
@@ -397,7 +777,7 @@ export default function Workflows() {
     try {
       const drafts: WorkflowImportDraft[] = []
       const warnings: string[] = []
-      const normalizedBaseUrl = sanitizeBaseUrl(bulkBaseUrl)
+      const normalizedBaseUrl = sanitizeBaseUrl(bulkBaseUrl || n8nBaseUrl)
 
       let parsedAsJson = false
       try {
@@ -553,17 +933,108 @@ export default function Workflows() {
     }
   }
 
+  const pushBulkPreviewToN8n = async () => {
+    if (bulkPreview.length === 0) {
+      parseBulkPayload()
+      return
+    }
+
+    if (!automationAgentId) {
+      toast({
+        title: 'Select an automation agent',
+        description: 'Choose which agent should import workflows into n8n.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (!sanitizeBaseUrl(n8nBaseUrl) || !n8nApiKey.trim()) {
+      toast({
+        title: 'n8n connection missing',
+        description: 'Set n8n base URL and API key before remote import.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setIsPushingBulkToN8n(true)
+    try {
+      const agentApiKey = await ensureAgentApiKey(automationAgentId)
+      let success = 0
+      const warnings: string[] = []
+      const failed: WorkflowImportDraft[] = []
+
+      for (const draft of bulkPreview) {
+        const templateWorkflow = createTemplateWorkflowFromDraft(draft, n8nBaseUrl)
+        const n8nWorkflow = draft.n8n_workflow || templateWorkflow
+
+        const { data, error } = await insforge.functions.invoke('agent-automation-bridge', {
+          body: {
+            action: 'create_n8n_workflow',
+            agentId: automationAgentId,
+            agentApiKey,
+            name: draft.name,
+            description: draft.description,
+            triggerUrl: draft.trigger_url,
+            is_active: draft.is_active,
+            activate: activateRemoteImports,
+            n8nBaseUrl: sanitizeBaseUrl(n8nBaseUrl),
+            n8nApiKey: n8nApiKey.trim(),
+            n8nWorkflow,
+          },
+        })
+
+        if (error) {
+          warnings.push(`${draft.name}: ${error.message || 'bridge request failed'}`)
+          failed.push(draft)
+          continue
+        }
+
+        const row = (data || {}) as Record<string, unknown>
+        const remote = row.n8n && typeof row.n8n === 'object' ? (row.n8n as Record<string, unknown>) : {}
+        const bridgeWarning = typeof remote.warning === 'string' ? remote.warning : ''
+        if (bridgeWarning) {
+          warnings.push(`${draft.name}: ${bridgeWarning}`)
+        }
+        success += 1
+      }
+
+      setBulkPreview(failed)
+      setBulkWarnings((current) => [...current, ...warnings])
+
+      toast({
+        title: `Remote import complete (${success}/${bulkPreview.length})`,
+        description: failed.length > 0 ? `${failed.length} workflows need retry.` : 'All workflows imported into n8n.',
+      })
+
+      await fetchWorkflows()
+      if (failed.length === 0) {
+        resetBulkImport()
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Remote n8n import failed',
+        description: error.message || 'Could not import workflows via automation bridge.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsPushingBulkToN8n(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <h2 className="flex items-center gap-3 text-2xl font-bold text-cyber-white">
             <Webhook className="h-7 w-7 animate-pulse text-pink-500" />
             n8n Workflows
           </h2>
-          <p className="text-sm text-cyber-gray">Manage automation pipelines and bulk-import n8n webhooks.</p>
+          <p className="text-sm text-cyber-gray">
+            Native-style workflow control with n8n sync, bulk import, MCP endpoint, and SSH runbook access.
+          </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             onClick={() => void fetchWorkflows()}
             disabled={refreshing}
@@ -572,6 +1043,15 @@ export default function Workflows() {
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
+          </Button>
+          <Button
+            onClick={() => void syncRemoteWorkflows()}
+            disabled={isSyncingN8n}
+            variant="outline"
+            className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
+          >
+            <Monitor className={`mr-2 h-4 w-4 ${isSyncingN8n ? 'animate-pulse' : ''}`} />
+            {isSyncingN8n ? 'Syncing n8n...' : 'Sync n8n'}
           </Button>
           <Button
             onClick={() => setShowBulkModal(true)}
@@ -587,6 +1067,234 @@ export default function Workflows() {
           </Button>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+        <Card className="border-cyber-border bg-cyber-card xl:col-span-7">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-cyber-white">
+              <Server className="h-4 w-4 text-cyan-300" />
+              n8n Connection Studio
+            </CardTitle>
+            <CardDescription>Match native n8n workflow control: connect, open editor, and sync catalog.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label className="text-cyber-white">n8n Base URL</Label>
+                <Input
+                  value={n8nBaseUrl}
+                  onChange={(event) => setN8nBaseUrl(event.target.value)}
+                  className="border-cyber-border bg-cyber-black text-cyber-white"
+                  placeholder="https://n8n.your-domain.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-cyber-white">n8n API Key</Label>
+                <Input
+                  type="password"
+                  value={n8nApiKey}
+                  onChange={(event) => setN8nApiKey(event.target.value)}
+                  className="border-cyber-border bg-cyber-black text-cyber-white"
+                  placeholder="n8n_api_..."
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label className="text-cyber-white">n8n MCP Endpoint</Label>
+                <Input
+                  value={n8nMcpEndpoint}
+                  onChange={(event) => setN8nMcpEndpoint(event.target.value)}
+                  className="border-cyber-border bg-cyber-black font-mono text-xs text-cyber-white"
+                  placeholder="https://n8n.your-domain.com/mcp"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={persistConnectionSettings} className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80">
+                Save Connection
+              </Button>
+              <Button
+                variant="outline"
+                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                onClick={() => openN8nPage('/home/workflows')}
+              >
+                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                Open Workflow Editor
+              </Button>
+              <Button
+                variant="outline"
+                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                onClick={() => openN8nPage('/executions')}
+              >
+                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                Open Executions
+              </Button>
+              <Button
+                variant="outline"
+                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                onClick={() => openN8nPage('/credentials')}
+              >
+                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                Open Credentials
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
+                <input
+                  type="checkbox"
+                  checked={syncRemoteToLocal}
+                  onChange={(event) => setSyncRemoteToLocal(event.target.checked)}
+                  className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
+                />
+                Add remote n8n workflows into local catalog during sync
+              </label>
+              <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
+                <input
+                  type="checkbox"
+                  checked={activateRemoteImports}
+                  onChange={(event) => setActivateRemoteImports(event.target.checked)}
+                  className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
+                />
+                Auto-activate workflows when importing via agent bridge
+              </label>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-cyber-border bg-cyber-card xl:col-span-5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-cyber-white">
+              <TerminalSquare className="h-4 w-4 text-cyan-300" />
+              Agent Access (MCP + SSH)
+            </CardTitle>
+            <CardDescription>Ready-to-use access values your agents can consume by API, MCP, or SSH runbooks.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+              <Input
+                value={sshHost}
+                onChange={(event) => setSshHost(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="host"
+              />
+              <Input
+                value={sshUser}
+                onChange={(event) => setSshUser(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="user"
+              />
+              <Input
+                value={sshPort}
+                onChange={(event) => setSshPort(event.target.value)}
+                className="border-cyber-border bg-cyber-black text-cyber-white"
+                placeholder="22"
+              />
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+              <p className="text-[11px] text-cyber-gray">n8n MCP Endpoint</p>
+              <div className="flex items-center gap-2">
+                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{n8nMcpEndpoint || 'Not set'}</p>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
+                  onClick={() => void copyValue(n8nMcpEndpoint, 'MCP endpoint')}
+                >
+                  <Link2 className="mr-1 h-3.5 w-3.5" />
+                  Copy
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+              <p className="text-[11px] text-cyber-gray">SSH Connect Command</p>
+              <div className="flex items-center gap-2">
+                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{sshConnectCommand || 'Not set'}</p>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
+                  onClick={() => void copyValue(sshConnectCommand, 'SSH command')}
+                >
+                  <Copy className="mr-1 h-3.5 w-3.5" />
+                  Copy
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+              <p className="text-[11px] text-cyber-gray">Runbook Health Check</p>
+              <div className="flex items-center gap-2">
+                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{runbookCommand || 'Not set'}</p>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
+                  onClick={() => void copyValue(runbookCommand, 'Runbook command')}
+                >
+                  <Copy className="mr-1 h-3.5 w-3.5" />
+                  Copy
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-cyber-border bg-cyber-card">
+        <CardHeader>
+          <CardTitle className="text-cyber-white">Remote n8n Catalog</CardTitle>
+          <CardDescription>Latest sync from n8n API (closer to native n8n workflow list).</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="bg-cyan-500/20 text-cyan-200">Remote: {remoteWorkflows.length}</Badge>
+            <Badge className="bg-cyber-green/20 text-cyber-green">Local: {workflows.length}</Badge>
+            {remoteWarnings.length > 0 && <Badge className="bg-yellow-500/20 text-yellow-300">Warnings: {remoteWarnings.length}</Badge>}
+          </div>
+
+          {remoteWorkflows.length > 0 ? (
+            <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-2">
+              {remoteWorkflows.map((workflow) => (
+                <div
+                  key={`${workflow.id}-${workflow.name}`}
+                  className="rounded-md border border-cyber-border/60 bg-cyber-dark/70 px-3 py-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-xs font-medium text-cyber-white">
+                      {workflow.name} {workflow.id ? <span className="text-cyber-gray">#{workflow.id}</span> : ''}
+                    </p>
+                    <Badge className={workflow.active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
+                      {workflow.active ? 'Active' : 'Paused'}
+                    </Badge>
+                  </div>
+                  <p className="mt-1 truncate font-mono text-[10px] text-cyber-gray">
+                    {workflow.webhookPaths.length > 0 ? workflow.webhookPaths.join(', ') : 'No webhook path detected'}
+                  </p>
+                  {workflow.updatedAt && <p className="mt-1 text-[10px] text-cyber-gray">Updated {new Date(workflow.updatedAt).toLocaleString()}</p>}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dashed border-cyber-border bg-cyber-dark/40 p-4 text-center text-sm text-cyber-gray">
+              No remote workflows loaded yet. Run <span className="font-mono">Sync n8n</span>.
+            </div>
+          )}
+
+          {remoteWarnings.length > 0 && (
+            <div className="space-y-2 rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
+              {remoteWarnings.map((warning, index) => (
+                <div key={`${warning}-${index}`} className="flex items-start gap-2 text-xs text-yellow-300">
+                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+                  <span>{warning}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {workflows.map((workflow) => (
@@ -787,7 +1495,7 @@ export default function Workflows() {
                     size="sm"
                     variant="ghost"
                     className="border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                    onClick={() => void navigator.clipboard.writeText(SAMPLE_BULK_INPUT)}
+                    onClick={() => void copyValue(SAMPLE_BULK_INPUT, 'Sample payload')}
                   >
                     <Copy className="mr-1.5 h-3.5 w-3.5" />
                     Copy Sample
@@ -824,6 +1532,39 @@ export default function Workflows() {
                 />
               </div>
 
+              <div className="grid grid-cols-1 gap-3 rounded-lg border border-cyber-border bg-cyber-black/50 p-3 lg:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-cyber-white">Automation Agent (for n8n push)</Label>
+                  <select
+                    value={automationAgentId}
+                    onChange={(event) => setAutomationAgentId(event.target.value)}
+                    className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
+                  >
+                    <option value="">Select agent</option>
+                    {agents.map((agent) => (
+                      <option key={agent.id} value={agent.id}>
+                        {agent.name} {agent.api_key ? '' : '(api key will be generated)'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-cyber-white">Remote Import Options</Label>
+                  <label className="flex items-center gap-2 text-xs text-cyber-gray">
+                    <input
+                      type="checkbox"
+                      checked={activateRemoteImports}
+                      onChange={(event) => setActivateRemoteImports(event.target.checked)}
+                      className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
+                    />
+                    Activate on import in n8n
+                  </label>
+                  <p className="text-[11px] text-cyber-gray">
+                    Uses <span className="font-mono">agent-automation-bridge</span> so agents can import/export workflows consistently.
+                  </p>
+                </div>
+              </div>
+
               <div className="flex flex-wrap gap-2">
                 <Button
                   onClick={parseBulkPayload}
@@ -841,6 +1582,14 @@ export default function Workflows() {
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   {isImportingBulk ? 'Importing...' : `Import ${bulkPreview.length} Workflows`}
+                </Button>
+                <Button
+                  onClick={() => void pushBulkPreviewToN8n()}
+                  disabled={isPushingBulkToN8n || bulkPreview.length === 0}
+                  className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400"
+                >
+                  <Server className="mr-2 h-4 w-4" />
+                  {isPushingBulkToN8n ? 'Pushing To n8n...' : `Push ${bulkPreview.length} To n8n`}
                 </Button>
                 <Button variant="ghost" onClick={resetBulkImport} className="text-cyber-gray hover:text-white">
                   Cancel

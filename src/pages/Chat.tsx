@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import {
   MessageSquare, Send, Bot, User, Hash, Plus, Users, Settings,
-  Trash2, X, ChevronDown, Zap
+  Trash2, X, ChevronDown, Zap, Mic, Square, Play, AudioLines
 } from 'lucide-react'
 import { useAgentStore, Agent } from '../stores/agent-store'
 import { insforge } from '../lib/insforge'
@@ -31,6 +31,21 @@ interface ChannelMessage {
   created_at: string
 }
 
+interface VoiceNoteMetadata {
+  audio_data_url: string
+  duration_ms: number
+  mime_type: string
+  size_bytes: number
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
+}
+
+function asString(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
 export default function Chat() {
   const { agents } = useAgentStore()
   const [channels, setChannels] = useState<Channel[]>([])
@@ -42,7 +57,16 @@ export default function Chat() {
   const [showMembers, setShowMembers] = useState(false)
   const [newChannelName, setNewChannelName] = useState('')
   const [newChannelDesc, setNewChannelDesc] = useState('')
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false)
+  const [recordingDurationMs, setRecordingDurationMs] = useState(0)
+  const [pendingVoiceNote, setPendingVoiceNote] = useState<VoiceNoteMetadata | null>(null)
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const mediaStreamRef = useRef<MediaStream | null>(null)
+  const recordingChunksRef = useRef<BlobPart[]>([])
+  const recordingStartRef = useRef<number>(0)
+  const recordingTimerRef = useRef<number | null>(null)
 
   // Load channels
   useEffect(() => {
@@ -81,6 +105,25 @@ export default function Chat() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) {
+        window.clearInterval(recordingTimerRef.current)
+        recordingTimerRef.current = null
+      }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop()
+      }
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop())
+        mediaStreamRef.current = null
+      }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
 
   // Channel members as agent objects
   const channelAgents = agents.filter(a => activeChannel?.members?.includes(a.id))
@@ -137,6 +180,121 @@ export default function Chat() {
     setChannels(prev => prev.map(c => c.id === updated.id ? updated : c))
   }
 
+  const startVoiceRecording = async () => {
+    if (isRecordingVoice) return
+
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+      window.alert('Voice capture is not supported in this browser.')
+      return
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      let recorder: MediaRecorder
+      try {
+        recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' })
+      } catch {
+        recorder = new MediaRecorder(stream)
+      }
+      mediaStreamRef.current = stream
+      mediaRecorderRef.current = recorder
+      recordingChunksRef.current = []
+      recordingStartRef.current = Date.now()
+      setRecordingDurationMs(0)
+      setPendingVoiceNote(null)
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) recordingChunksRef.current.push(event.data)
+      }
+
+      recorder.start(250)
+      setIsRecordingVoice(true)
+
+      if (recordingTimerRef.current) window.clearInterval(recordingTimerRef.current)
+      recordingTimerRef.current = window.setInterval(() => {
+        setRecordingDurationMs(Date.now() - recordingStartRef.current)
+      }, 200)
+    } catch (error) {
+      console.error('Failed starting voice recording:', error)
+      window.alert('Could not access microphone. Check browser permissions and retry.')
+    }
+  }
+
+  const stopVoiceRecording = async () => {
+    const recorder = mediaRecorderRef.current
+    if (!recorder || recorder.state === 'inactive') return
+
+    await new Promise<void>((resolve) => {
+      recorder.onstop = async () => {
+        try {
+          const blob = new Blob(recordingChunksRef.current, { type: recorder.mimeType || 'audio/webm' })
+          if (blob.size === 0) {
+            setPendingVoiceNote(null)
+            resolve()
+            return
+          }
+
+          const dataUrl = await new Promise<string>((innerResolve, innerReject) => {
+            const reader = new FileReader()
+            reader.onload = () => innerResolve(String(reader.result || ''))
+            reader.onerror = () => innerReject(new Error('Voice note encoding failed'))
+            reader.readAsDataURL(blob)
+          })
+
+          const durationMs = Math.max(Date.now() - recordingStartRef.current, recordingDurationMs)
+          setPendingVoiceNote({
+            audio_data_url: dataUrl,
+            duration_ms: durationMs,
+            mime_type: blob.type || recorder.mimeType || 'audio/webm',
+            size_bytes: blob.size,
+          })
+        } catch (error) {
+          console.error('Failed finalizing voice note:', error)
+          setPendingVoiceNote(null)
+        }
+        resolve()
+      }
+
+      recorder.stop()
+    })
+
+    if (recordingTimerRef.current) {
+      window.clearInterval(recordingTimerRef.current)
+      recordingTimerRef.current = null
+    }
+    setIsRecordingVoice(false)
+    setRecordingDurationMs(0)
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop())
+      mediaStreamRef.current = null
+    }
+  }
+
+  const cancelVoiceNote = () => {
+    setPendingVoiceNote(null)
+    setRecordingDurationMs(0)
+  }
+
+  const playAgentMessage = (message: string, messageId: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+
+    if (speakingMessageId === messageId) {
+      window.speechSynthesis.cancel()
+      setSpeakingMessageId(null)
+      return
+    }
+
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(message)
+    utterance.rate = 1
+    utterance.pitch = 1
+    utterance.onend = () => setSpeakingMessageId(null)
+    utterance.onerror = () => setSpeakingMessageId(null)
+    setSpeakingMessageId(messageId)
+    window.speechSynthesis.speak(utterance)
+  }
+
   const getAgentSystemPrompt = (agent: Agent): string => {
     const template = BROTHERHOOD_TEMPLATES.find(t => t.role === agent.role)
     if (template) return template.systemPrompt
@@ -144,10 +302,13 @@ export default function Chat() {
   }
 
   const sendMessage = async () => {
-    if (!input.trim() || !activeChannel) return
+    if ((!input.trim() && !pendingVoiceNote) || !activeChannel) return
     setLoading(true)
     const userText = input.trim()
+    const userMessage = userText || '🎙️ Operator sent a voice note.'
+    const voiceNoteMetadata = pendingVoiceNote
     setInput('')
+    setPendingVoiceNote(null)
 
     try {
       // Save operator message
@@ -157,7 +318,13 @@ export default function Chat() {
           channel_id: activeChannel.id,
           sender_type: 'user',
           sender_name: 'Operator',
-          message: userText,
+          message: userMessage,
+          metadata: voiceNoteMetadata
+            ? {
+                kind: 'voice_note',
+                voice: voiceNoteMetadata,
+              }
+            : {},
         })
         .select()
       if (userMsg?.[0]) setMessages(prev => [...prev, userMsg[0] as ChannelMessage])
@@ -172,7 +339,7 @@ export default function Chat() {
 
           const { data: aiResponse } = await (insforge.ai as any).generateText({
             model: 'openai/gpt-4o-mini',
-            prompt: userText,
+            prompt: userMessage,
             systemPrompt: contextPrompt,
           })
 
@@ -227,6 +394,13 @@ export default function Chat() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() }
+  }
+
+  const formatDuration = (durationMs: number) => {
+    const totalSeconds = Math.max(Math.round(durationMs / 1000), 0)
+    const minutes = Math.floor(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
   return (
@@ -350,21 +524,55 @@ export default function Chat() {
                         ? 'bg-cyber-green text-cyber-black rounded-br-sm'
                         : 'bg-cyber-dark border border-cyber-border text-cyber-white rounded-bl-sm'
                     }`}>
-                      <div className="flex items-center gap-2 mb-1">
-                        {msg.sender_type === 'user' ? (
-                          <User className="h-3 w-3" />
-                        ) : (
-                          <span className="text-sm">{(msg.metadata as any)?.emoji || '🤖'}</span>
-                        )}
-                        <span className="text-xs font-semibold">{msg.sender_name}</span>
-                        {msg.sender_type === 'agent' && (
-                          <span className="text-[10px] opacity-50">{(msg.metadata as any)?.role}</span>
-                        )}
-                        <span className="text-[10px] opacity-40 ml-auto">
-                          {new Date(msg.created_at).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                      {(() => {
+                        const metadata = asRecord(msg.metadata)
+                        const voice = asRecord(metadata.voice)
+                        const voiceDataUrl =
+                          asString(voice.audio_data_url) || asString((metadata as any).audio_data_url)
+                        const voiceDurationMs =
+                          Number(voice.duration_ms || (metadata as any).duration_ms || 0)
+
+                        return (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              {msg.sender_type === 'user' ? (
+                                <User className="h-3 w-3" />
+                              ) : (
+                                <span className="text-sm">{(msg.metadata as any)?.emoji || '🤖'}</span>
+                              )}
+                              <span className="text-xs font-semibold">{msg.sender_name}</span>
+                              {msg.sender_type === 'agent' && (
+                                <span className="text-[10px] opacity-50">{(msg.metadata as any)?.role}</span>
+                              )}
+                              <span className="text-[10px] opacity-40 ml-auto">
+                                {new Date(msg.created_at).toLocaleTimeString()}
+                              </span>
+                            </div>
+
+                            <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+
+                            {voiceDataUrl && (
+                              <div className="mt-2 rounded-lg border border-cyber-border/50 bg-cyber-black/20 px-2 py-1.5">
+                                <div className="mb-1 flex items-center gap-2 text-[10px] opacity-80">
+                                  <AudioLines className="h-3 w-3" />
+                                  <span>Voice note {voiceDurationMs > 0 ? `• ${formatDuration(voiceDurationMs)}` : ''}</span>
+                                </div>
+                                <audio controls src={voiceDataUrl} className="h-8 w-full" />
+                              </div>
+                            )}
+
+                            {msg.sender_type === 'agent' && !voiceDataUrl && (
+                              <button
+                                onClick={() => playAgentMessage(msg.message, msg.id)}
+                                className="mt-2 inline-flex items-center gap-1 rounded border border-cyber-border px-2 py-1 text-[10px] text-cyber-gray hover:text-cyber-white"
+                              >
+                                <Play className="h-3 w-3" />
+                                {speakingMessageId === msg.id ? 'Stop Voice' : 'Play Voice'}
+                              </button>
+                            )}
+                          </>
+                        )
+                      })()}
                     </div>
                   )}
                 </div>
@@ -375,6 +583,25 @@ export default function Chat() {
             {/* Input */}
             <div className="p-4 border-t border-cyber-border">
               <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => {
+                    if (isRecordingVoice) {
+                      void stopVoiceRecording()
+                    } else {
+                      void startVoiceRecording()
+                    }
+                  }}
+                  disabled={!activeChannel}
+                  variant={isRecordingVoice ? 'default' : 'outline'}
+                  className={
+                    isRecordingVoice
+                      ? 'h-10 w-10 p-0 bg-red-500 text-white hover:bg-red-400'
+                      : 'h-10 w-10 p-0 border-cyber-border text-cyber-gray hover:text-cyber-white'
+                  }
+                  title={isRecordingVoice ? 'Stop recording' : 'Record voice note'}
+                >
+                  {isRecordingVoice ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
                 <textarea
                   value={input}
                   onChange={e => setInput(e.target.value)}
@@ -387,7 +614,7 @@ export default function Chat() {
                 />
                 <Button
                   onClick={sendMessage}
-                  disabled={loading || !input.trim() || !activeChannel}
+                  disabled={loading || (!input.trim() && !pendingVoiceNote) || !activeChannel}
                   className="bg-cyber-green text-cyber-black h-10 w-10 p-0 hover:opacity-90 disabled:opacity-50"
                   title="Send message"
                 >
@@ -398,6 +625,31 @@ export default function Chat() {
                   )}
                 </Button>
               </div>
+              {(isRecordingVoice || pendingVoiceNote) && (
+                <div className="mt-2 rounded-lg border border-cyber-border bg-cyber-dark/50 px-3 py-2">
+                  {isRecordingVoice && (
+                    <p className="text-[11px] text-red-300">
+                      Recording voice note... {formatDuration(recordingDurationMs)}
+                    </p>
+                  )}
+                  {pendingVoiceNote && !isRecordingVoice && (
+                    <div className="space-y-1">
+                      <p className="text-[11px] text-cyber-gray">
+                        Voice note ready ({formatDuration(pendingVoiceNote.duration_ms)}). Send message to publish.
+                      </p>
+                      <audio controls src={pendingVoiceNote.audio_data_url} className="h-8 w-full" />
+                      <div>
+                        <button
+                          onClick={cancelVoiceNote}
+                          className="text-[11px] text-red-300 hover:text-red-200"
+                        >
+                          Remove voice note
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
               {loading && channelAgents.length > 0 && (
                 <p className="text-[10px] text-cyber-gray mt-1">
                   ⏳ Waiting for {channelAgents.filter(a => a.status === 'active' || a.status === 'idle').length} agent(s) to respond...

@@ -5,3 +5,7 @@ dist
 *.log
 build_log.txt
 .tmp_*
+__pycache__/
+*.pyc
+scripts/n8n_import_report*.json
+scripts/n8n_failed_retry_report.json

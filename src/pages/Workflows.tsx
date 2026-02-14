@@ -67,6 +67,16 @@ const N8N_MCP_ENDPOINT_KEY = 'agentforge-n8n-mcp-endpoint'
 const N8N_SSH_HOST_KEY = 'agentforge-n8n-ssh-host'
 const N8N_SSH_USER_KEY = 'agentforge-n8n-ssh-user'
 const N8N_SSH_PORT_KEY = 'agentforge-n8n-ssh-port'
+const N8N_RUNNER_URL_KEY = 'agentforge-n8n-runner-url'
+const N8N_RUNNER_TOKEN_KEY = 'agentforge-n8n-runner-token'
+const N8N_WORKSPACE_PATH_KEY = 'agentforge-n8n-workspace-path'
+
+const N8N_OFFICIAL_LINKS = [
+  { label: 'Official n8n Repo', url: 'https://github.com/n8n-io/n8n' },
+  { label: 'Official n8n Docs', url: 'https://docs.n8n.io' },
+  { label: 'Official Templates', url: 'https://n8n.io/workflows/' },
+  { label: 'AI Starter Kit Repo', url: 'https://github.com/n8n-io/self-hosted-ai-starter-kit' },
+]
 
 const SAMPLE_BULK_INPUT = `# CSV format (name,url,description)
 Daily SEO Report,https://n8n.example.com/webhook/daily-seo,Daily SEO automation
@@ -387,7 +397,15 @@ export default function Workflows() {
   const [sshHost, setSshHost] = useState('')
   const [sshUser, setSshUser] = useState('root')
   const [sshPort, setSshPort] = useState('22')
+  const [runnerUrl, setRunnerUrl] = useState('')
+  const [runnerToken, setRunnerToken] = useState('')
+  const [workspacePath, setWorkspacePath] = useState('/home/workflows')
+  const [showEmbeddedWorkspace, setShowEmbeddedWorkspace] = useState(false)
   const [automationAgentId, setAutomationAgentId] = useState('')
+  const [consoleShell, setConsoleShell] = useState<'bash' | 'powershell'>('bash')
+  const [consoleCommand, setConsoleCommand] = useState('')
+  const [consoleOutput, setConsoleOutput] = useState('')
+  const [isConsoleRunning, setIsConsoleRunning] = useState(false)
   const [syncRemoteToLocal, setSyncRemoteToLocal] = useState(true)
   const [activateRemoteImports, setActivateRemoteImports] = useState(true)
 
@@ -411,6 +429,9 @@ export default function Workflows() {
     const storedSshHost = localStorage.getItem(N8N_SSH_HOST_KEY) || ''
     const storedSshUser = localStorage.getItem(N8N_SSH_USER_KEY) || 'root'
     const storedSshPort = localStorage.getItem(N8N_SSH_PORT_KEY) || '22'
+    const storedRunnerUrl = localStorage.getItem(N8N_RUNNER_URL_KEY) || ''
+    const storedRunnerToken = localStorage.getItem(N8N_RUNNER_TOKEN_KEY) || ''
+    const storedWorkspacePath = localStorage.getItem(N8N_WORKSPACE_PATH_KEY) || '/home/workflows'
 
     setN8nBaseUrl(storedBase)
     setN8nApiKey(storedApiKey)
@@ -418,6 +439,9 @@ export default function Workflows() {
     setSshHost(storedSshHost)
     setSshUser(storedSshUser)
     setSshPort(storedSshPort)
+    setRunnerUrl(storedRunnerUrl)
+    setRunnerToken(storedRunnerToken)
+    setWorkspacePath(storedWorkspacePath.startsWith('/') ? storedWorkspacePath : `/${storedWorkspacePath}`)
   }, [])
 
   useEffect(() => {
@@ -449,6 +473,41 @@ export default function Workflows() {
     return `${sshConnectCommand} \"docker ps | grep n8n && docker logs --tail 80 n8n\"`
   }, [sshConnectCommand])
 
+  const workspaceUrl = useMemo(() => {
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    if (!base) return ''
+    const path = workspacePath.trim() || '/home/workflows'
+    return `${base}${path.startsWith('/') ? path : `/${path}`}`
+  }, [n8nBaseUrl, workspacePath])
+
+  const commandPresets = useMemo(
+    () => [
+      {
+        label: 'n8n container status',
+        command: 'docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}" | grep n8n',
+      },
+      {
+        label: 'n8n recent logs',
+        command: 'docker logs --tail 120 n8n',
+      },
+      {
+        label: 'n8n update (docker)',
+        command:
+          'docker pull n8nio/n8n:latest && docker stop n8n && docker rm n8n && docker run -d --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n --restart unless-stopped n8nio/n8n:latest',
+      },
+      {
+        label: 'n8n API ping',
+        command: `curl -s ${sanitizeBaseUrl(n8nBaseUrl) || 'https://n8n.example.com'}/healthz`,
+      },
+    ],
+    [n8nBaseUrl],
+  )
+
+  useEffect(() => {
+    if (consoleCommand.trim()) return
+    setConsoleCommand('docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}" | grep n8n')
+  }, [consoleCommand])
+
   const copyValue = async (value: string, label: string) => {
     if (!value.trim()) {
       toast({
@@ -479,12 +538,15 @@ export default function Workflows() {
     localStorage.setItem(N8N_SSH_HOST_KEY, sshHost.trim())
     localStorage.setItem(N8N_SSH_USER_KEY, sshUser.trim() || 'root')
     localStorage.setItem(N8N_SSH_PORT_KEY, sshPort.trim() || '22')
+    localStorage.setItem(N8N_RUNNER_URL_KEY, runnerUrl.trim())
+    localStorage.setItem(N8N_RUNNER_TOKEN_KEY, runnerToken.trim())
+    localStorage.setItem(N8N_WORKSPACE_PATH_KEY, workspacePath.trim() || '/home/workflows')
 
     setN8nBaseUrl(normalizedBase)
     setN8nMcpEndpoint(derivedMcp)
     toast({
       title: 'Connection settings saved',
-      description: 'n8n, MCP, and SSH defaults saved in this browser.',
+      description: 'n8n, MCP, SSH, console runner, and workspace defaults saved in this browser.',
     })
   }
 
@@ -1022,6 +1084,85 @@ export default function Workflows() {
     }
   }
 
+  const applyCommandPreset = (command: string) => {
+    setConsoleCommand(command)
+  }
+
+  const executeConsoleCommand = async () => {
+    if (!automationAgentId) {
+      toast({
+        title: 'Automation agent required',
+        description: 'Pick an agent so execution can be authenticated.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (!consoleCommand.trim()) {
+      toast({
+        title: 'Command required',
+        description: 'Enter a command before running.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setIsConsoleRunning(true)
+    try {
+      const agentApiKey = await ensureAgentApiKey(automationAgentId)
+      const { data, error } = await insforge.functions.invoke('agent-automation-bridge', {
+        body: {
+          action: 'execute_remote_command',
+          agentId: automationAgentId,
+          agentApiKey,
+          command: consoleCommand.trim(),
+          shell: consoleShell,
+          runnerUrl: runnerUrl.trim(),
+          runnerToken: runnerToken.trim(),
+          ssh: {
+            host: sshHost.trim(),
+            user: sshUser.trim() || 'root',
+            port: sshPort.trim() || '22',
+          },
+        },
+      })
+
+      if (error) throw error
+
+      const payload = (data || {}) as Record<string, unknown>
+      const stdout = typeof payload.stdout === 'string' ? payload.stdout : ''
+      const stderr = typeof payload.stderr === 'string' ? payload.stderr : ''
+      const runCommand = typeof payload.runCommand === 'string' ? payload.runCommand : ''
+      const suggestedCommand = typeof payload.suggestedCommand === 'string' ? payload.suggestedCommand : ''
+      const dryRun = payload.dryRun === true
+      const exitCode = typeof payload.exitCode === 'number' ? payload.exitCode : undefined
+
+      const outputSections = [
+        `$ ${consoleCommand.trim()}`,
+        typeof exitCode === 'number' ? `exitCode: ${exitCode}` : '',
+        stdout ? `--- stdout ---\n${stdout}` : '',
+        stderr ? `--- stderr ---\n${stderr}` : '',
+        runCommand ? `--- ssh command ---\n${runCommand}` : '',
+        suggestedCommand ? `--- suggested ---\n${suggestedCommand}` : '',
+        dryRun ? 'Runner URL missing: command was prepared but not executed remotely.' : '',
+      ].filter(Boolean)
+
+      setConsoleOutput(outputSections.join('\n\n') || 'No output returned.')
+      toast({
+        title: dryRun ? 'Command prepared (dry run)' : 'Command executed',
+        description: dryRun ? 'Add runner URL/token to execute on your VPS from the panel.' : 'Remote command completed.',
+      })
+    } catch (error: any) {
+      toast({
+        title: 'Remote command failed',
+        description: error.message || 'Could not execute command through agent bridge.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsConsoleRunning(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -1137,6 +1278,66 @@ export default function Workflows() {
                 <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
                 Open Credentials
               </Button>
+              <Button
+                variant="outline"
+                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                onClick={() => openN8nPage('/signin')}
+              >
+                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                Open n8n Login
+              </Button>
+              <Button
+                variant="outline"
+                className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
+                onClick={() => setShowEmbeddedWorkspace((current) => !current)}
+              >
+                <Monitor className="mr-1.5 h-3.5 w-3.5" />
+                {showEmbeddedWorkspace ? 'Hide Embedded n8n' : 'Embed n8n Workspace'}
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label className="text-cyber-white">Workspace Path</Label>
+                <Input
+                  value={workspacePath}
+                  onChange={(event) => setWorkspacePath(event.target.value)}
+                  className="border-cyber-border bg-cyber-black text-cyber-white"
+                  placeholder="/home/workflows"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-cyber-white">Embedded Workspace URL</Label>
+                <div className="flex items-center gap-2 rounded-md border border-cyber-border bg-cyber-black px-3 py-2">
+                  <p className="flex-1 truncate font-mono text-xs text-cyber-white">{workspaceUrl || 'Set n8n base URL first'}</p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
+                    onClick={() => void copyValue(workspaceUrl, 'Embedded workspace URL')}
+                  >
+                    <Copy className="mr-1 h-3.5 w-3.5" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+              <p className="text-xs text-cyber-white">Official n8n Sources</p>
+              <div className="flex flex-wrap gap-2">
+                {N8N_OFFICIAL_LINKS.map((link) => (
+                  <Button
+                    key={link.url}
+                    variant="outline"
+                    className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                    onClick={() => window.open(link.url, '_blank', 'noopener,noreferrer')}
+                  >
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                    {link.label}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -1159,6 +1360,35 @@ export default function Workflows() {
                 Auto-activate workflows when importing via agent bridge
               </label>
             </div>
+
+            {showEmbeddedWorkspace && (
+              <div className="space-y-2 rounded-lg border border-cyan-500/30 bg-cyan-500/5 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs text-cyan-100">Embedded n8n Workspace (official UI)</p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 border border-cyan-500/40 text-cyan-300 hover:text-cyan-100"
+                    onClick={() => {
+                      if (workspaceUrl) window.open(workspaceUrl, '_blank', 'noopener,noreferrer')
+                    }}
+                  >
+                    <ExternalLink className="mr-1 h-3.5 w-3.5" />
+                    Open Full Tab
+                  </Button>
+                </div>
+                {workspaceUrl ? (
+                  <iframe
+                    title="Embedded n8n Workspace"
+                    src={workspaceUrl}
+                    className="h-[560px] w-full rounded-md border border-cyber-border bg-black"
+                    loading="lazy"
+                  />
+                ) : (
+                  <p className="text-xs text-yellow-300">Set n8n base URL before embedding the workspace.</p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -1239,6 +1469,106 @@ export default function Workflows() {
                 </Button>
               </div>
             </div>
+
+            <div className="space-y-3 rounded-lg border border-cyan-500/30 bg-cyan-500/5 p-3">
+              <p className="text-xs text-cyan-100">Remote Command Console (Agent + SSH + PowerShell/Bash)</p>
+
+              <div className="grid grid-cols-1 gap-2">
+                <Label className="text-[11px] text-cyber-gray">Automation Agent</Label>
+                <select
+                  value={automationAgentId}
+                  onChange={(event) => setAutomationAgentId(event.target.value)}
+                  className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
+                >
+                  <option value="">Select agent</option>
+                  {agents.map((agent) => (
+                    <option key={agent.id} value={agent.id}>
+                      {agent.name} {agent.api_key ? '' : '(api key will be generated)'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                <Label className="text-[11px] text-cyber-gray">Runner Endpoint (optional, for real execution)</Label>
+                <Input
+                  value={runnerUrl}
+                  onChange={(event) => setRunnerUrl(event.target.value)}
+                  className="border-cyber-border bg-cyber-black text-cyber-white"
+                  placeholder="https://your-vps-runner.example.com/execute"
+                />
+                <Input
+                  type="password"
+                  value={runnerToken}
+                  onChange={(event) => setRunnerToken(event.target.value)}
+                  className="border-cyber-border bg-cyber-black text-cyber-white"
+                  placeholder="Runner token (optional)"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[11px] text-cyber-gray">Command Presets</Label>
+                <div className="flex flex-wrap gap-2">
+                  {commandPresets.map((preset) => (
+                    <Button
+                      key={preset.label}
+                      size="sm"
+                      variant="outline"
+                      className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                      onClick={() => applyCommandPreset(preset.command)}
+                    >
+                      {preset.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="text-[11px] text-cyber-gray">Shell Mode</Label>
+                  <select
+                    value={consoleShell}
+                    onChange={(event) => setConsoleShell(event.target.value === 'powershell' ? 'powershell' : 'bash')}
+                    className="rounded-md border border-cyber-border bg-cyber-black px-2 py-1 text-xs text-cyber-white"
+                  >
+                    <option value="bash">bash</option>
+                    <option value="powershell">powershell</option>
+                  </select>
+                </div>
+                <textarea
+                  value={consoleCommand}
+                  onChange={(event) => setConsoleCommand(event.target.value)}
+                  rows={4}
+                  className="w-full resize-none rounded-md border border-cyber-border bg-cyber-black px-3 py-2 font-mono text-xs text-cyber-white"
+                  placeholder="Enter remote command..."
+                />
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    onClick={() => void executeConsoleCommand()}
+                    disabled={isConsoleRunning}
+                    className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400"
+                  >
+                    <TerminalSquare className="mr-2 h-4 w-4" />
+                    {isConsoleRunning ? 'Running...' : 'Run Command'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-cyber-border text-cyber-gray hover:text-cyber-white"
+                    onClick={() => void copyValue(consoleCommand, 'Console command')}
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Command
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[11px] text-cyber-gray">Console Output</Label>
+                <pre className="max-h-56 overflow-auto rounded-md border border-cyber-border bg-cyber-black p-3 text-[11px] text-cyber-gray">
+                  {consoleOutput || 'No output yet. Run a command to see results.'}
+                </pre>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1257,25 +1587,46 @@ export default function Workflows() {
 
           {remoteWorkflows.length > 0 ? (
             <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-2">
-              {remoteWorkflows.map((workflow) => (
-                <div
-                  key={`${workflow.id}-${workflow.name}`}
-                  className="rounded-md border border-cyber-border/60 bg-cyber-dark/70 px-3 py-2"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-xs font-medium text-cyber-white">
-                      {workflow.name} {workflow.id ? <span className="text-cyber-gray">#{workflow.id}</span> : ''}
+              {remoteWorkflows.map((workflow) => {
+                const workflowMcpEndpoint =
+                  n8nMcpEndpoint && workflow.id
+                    ? `${sanitizeBaseUrl(n8nMcpEndpoint)}?workflowId=${encodeURIComponent(workflow.id)}`
+                    : ''
+
+                return (
+                  <div
+                    key={`${workflow.id}-${workflow.name}`}
+                    className="rounded-md border border-cyber-border/60 bg-cyber-dark/70 px-3 py-2"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="truncate text-xs font-medium text-cyber-white">
+                        {workflow.name} {workflow.id ? <span className="text-cyber-gray">#{workflow.id}</span> : ''}
+                      </p>
+                      <Badge className={workflow.active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
+                        {workflow.active ? 'Active' : 'Paused'}
+                      </Badge>
+                    </div>
+                    <p className="mt-1 truncate font-mono text-[10px] text-cyber-gray">
+                      {workflow.webhookPaths.length > 0 ? workflow.webhookPaths.join(', ') : 'No webhook path detected'}
                     </p>
-                    <Badge className={workflow.active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
-                      {workflow.active ? 'Active' : 'Paused'}
-                    </Badge>
+                    {workflow.updatedAt && <p className="mt-1 text-[10px] text-cyber-gray">Updated {new Date(workflow.updatedAt).toLocaleString()}</p>}
+
+                    {workflowMcpEndpoint && (
+                      <div className="mt-2 flex items-center gap-2 rounded-md border border-cyber-border/60 bg-cyber-black/50 px-2 py-1.5">
+                        <p className="flex-1 truncate font-mono text-[10px] text-cyan-200">{workflowMcpEndpoint}</p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 border border-cyber-border px-2 text-[10px] text-cyber-gray hover:text-cyber-white"
+                          onClick={() => void copyValue(workflowMcpEndpoint, 'Workflow MCP endpoint')}
+                        >
+                          Copy MCP
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-1 truncate font-mono text-[10px] text-cyber-gray">
-                    {workflow.webhookPaths.length > 0 ? workflow.webhookPaths.join(', ') : 'No webhook path detected'}
-                  </p>
-                  {workflow.updatedAt && <p className="mt-1 text-[10px] text-cyber-gray">Updated {new Date(workflow.updatedAt).toLocaleString()}</p>}
-                </div>
-              ))}
+                )
+              })}
             </div>
           ) : (
             <div className="rounded-lg border border-dashed border-cyber-border bg-cyber-dark/40 p-4 text-center text-sm text-cyber-gray">

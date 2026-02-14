@@ -9,6 +9,7 @@ type Action =
   | 'create_n8n_workflow'
   | 'request_livekit_session'
   | 'synthesize_tts'
+  | 'execute_remote_command'
   | 'import_sip_numbers'
   | 'post_forum_update'
   | 'comment_forum_post'
@@ -1334,6 +1335,113 @@ async function synthesizeTtsForAgent(
   }
 }
 
+async function executeRemoteCommandForAgent(
+  client: ReturnType<typeof createClient>,
+  payload: Record<string, unknown>,
+  agent: Record<string, unknown>,
+) {
+  const agentId = asString(agent.id)
+  const agentName = asString(agent.name, 'Agent')
+  const command = asString(payload.command || payload.cmd)
+  if (!command) {
+    throw new Error('command is required for execute_remote_command')
+  }
+
+  const shell = asString(payload.shell, 'bash').toLowerCase() === 'powershell' ? 'powershell' : 'bash'
+  const runnerUrl = asString(payload.runnerUrl || payload.runner_url || Deno.env.get('REMOTE_RUNNER_URL'))
+  const runnerToken = asString(payload.runnerToken || payload.runner_token || Deno.env.get('REMOTE_RUNNER_TOKEN'))
+
+  const ssh = parseRecord(payload.ssh)
+  const sshHost = asString(ssh.host || payload.sshHost || payload.ssh_host || Deno.env.get('SSH_HOST'))
+  const sshUser = asString(ssh.user || payload.sshUser || payload.ssh_user || Deno.env.get('SSH_USER'), 'root')
+  const sshPort = Math.max(1, Math.round(asNumber(ssh.port || payload.sshPort || payload.ssh_port || Deno.env.get('SSH_PORT'), 22)))
+  const escapedCommand = command.replace(/"/g, '\\"')
+  const runCommand = sshHost ? `ssh -p ${sshPort} ${sshUser}@${sshHost} "${escapedCommand}"` : command
+
+  if (!runnerUrl) {
+    await writeActivity(client, {
+      agentId,
+      agentName,
+      message: `prepared remote command (dry run): ${command.slice(0, 80)}`,
+      type: 'info',
+    })
+
+    return {
+      ok: true,
+      action: 'execute_remote_command',
+      dryRun: true,
+      shell,
+      command,
+      runCommand,
+      suggestedCommand: runCommand,
+      stdout: '',
+      stderr: '',
+      exitCode: null,
+    }
+  }
+
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  }
+  if (runnerToken) {
+    headers.Authorization = `Bearer ${runnerToken}`
+  }
+
+  const { response, body } = await fetchJson(runnerUrl, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      shell,
+      command,
+      ssh: sshHost
+        ? {
+            host: sshHost,
+            user: sshUser,
+            port: sshPort,
+          }
+        : null,
+      metadata: {
+        agentId,
+        agentName,
+        source: 'agent-automation-bridge',
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    const details = JSON.stringify(body).slice(0, 240)
+    throw new Error(`Remote runner failed (${response.status}) ${details}`)
+  }
+
+  const runnerBody = parseRecord(body)
+  const stdout = asString(runnerBody.stdout || runnerBody.output || runnerBody.result)
+  const stderr = asString(runnerBody.stderr || runnerBody.error)
+  const exitCode =
+    typeof runnerBody.exitCode === 'number'
+      ? Math.round(runnerBody.exitCode)
+      : Math.round(asNumber(runnerBody.code, 0))
+
+  await writeActivity(client, {
+    agentId,
+    agentName,
+    message: `executed remote command (exit ${exitCode})`,
+    type: exitCode === 0 ? 'success' : 'warning',
+  })
+
+  return {
+    ok: true,
+    action: 'execute_remote_command',
+    dryRun: false,
+    shell,
+    command,
+    runCommand,
+    stdout,
+    stderr,
+    exitCode,
+  }
+}
+
 export default async function (req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS })
@@ -1411,6 +1519,11 @@ export default async function (req: Request): Promise<Response> {
 
     if (action === 'synthesize_tts') {
       const result = await synthesizeTtsForAgent(client, payload, agent)
+      return jsonResponse(result)
+    }
+
+    if (action === 'execute_remote_command') {
+      const result = await executeRemoteCommandForAgent(client, payload, agent)
       return jsonResponse(result)
     }
 

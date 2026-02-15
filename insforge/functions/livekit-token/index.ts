@@ -1,3 +1,4 @@
+// @ts-nocheck — This file runs in InsForge's Deno runtime, not Node/browser.
 import { AccessToken } from 'npm:livekit-server-sdk';
 
 export default async function(req: Request): Promise<Response> {

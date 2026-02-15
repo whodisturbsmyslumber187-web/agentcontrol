@@ -23,6 +23,12 @@ import {
   Monitor,
   Server,
   TerminalSquare,
+  History,
+  Layers,
+  Wrench,
+  Pause,
+  ToggleLeft,
+  ToggleRight,
 } from 'lucide-react'
 import { insforge } from '../lib/insforge'
 
@@ -56,10 +62,21 @@ interface N8nWorkflowRecord {
   raw?: Record<string, unknown>
 }
 
+interface N8nExecution {
+  id: string
+  workflowName: string
+  status: string
+  startedAt: string
+  stoppedAt?: string
+  mode: string
+}
+
 interface N8nFetchResult {
   rows: N8nWorkflowRecord[]
   warnings: string[]
 }
+
+type WorkflowTab = 'editor' | 'manager' | 'history' | 'tools'
 
 const N8N_BASE_URL_KEY = 'agentforge-n8n-base-url'
 const N8N_API_KEY_KEY = 'agentforge-n8n-api-key'
@@ -401,6 +418,11 @@ export default function Workflows() {
   const [runnerToken, setRunnerToken] = useState('')
   const [workspacePath, setWorkspacePath] = useState('/home/workflows')
   const [showEmbeddedWorkspace, setShowEmbeddedWorkspace] = useState(false)
+  const [activeTab, setActiveTab] = useState<WorkflowTab>('editor')
+  const [n8nExecutions, setN8nExecutions] = useState<N8nExecution[]>([])
+  const [isFetchingExecutions, setIsFetchingExecutions] = useState(false)
+  const [isDeletingRemote, setIsDeletingRemote] = useState<string | null>(null)
+  const [isTogglingRemote, setIsTogglingRemote] = useState<string | null>(null)
   const [automationAgentId, setAutomationAgentId] = useState('')
   const [consoleShell, setConsoleShell] = useState<'bash' | 'powershell'>('bash')
   const [consoleCommand, setConsoleCommand] = useState('')
@@ -611,6 +633,79 @@ export default function Workflows() {
     }
 
     return { rows: [], warnings }
+  }
+
+  const fetchExecutions = async () => {
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    const apiKey = n8nApiKey.trim()
+    if (!base || !apiKey) {
+      toast({ title: 'n8n base URL and API key are required', variant: 'destructive' })
+      return
+    }
+    setIsFetchingExecutions(true)
+    try {
+      const res = await fetch(`${base}/api/v1/executions?limit=30`, {
+        headers: { Accept: 'application/json', 'X-N8N-API-KEY': apiKey },
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const payload = await res.json().catch(() => ({}))
+      const items = Array.isArray(payload) ? payload : Array.isArray(payload.data) ? payload.data : []
+      setN8nExecutions(items.map((e: any) => ({
+        id: String(e.id ?? ''),
+        workflowName: e.workflowData?.name ?? e.workflowName ?? `Workflow ${e.workflowId ?? ''}`,
+        status: e.status ?? (e.finished ? 'success' : 'running'),
+        startedAt: e.startedAt ?? '',
+        stoppedAt: e.stoppedAt ?? e.finishedAt ?? undefined,
+        mode: e.mode ?? 'unknown',
+      })))
+      toast({ title: `Loaded ${items.length} executions` })
+    } catch (err: any) {
+      toast({ title: 'Failed to load executions', description: err.message, variant: 'destructive' })
+    } finally {
+      setIsFetchingExecutions(false)
+    }
+  }
+
+  const toggleRemoteWorkflow = async (wf: N8nWorkflowRecord) => {
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    const apiKey = n8nApiKey.trim()
+    if (!base || !apiKey) return
+    setIsTogglingRemote(wf.id)
+    try {
+      const action = wf.active ? 'deactivate' : 'activate'
+      const res = await fetch(`${base}/api/v1/workflows/${wf.id}/${action}`, {
+        method: 'POST',
+        headers: { 'X-N8N-API-KEY': apiKey },
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      setRemoteWorkflows(cur => cur.map(r => r.id === wf.id ? { ...r, active: !r.active } : r))
+      toast({ title: `Workflow ${action}d` })
+    } catch (err: any) {
+      toast({ title: `Toggle failed`, description: err.message, variant: 'destructive' })
+    } finally {
+      setIsTogglingRemote(null)
+    }
+  }
+
+  const deleteRemoteWorkflow = async (id: string) => {
+    if (!window.confirm('Delete this workflow from n8n?')) return
+    const base = sanitizeBaseUrl(n8nBaseUrl)
+    const apiKey = n8nApiKey.trim()
+    if (!base || !apiKey) return
+    setIsDeletingRemote(id)
+    try {
+      const res = await fetch(`${base}/api/v1/workflows/${id}`, {
+        method: 'DELETE',
+        headers: { 'X-N8N-API-KEY': apiKey },
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      setRemoteWorkflows(cur => cur.filter(r => r.id !== id))
+      toast({ title: 'Workflow deleted from n8n' })
+    } catch (err: any) {
+      toast({ title: 'Delete failed', description: err.message, variant: 'destructive' })
+    } finally {
+      setIsDeletingRemote(null)
+    }
   }
 
   const syncRemoteWorkflows = async () => {
@@ -1165,6 +1260,7 @@ export default function Workflows() {
 
   return (
     <div className="space-y-6">
+      {/* Page Header */}
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <h2 className="flex items-center gap-3 text-2xl font-bold text-cyber-white">
@@ -1172,36 +1268,10 @@ export default function Workflows() {
             n8n Workflows
           </h2>
           <p className="text-sm text-cyber-gray">
-            Native-style workflow control with n8n sync, bulk import, MCP endpoint, and SSH runbook access.
+            Embedded n8n editor, workflow management, execution history, and automation tools.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => void fetchWorkflows()}
-            disabled={refreshing}
-            variant="outline"
-            className="border-cyber-border text-cyber-gray hover:text-white"
-          >
-            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
-          <Button
-            onClick={() => void syncRemoteWorkflows()}
-            disabled={isSyncingN8n}
-            variant="outline"
-            className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
-          >
-            <Monitor className={`mr-2 h-4 w-4 ${isSyncingN8n ? 'animate-pulse' : ''}`} />
-            {isSyncingN8n ? 'Syncing n8n...' : 'Sync n8n'}
-          </Button>
-          <Button
-            onClick={() => setShowBulkModal(true)}
-            variant="outline"
-            className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            Bulk Import
-          </Button>
           <Button onClick={() => setShowAddModal(true)} className="bg-pink-600 text-white hover:bg-pink-700">
             <Plus className="mr-2 h-4 w-4" />
             Add Workflow
@@ -1209,539 +1279,407 @@ export default function Workflows() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
-        <Card className="border-cyber-border bg-cyber-card xl:col-span-7">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-cyber-white">
-              <Server className="h-4 w-4 text-cyan-300" />
-              n8n Connection Studio
-            </CardTitle>
-            <CardDescription>Match native n8n workflow control: connect, open editor, and sync catalog.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-cyber-white">n8n Base URL</Label>
-                <Input
-                  value={n8nBaseUrl}
-                  onChange={(event) => setN8nBaseUrl(event.target.value)}
-                  className="border-cyber-border bg-cyber-black text-cyber-white"
-                  placeholder="https://n8n.your-domain.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-cyber-white">n8n API Key</Label>
-                <Input
-                  type="password"
-                  value={n8nApiKey}
-                  onChange={(event) => setN8nApiKey(event.target.value)}
-                  className="border-cyber-border bg-cyber-black text-cyber-white"
-                  placeholder="n8n_api_..."
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label className="text-cyber-white">n8n MCP Endpoint</Label>
-                <Input
-                  value={n8nMcpEndpoint}
-                  onChange={(event) => setN8nMcpEndpoint(event.target.value)}
-                  className="border-cyber-border bg-cyber-black font-mono text-xs text-cyber-white"
-                  placeholder="https://n8n.your-domain.com/mcp"
-                />
-              </div>
-            </div>
+      {/* Tab Bar */}
+      <div className="flex items-center gap-1 rounded-lg border border-cyber-border bg-cyber-dark/60 p-1">
+        {([
+          { key: 'editor' as WorkflowTab, label: 'n8n Editor', icon: Monitor },
+          { key: 'manager' as WorkflowTab, label: 'Workflow Manager', icon: Layers },
+          { key: 'history' as WorkflowTab, label: 'Execution History', icon: History },
+          { key: 'tools' as WorkflowTab, label: 'Tools', icon: Wrench },
+        ]).map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all ${
+              activeTab === tab.key
+                ? 'bg-pink-600/20 text-pink-400 shadow-sm shadow-pink-500/10'
+                : 'text-cyber-gray hover:bg-cyber-card hover:text-cyber-white'
+            }`}
+          >
+            <tab.icon className="h-4 w-4" />
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={persistConnectionSettings} className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80">
-                Save Connection
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                onClick={() => openN8nPage('/home/workflows')}
-              >
-                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                Open Workflow Editor
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                onClick={() => openN8nPage('/executions')}
-              >
-                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                Open Executions
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                onClick={() => openN8nPage('/credentials')}
-              >
-                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                Open Credentials
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                onClick={() => openN8nPage('/signin')}
-              >
-                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                Open n8n Login
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
-                onClick={() => setShowEmbeddedWorkspace((current) => !current)}
-              >
-                <Monitor className="mr-1.5 h-3.5 w-3.5" />
-                {showEmbeddedWorkspace ? 'Hide Embedded n8n' : 'Embed n8n Workspace'}
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-cyber-white">Workspace Path</Label>
-                <Input
-                  value={workspacePath}
-                  onChange={(event) => setWorkspacePath(event.target.value)}
-                  className="border-cyber-border bg-cyber-black text-cyber-white"
-                  placeholder="/home/workflows"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-cyber-white">Embedded Workspace URL</Label>
-                <div className="flex items-center gap-2 rounded-md border border-cyber-border bg-cyber-black px-3 py-2">
-                  <p className="flex-1 truncate font-mono text-xs text-cyber-white">{workspaceUrl || 'Set n8n base URL first'}</p>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                    onClick={() => void copyValue(workspaceUrl, 'Embedded workspace URL')}
-                  >
-                    <Copy className="mr-1 h-3.5 w-3.5" />
-                    Copy
+      {/* ═══════════════════ TAB: n8n Editor ═══════════════════ */}
+      {activeTab === 'editor' && (
+        <Card className="border-cyber-border bg-cyber-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-cyber-white">
+                <Monitor className="h-5 w-5 text-pink-400" />
+                Embedded n8n Editor
+              </CardTitle>
+              <div className="flex gap-2">
+                {sanitizeBaseUrl(n8nBaseUrl) && (
+                  <Button size="sm" variant="outline" className="border-cyber-border text-cyber-gray hover:text-white" onClick={() => window.open(sanitizeBaseUrl(n8nBaseUrl), '_blank', 'noopener,noreferrer')}>
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" /> Open Full Tab
                   </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
-              <p className="text-xs text-cyber-white">Official n8n Sources</p>
-              <div className="flex flex-wrap gap-2">
-                {N8N_OFFICIAL_LINKS.map((link) => (
-                  <Button
-                    key={link.url}
-                    variant="outline"
-                    className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                    onClick={() => window.open(link.url, '_blank', 'noopener,noreferrer')}
-                  >
-                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                    {link.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
-                <input
-                  type="checkbox"
-                  checked={syncRemoteToLocal}
-                  onChange={(event) => setSyncRemoteToLocal(event.target.checked)}
-                  className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
-                />
-                Add remote n8n workflows into local catalog during sync
-              </label>
-              <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
-                <input
-                  type="checkbox"
-                  checked={activateRemoteImports}
-                  onChange={(event) => setActivateRemoteImports(event.target.checked)}
-                  className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
-                />
-                Auto-activate workflows when importing via agent bridge
-              </label>
-            </div>
-
-            {showEmbeddedWorkspace && (
-              <div className="space-y-2 rounded-lg border border-cyan-500/30 bg-cyan-500/5 p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs text-cyan-100">Embedded n8n Workspace (official UI)</p>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-7 border border-cyan-500/40 text-cyan-300 hover:text-cyan-100"
-                    onClick={() => {
-                      if (workspaceUrl) window.open(workspaceUrl, '_blank', 'noopener,noreferrer')
-                    }}
-                  >
-                    <ExternalLink className="mr-1 h-3.5 w-3.5" />
-                    Open Full Tab
-                  </Button>
-                </div>
-                {workspaceUrl ? (
-                  <iframe
-                    title="Embedded n8n Workspace"
-                    src={workspaceUrl}
-                    className="h-[560px] w-full rounded-md border border-cyber-border bg-black"
-                    loading="lazy"
-                  />
-                ) : (
-                  <p className="text-xs text-yellow-300">Set n8n base URL before embedding the workspace.</p>
                 )}
+              </div>
+            </div>
+            <CardDescription>Your n8n workflow editor embedded directly in the panel.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {sanitizeBaseUrl(n8nBaseUrl) ? (
+              <iframe
+                title="Embedded n8n Editor"
+                src={sanitizeBaseUrl(n8nBaseUrl)}
+                className="h-[700px] w-full rounded-lg border border-cyber-border bg-black"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-yellow-500/40 bg-yellow-500/5 py-16">
+                <AlertTriangle className="mb-3 h-10 w-10 text-yellow-400" />
+                <p className="text-lg font-medium text-yellow-300">n8n URL Not Configured</p>
+                <p className="mt-1 text-sm text-cyber-gray">Go to the <button onClick={() => setActiveTab('tools')} className="text-pink-400 underline">Tools</button> tab to set your n8n base URL and API key.</p>
               </div>
             )}
           </CardContent>
         </Card>
+      )}
 
-        <Card className="border-cyber-border bg-cyber-card xl:col-span-5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-cyber-white">
-              <TerminalSquare className="h-4 w-4 text-cyan-300" />
-              Agent Access (MCP + SSH)
-            </CardTitle>
-            <CardDescription>Ready-to-use access values your agents can consume by API, MCP, or SSH runbooks.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-              <Input
-                value={sshHost}
-                onChange={(event) => setSshHost(event.target.value)}
-                className="border-cyber-border bg-cyber-black text-cyber-white"
-                placeholder="host"
-              />
-              <Input
-                value={sshUser}
-                onChange={(event) => setSshUser(event.target.value)}
-                className="border-cyber-border bg-cyber-black text-cyber-white"
-                placeholder="user"
-              />
-              <Input
-                value={sshPort}
-                onChange={(event) => setSshPort(event.target.value)}
-                className="border-cyber-border bg-cyber-black text-cyber-white"
-                placeholder="22"
-              />
+      {/* ═══════════════════ TAB: Workflow Manager ═══════════════════ */}
+      {activeTab === 'manager' && (
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={() => void syncRemoteWorkflows()} disabled={isSyncingN8n} variant="outline" className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10">
+              <RefreshCw className={`mr-2 h-4 w-4 ${isSyncingN8n ? 'animate-spin' : ''}`} />
+              {isSyncingN8n ? 'Syncing...' : 'Sync from n8n'}
+            </Button>
+            <Button onClick={() => void fetchWorkflows()} disabled={refreshing} variant="outline" className="border-cyber-border text-cyber-gray hover:text-white">
+              <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh Local
+            </Button>
+            <Button onClick={() => setShowBulkModal(true)} variant="outline" className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10">
+              <Upload className="mr-2 h-4 w-4" /> Bulk Import
+            </Button>
+            <div className="ml-auto flex gap-2">
+              <Badge className="bg-cyan-500/20 text-cyan-200">Remote: {remoteWorkflows.length}</Badge>
+              <Badge className="bg-cyber-green/20 text-cyber-green">Local: {workflows.length}</Badge>
             </div>
+          </div>
 
-            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
-              <p className="text-[11px] text-cyber-gray">n8n MCP Endpoint</p>
-              <div className="flex items-center gap-2">
-                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{n8nMcpEndpoint || 'Not set'}</p>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                  onClick={() => void copyValue(n8nMcpEndpoint, 'MCP endpoint')}
-                >
-                  <Link2 className="mr-1 h-3.5 w-3.5" />
-                  Copy
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
-              <p className="text-[11px] text-cyber-gray">SSH Connect Command</p>
-              <div className="flex items-center gap-2">
-                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{sshConnectCommand || 'Not set'}</p>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                  onClick={() => void copyValue(sshConnectCommand, 'SSH command')}
-                >
-                  <Copy className="mr-1 h-3.5 w-3.5" />
-                  Copy
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
-              <p className="text-[11px] text-cyber-gray">Runbook Health Check</p>
-              <div className="flex items-center gap-2">
-                <p className="flex-1 truncate font-mono text-xs text-cyber-white">{runbookCommand || 'Not set'}</p>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                  onClick={() => void copyValue(runbookCommand, 'Runbook command')}
-                >
-                  <Copy className="mr-1 h-3.5 w-3.5" />
-                  Copy
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-3 rounded-lg border border-cyan-500/30 bg-cyan-500/5 p-3">
-              <p className="text-xs text-cyan-100">Remote Command Console (Agent + SSH + PowerShell/Bash)</p>
-
-              <div className="grid grid-cols-1 gap-2">
-                <Label className="text-[11px] text-cyber-gray">Automation Agent</Label>
-                <select
-                  value={automationAgentId}
-                  onChange={(event) => setAutomationAgentId(event.target.value)}
-                  className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
-                >
-                  <option value="">Select agent</option>
-                  {agents.map((agent) => (
-                    <option key={agent.id} value={agent.id}>
-                      {agent.name} {agent.api_key ? '' : '(api key will be generated)'}
-                    </option>
+          {/* Remote n8n Workflows */}
+          <Card className="border-cyber-border bg-cyber-card">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base text-cyber-white">n8n Remote Workflows</CardTitle>
+              <CardDescription>Workflows fetched from your n8n instance API. Activate, deactivate, or delete directly.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {remoteWorkflows.length > 0 ? (
+                <div className="space-y-2">
+                  {remoteWorkflows.map(wf => (
+                    <div key={wf.id} className="flex items-center justify-between gap-3 rounded-lg border border-cyber-border/60 bg-cyber-dark/70 px-4 py-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="truncate text-sm font-medium text-cyber-white">{wf.name}</p>
+                          <span className="text-[10px] text-cyber-gray">#{wf.id}</span>
+                        </div>
+                        <p className="mt-0.5 text-[11px] text-cyber-gray">
+                          {wf.webhookPaths.length > 0 ? wf.webhookPaths.join(', ') : 'No webhook'}
+                          {wf.updatedAt && ` · Updated ${new Date(wf.updatedAt).toLocaleDateString()}`}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={wf.active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
+                          {wf.active ? 'Active' : 'Paused'}
+                        </Badge>
+                        <Button size="sm" variant="ghost" disabled={isTogglingRemote === wf.id} className="h-8 text-cyber-gray hover:text-cyber-white" onClick={() => void toggleRemoteWorkflow(wf)}>
+                          {wf.active ? <ToggleRight className="h-4 w-4 text-cyber-green" /> : <ToggleLeft className="h-4 w-4" />}
+                        </Button>
+                        <Button size="sm" variant="ghost" disabled={isDeletingRemote === wf.id} className="h-8 text-red-400 hover:text-red-300" onClick={() => void deleteRemoteWorkflow(wf.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-8 text-cyber-gray hover:text-white" onClick={() => openN8nPage(`/workflow/${wf.id}`)}>
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   ))}
-                </select>
-              </div>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-dashed border-cyber-border py-8 text-center text-sm text-cyber-gray">
+                  No remote workflows. Click <span className="font-mono text-cyan-300">Sync from n8n</span> to load.
+                </div>
+              )}
+              {remoteWarnings.length > 0 && (
+                <div className="mt-3 space-y-1 rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
+                  {remoteWarnings.map((w, i) => (
+                    <div key={`${w}-${i}`} className="flex items-start gap-2 text-xs text-yellow-300">
+                      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" /><span>{w}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-              <div className="grid grid-cols-1 gap-2">
-                <Label className="text-[11px] text-cyber-gray">Runner Endpoint (optional, for real execution)</Label>
-                <Input
-                  value={runnerUrl}
-                  onChange={(event) => setRunnerUrl(event.target.value)}
-                  className="border-cyber-border bg-cyber-black text-cyber-white"
-                  placeholder="https://your-vps-runner.example.com/execute"
-                />
-                <Input
-                  type="password"
-                  value={runnerToken}
-                  onChange={(event) => setRunnerToken(event.target.value)}
-                  className="border-cyber-border bg-cyber-black text-cyber-white"
-                  placeholder="Runner token (optional)"
-                />
+          {/* Local Workflow Cards */}
+          <Card className="border-cyber-border bg-cyber-card">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base text-cyber-white">Local Workflow Catalog</CardTitle>
+              <CardDescription>Workflows saved in your InsForge database.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {workflows.map(workflow => (
+                  <div key={workflow.id} className="rounded-lg border border-cyber-border bg-cyber-dark/50 p-4 transition-colors hover:border-pink-500/50">
+                    <div className="flex items-start justify-between">
+                      <p className="truncate pr-2 text-sm font-medium text-cyber-white">{workflow.name}</p>
+                      <button onClick={() => void handleToggleActive(workflow)}>
+                        <Badge className={workflow.is_active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
+                          {workflow.is_active ? 'Active' : 'Paused'}
+                        </Badge>
+                      </button>
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-xs text-cyber-gray">{workflow.description || 'No description'}</p>
+                    <div className="mt-2 flex items-center gap-2 rounded border border-cyber-border/50 bg-cyber-black/50 p-1.5 font-mono text-[10px] text-cyber-gray">
+                      <Webhook className="h-3 w-3 flex-shrink-0" /><span className="truncate">{workflow.trigger_url}</span>
+                    </div>
+                    <div className="mt-2 text-[10px] text-cyber-gray">
+                      <Clock className="mr-1 inline h-3 w-3" />Created {new Date(workflow.created_at).toLocaleDateString()}
+                      {workflow.last_run_at && (
+                        <span className="ml-2">
+                          {workflow.last_status === 'success' ? <CheckCircle2 className="mr-0.5 inline h-3 w-3 text-cyber-green" /> : workflow.last_status === 'failure' ? <XCircle className="mr-0.5 inline h-3 w-3 text-red-400" /> : null}
+                          Last run {new Date(workflow.last_run_at).toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-3 flex gap-2">
+                      <Button size="sm" className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80" onClick={() => void handleTrigger(workflow)}>
+                        <Play className="mr-1 h-3 w-3" /> Run
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-400 hover:bg-red-900/20" onClick={() => void handleDelete(workflow.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {workflows.length === 0 && (
+                  <div className="col-span-full rounded-lg border border-dashed border-cyber-border py-8 text-center text-sm text-cyber-gray">
+                    No local workflows. Add one or use bulk import.
+                  </div>
+                )}
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
-              <div className="space-y-2">
-                <Label className="text-[11px] text-cyber-gray">Command Presets</Label>
+      {/* ═══════════════════ TAB: Execution History ═══════════════════ */}
+      {activeTab === 'history' && (
+        <Card className="border-cyber-border bg-cyber-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-cyber-white">
+                <History className="h-5 w-5 text-cyan-400" />
+                Execution History
+              </CardTitle>
+              <Button onClick={() => void fetchExecutions()} disabled={isFetchingExecutions} variant="outline" className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10">
+                <RefreshCw className={`mr-2 h-4 w-4 ${isFetchingExecutions ? 'animate-spin' : ''}`} />
+                {isFetchingExecutions ? 'Loading...' : 'Load Executions'}
+              </Button>
+            </div>
+            <CardDescription>Recent workflow executions from your n8n instance.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {n8nExecutions.length > 0 ? (
+              <div className="overflow-auto rounded-lg border border-cyber-border">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-cyber-border bg-cyber-dark/80 text-left text-xs text-cyber-gray">
+                      <th className="px-4 py-2.5">ID</th>
+                      <th className="px-4 py-2.5">Workflow</th>
+                      <th className="px-4 py-2.5">Status</th>
+                      <th className="px-4 py-2.5">Mode</th>
+                      <th className="px-4 py-2.5">Started</th>
+                      <th className="px-4 py-2.5">Finished</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {n8nExecutions.map(exec => (
+                      <tr key={exec.id} className="border-b border-cyber-border/40 hover:bg-cyber-dark/40">
+                        <td className="px-4 py-2 font-mono text-xs text-cyber-gray">{exec.id}</td>
+                        <td className="px-4 py-2 text-cyber-white">{exec.workflowName}</td>
+                        <td className="px-4 py-2">
+                          <Badge className={
+                            exec.status === 'success' ? 'bg-cyber-green/20 text-cyber-green' :
+                            exec.status === 'error' || exec.status === 'crashed' ? 'bg-red-500/20 text-red-400' :
+                            exec.status === 'running' || exec.status === 'waiting' ? 'bg-blue-500/20 text-blue-400' :
+                            'bg-cyber-gray/20 text-cyber-gray'
+                          }>
+                            {exec.status}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-2 text-xs text-cyber-gray">{exec.mode}</td>
+                        <td className="px-4 py-2 text-xs text-cyber-gray">{exec.startedAt ? new Date(exec.startedAt).toLocaleString() : '—'}</td>
+                        <td className="px-4 py-2 text-xs text-cyber-gray">{exec.stoppedAt ? new Date(exec.stoppedAt).toLocaleString() : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-cyber-border py-12 text-center">
+                <History className="mb-3 h-10 w-10 text-cyber-gray/50" />
+                <p className="text-sm text-cyber-gray">No executions loaded. Click <span className="font-mono text-cyan-300">Load Executions</span> to fetch from n8n API.</p>
+                {!sanitizeBaseUrl(n8nBaseUrl) && <p className="mt-1 text-xs text-yellow-300">Set your n8n URL & API key in the Tools tab first.</p>}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ═══════════════════ TAB: Tools ═══════════════════ */}
+      {activeTab === 'tools' && (
+        <div className="space-y-4">
+          {/* Connection Settings */}
+          <Card className="border-cyber-border bg-cyber-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-cyber-white">
+                <Server className="h-4 w-4 text-cyan-300" />
+                n8n Connection Settings
+              </CardTitle>
+              <CardDescription>Configure your n8n instance URL, API key, and related settings.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-cyber-white">n8n Base URL</Label>
+                  <Input value={n8nBaseUrl} onChange={e => setN8nBaseUrl(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="https://n8n.your-domain.com" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-cyber-white">n8n API Key</Label>
+                  <Input type="password" value={n8nApiKey} onChange={e => setN8nApiKey(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="n8n_api_..." />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label className="text-cyber-white">n8n MCP Endpoint</Label>
+                  <Input value={n8nMcpEndpoint} onChange={e => setN8nMcpEndpoint(e.target.value)} className="border-cyber-border bg-cyber-black font-mono text-xs text-cyber-white" placeholder="https://n8n.your-domain.com/mcp" />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={persistConnectionSettings} className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80">Save Connection</Button>
+                <Button variant="outline" className="border-cyber-border text-cyber-gray hover:text-white" onClick={() => openN8nPage('/home/workflows')}><ExternalLink className="mr-1.5 h-3.5 w-3.5" />Open Editor</Button>
+                <Button variant="outline" className="border-cyber-border text-cyber-gray hover:text-white" onClick={() => openN8nPage('/executions')}><ExternalLink className="mr-1.5 h-3.5 w-3.5" />Executions</Button>
+                <Button variant="outline" className="border-cyber-border text-cyber-gray hover:text-white" onClick={() => openN8nPage('/credentials')}><ExternalLink className="mr-1.5 h-3.5 w-3.5" />Credentials</Button>
+              </div>
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
+                  <input type="checkbox" checked={syncRemoteToLocal} onChange={e => setSyncRemoteToLocal(e.target.checked)} className="h-4 w-4 rounded border-cyber-border bg-cyber-black" />
+                  Add remote n8n workflows into local catalog during sync
+                </label>
+                <label className="flex items-center gap-2 rounded border border-cyber-border bg-cyber-dark/40 p-2 text-xs text-cyber-gray">
+                  <input type="checkbox" checked={activateRemoteImports} onChange={e => setActivateRemoteImports(e.target.checked)} className="h-4 w-4 rounded border-cyber-border bg-cyber-black" />
+                  Auto-activate workflows when importing via agent bridge
+                </label>
+              </div>
+              <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+                <p className="text-xs text-cyber-white">Official n8n Sources</p>
                 <div className="flex flex-wrap gap-2">
-                  {commandPresets.map((preset) => (
-                    <Button
-                      key={preset.label}
-                      size="sm"
-                      variant="outline"
-                      className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                      onClick={() => applyCommandPreset(preset.command)}
-                    >
-                      {preset.label}
+                  {N8N_OFFICIAL_LINKS.map(link => (
+                    <Button key={link.url} variant="outline" className="border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => window.open(link.url, '_blank', 'noopener,noreferrer')}>
+                      <ExternalLink className="mr-1.5 h-3.5 w-3.5" />{link.label}
                     </Button>
                   ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
+          {/* SSH & MCP Access */}
+          <Card className="border-cyber-border bg-cyber-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-cyber-white"><TerminalSquare className="h-4 w-4 text-cyan-300" />Agent Access (MCP + SSH)</CardTitle>
+              <CardDescription>Access values your agents can consume by API, MCP, or SSH.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                <Input value={sshHost} onChange={e => setSshHost(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="host" />
+                <Input value={sshUser} onChange={e => setSshUser(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="user" />
+                <Input value={sshPort} onChange={e => setSshPort(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="22" />
+              </div>
+              <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+                <p className="text-[11px] text-cyber-gray">n8n MCP Endpoint</p>
+                <div className="flex items-center gap-2">
+                  <p className="flex-1 truncate font-mono text-xs text-cyber-white">{n8nMcpEndpoint || 'Not set'}</p>
+                  <Button size="sm" variant="ghost" className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => void copyValue(n8nMcpEndpoint, 'MCP endpoint')}><Link2 className="mr-1 h-3.5 w-3.5" />Copy</Button>
+                </div>
+              </div>
+              <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+                <p className="text-[11px] text-cyber-gray">SSH Connect Command</p>
+                <div className="flex items-center gap-2">
+                  <p className="flex-1 truncate font-mono text-xs text-cyber-white">{sshConnectCommand || 'Not set'}</p>
+                  <Button size="sm" variant="ghost" className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => void copyValue(sshConnectCommand, 'SSH command')}><Copy className="mr-1 h-3.5 w-3.5" />Copy</Button>
+                </div>
+              </div>
+              <div className="space-y-2 rounded-lg border border-cyber-border bg-cyber-black/60 p-3">
+                <p className="text-[11px] text-cyber-gray">Runbook Health Check</p>
+                <div className="flex items-center gap-2">
+                  <p className="flex-1 truncate font-mono text-xs text-cyber-white">{runbookCommand || 'Not set'}</p>
+                  <Button size="sm" variant="ghost" className="h-7 border border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => void copyValue(runbookCommand, 'Runbook command')}><Copy className="mr-1 h-3.5 w-3.5" />Copy</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Remote Console */}
+          <Card className="border-cyber-border bg-cyber-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-cyber-white"><TerminalSquare className="h-4 w-4 text-cyan-300" />Remote Command Console</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-1 gap-2">
+                <Label className="text-[11px] text-cyber-gray">Automation Agent</Label>
+                <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
+                  <option value="">Select agent</option>
+                  {agents.map(agent => (<option key={agent.id} value={agent.id}>{agent.name} {agent.api_key ? '' : '(api key will be generated)'}</option>))}
+                </select>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                <Label className="text-[11px] text-cyber-gray">Runner Endpoint (optional)</Label>
+                <Input value={runnerUrl} onChange={e => setRunnerUrl(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="https://your-vps-runner.example.com/execute" />
+                <Input type="password" value={runnerToken} onChange={e => setRunnerToken(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="Runner token (optional)" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[11px] text-cyber-gray">Command Presets</Label>
+                <div className="flex flex-wrap gap-2">
+                  {commandPresets.map(preset => (
+                    <Button key={preset.label} size="sm" variant="outline" className="border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => applyCommandPreset(preset.command)}>{preset.label}</Button>
+                  ))}
+                </div>
+              </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <Label className="text-[11px] text-cyber-gray">Shell Mode</Label>
-                  <select
-                    value={consoleShell}
-                    onChange={(event) => setConsoleShell(event.target.value === 'powershell' ? 'powershell' : 'bash')}
-                    className="rounded-md border border-cyber-border bg-cyber-black px-2 py-1 text-xs text-cyber-white"
-                  >
+                  <select value={consoleShell} onChange={e => setConsoleShell(e.target.value === 'powershell' ? 'powershell' : 'bash')} className="rounded-md border border-cyber-border bg-cyber-black px-2 py-1 text-xs text-cyber-white">
                     <option value="bash">bash</option>
                     <option value="powershell">powershell</option>
                   </select>
                 </div>
-                <textarea
-                  value={consoleCommand}
-                  onChange={(event) => setConsoleCommand(event.target.value)}
-                  rows={4}
-                  className="w-full resize-none rounded-md border border-cyber-border bg-cyber-black px-3 py-2 font-mono text-xs text-cyber-white"
-                  placeholder="Enter remote command..."
-                />
+                <textarea value={consoleCommand} onChange={e => setConsoleCommand(e.target.value)} rows={4} className="w-full resize-none rounded-md border border-cyber-border bg-cyber-black px-3 py-2 font-mono text-xs text-cyber-white" placeholder="Enter remote command..." />
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    onClick={() => void executeConsoleCommand()}
-                    disabled={isConsoleRunning}
-                    className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400"
-                  >
-                    <TerminalSquare className="mr-2 h-4 w-4" />
-                    {isConsoleRunning ? 'Running...' : 'Run Command'}
+                  <Button onClick={() => void executeConsoleCommand()} disabled={isConsoleRunning} className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400">
+                    <TerminalSquare className="mr-2 h-4 w-4" />{isConsoleRunning ? 'Running...' : 'Run Command'}
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="border-cyber-border text-cyber-gray hover:text-cyber-white"
-                    onClick={() => void copyValue(consoleCommand, 'Console command')}
-                  >
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copy Command
+                  <Button variant="outline" className="border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => void copyValue(consoleCommand, 'Console command')}>
+                    <Copy className="mr-2 h-4 w-4" />Copy Command
                   </Button>
                 </div>
               </div>
-
               <div className="space-y-2">
                 <Label className="text-[11px] text-cyber-gray">Console Output</Label>
                 <pre className="max-h-56 overflow-auto rounded-md border border-cyber-border bg-cyber-black p-3 text-[11px] text-cyber-gray">
                   {consoleOutput || 'No output yet. Run a command to see results.'}
                 </pre>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="border-cyber-border bg-cyber-card">
-        <CardHeader>
-          <CardTitle className="text-cyber-white">Remote n8n Catalog</CardTitle>
-          <CardDescription>Latest sync from n8n API (closer to native n8n workflow list).</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge className="bg-cyan-500/20 text-cyan-200">Remote: {remoteWorkflows.length}</Badge>
-            <Badge className="bg-cyber-green/20 text-cyber-green">Local: {workflows.length}</Badge>
-            {remoteWarnings.length > 0 && <Badge className="bg-yellow-500/20 text-yellow-300">Warnings: {remoteWarnings.length}</Badge>}
-          </div>
-
-          {remoteWorkflows.length > 0 ? (
-            <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-2">
-              {remoteWorkflows.map((workflow) => {
-                const workflowMcpEndpoint =
-                  n8nMcpEndpoint && workflow.id
-                    ? `${sanitizeBaseUrl(n8nMcpEndpoint)}?workflowId=${encodeURIComponent(workflow.id)}`
-                    : ''
-
-                return (
-                  <div
-                    key={`${workflow.id}-${workflow.name}`}
-                    className="rounded-md border border-cyber-border/60 bg-cyber-dark/70 px-3 py-2"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-xs font-medium text-cyber-white">
-                        {workflow.name} {workflow.id ? <span className="text-cyber-gray">#{workflow.id}</span> : ''}
-                      </p>
-                      <Badge className={workflow.active ? 'bg-cyber-green/20 text-cyber-green' : 'bg-cyber-gray/20 text-cyber-gray'}>
-                        {workflow.active ? 'Active' : 'Paused'}
-                      </Badge>
-                    </div>
-                    <p className="mt-1 truncate font-mono text-[10px] text-cyber-gray">
-                      {workflow.webhookPaths.length > 0 ? workflow.webhookPaths.join(', ') : 'No webhook path detected'}
-                    </p>
-                    {workflow.updatedAt && <p className="mt-1 text-[10px] text-cyber-gray">Updated {new Date(workflow.updatedAt).toLocaleString()}</p>}
-
-                    {workflowMcpEndpoint && (
-                      <div className="mt-2 flex items-center gap-2 rounded-md border border-cyber-border/60 bg-cyber-black/50 px-2 py-1.5">
-                        <p className="flex-1 truncate font-mono text-[10px] text-cyan-200">{workflowMcpEndpoint}</p>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 border border-cyber-border px-2 text-[10px] text-cyber-gray hover:text-cyber-white"
-                          onClick={() => void copyValue(workflowMcpEndpoint, 'Workflow MCP endpoint')}
-                        >
-                          Copy MCP
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-dashed border-cyber-border bg-cyber-dark/40 p-4 text-center text-sm text-cyber-gray">
-              No remote workflows loaded yet. Run <span className="font-mono">Sync n8n</span>.
-            </div>
-          )}
-
-          {remoteWarnings.length > 0 && (
-            <div className="space-y-2 rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
-              {remoteWarnings.map((warning, index) => (
-                <div key={`${warning}-${index}`} className="flex items-start gap-2 text-xs text-yellow-300">
-                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
-                  <span>{warning}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {workflows.map((workflow) => (
-          <Card key={workflow.id} className="border-cyber-border bg-cyber-card transition-colors hover:border-pink-500/50">
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <CardTitle className="truncate pr-2 text-base text-cyber-white" title={workflow.name}>
-                  {workflow.name}
-                </CardTitle>
-                <button onClick={() => void handleToggleActive(workflow)}>
-                  <Badge
-                    variant={workflow.is_active ? 'default' : 'secondary'}
-                    className={
-                      workflow.is_active
-                        ? 'bg-cyber-green/20 text-cyber-green'
-                        : 'bg-cyber-gray/20 text-cyber-gray'
-                    }
-                  >
-                    {workflow.is_active ? 'Active' : 'Paused'}
-                  </Badge>
-                </button>
-              </div>
-              <CardDescription className="min-h-[2.5em] line-clamp-2 text-xs text-cyber-gray">
-                {workflow.description || 'No description provided'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 rounded border border-cyber-border/50 bg-cyber-dark/50 p-2 font-mono text-xs text-cyber-gray break-all">
-                  <Webhook className="h-3 w-3 flex-shrink-0" />
-                  <span className="truncate">{workflow.trigger_url}</span>
-                </div>
-
-                <div className="text-[10px] text-cyber-gray">
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Created {new Date(workflow.created_at).toLocaleDateString()}
-                  </div>
-                  {workflow.last_run_at && (
-                    <div className="mt-1 flex items-center gap-1">
-                      {workflow.last_status === 'success' ? (
-                        <CheckCircle2 className="h-3 w-3 text-cyber-green" />
-                      ) : workflow.last_status === 'failure' ? (
-                        <XCircle className="h-3 w-3 text-red-400" />
-                      ) : (
-                        <Clock className="h-3 w-3" />
-                      )}
-                      Last run {new Date(workflow.last_run_at).toLocaleString()}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      className="bg-cyber-green font-medium text-cyber-black hover:bg-cyber-green/80"
-                      onClick={() => void handleTrigger(workflow)}
-                    >
-                      <Play className="mr-1 h-3 w-3" />
-                      Run
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-8 w-8 p-0 text-red-400 hover:bg-red-900/20 hover:text-red-300"
-                      onClick={() => void handleDelete(workflow.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
             </CardContent>
           </Card>
-        ))}
+        </div>
+      )}
 
-        {workflows.length === 0 && (
-          <div className="col-span-full rounded-lg border border-dashed border-cyber-border bg-cyber-card/50 py-12 text-center text-cyber-gray">
-            <Webhook className="mx-auto mb-4 h-12 w-12 opacity-50" />
-            <h3 className="text-lg font-medium text-cyber-white">No workflows configured</h3>
-            <p className="mx-auto mt-1 max-w-sm">
-              Add one manually or use bulk import for n8n exports and webhook lists.
-            </p>
-            <div className="mt-3 flex items-center justify-center gap-2">
-              <Button onClick={() => setShowAddModal(true)} variant="link" className="text-pink-500">
-                Create first workflow
-              </Button>
-              <Button onClick={() => setShowBulkModal(true)} variant="link" className="text-cyan-400">
-                Bulk import
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-
+      {/* ═══════════════════ MODALS (always rendered) ═══════════════════ */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
           <Card className="w-full max-w-md border-cyber-border bg-cyber-dark">
@@ -1752,58 +1690,20 @@ export default function Workflows() {
             <CardContent>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-cyber-white">
-                    Workflow Name
-                  </Label>
-                  <Input
-                    id="name"
-                    value={newWorkflow.name}
-                    onChange={(event) => setNewWorkflow({ ...newWorkflow, name: event.target.value })}
-                    className="border-cyber-border bg-cyber-black text-cyber-white"
-                    placeholder="e.g. Daily SEO Report"
-                    required
-                  />
+                  <Label htmlFor="name" className="text-cyber-white">Workflow Name</Label>
+                  <Input id="name" value={newWorkflow.name} onChange={e => setNewWorkflow({ ...newWorkflow, name: e.target.value })} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="e.g. Daily SEO Report" required />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="url" className="text-cyber-white">
-                    Webhook URL
-                  </Label>
-                  <Input
-                    id="url"
-                    value={newWorkflow.trigger_url}
-                    onChange={(event) => setNewWorkflow({ ...newWorkflow, trigger_url: event.target.value })}
-                    className="border-cyber-border bg-cyber-black font-mono text-xs text-cyber-white"
-                    placeholder="https://n8n.your-domain.com/webhook/..."
-                    required
-                  />
+                  <Label htmlFor="url" className="text-cyber-white">Webhook URL</Label>
+                  <Input id="url" value={newWorkflow.trigger_url} onChange={e => setNewWorkflow({ ...newWorkflow, trigger_url: e.target.value })} className="border-cyber-border bg-cyber-black font-mono text-xs text-cyber-white" placeholder="https://n8n.your-domain.com/webhook/..." required />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="desc" className="text-cyber-white">
-                    Description
-                  </Label>
-                  <Input
-                    id="desc"
-                    value={newWorkflow.description}
-                    onChange={(event) => setNewWorkflow({ ...newWorkflow, description: event.target.value })}
-                    className="border-cyber-border bg-cyber-black text-cyber-white"
-                    placeholder="What does this automation do?"
-                  />
+                  <Label htmlFor="desc" className="text-cyber-white">Description</Label>
+                  <Input id="desc" value={newWorkflow.description} onChange={e => setNewWorkflow({ ...newWorkflow, description: e.target.value })} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="What does this automation do?" />
                 </div>
-
                 <div className="mt-6 flex justify-end gap-2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setShowAddModal(false)}
-                    className="text-cyber-gray hover:text-white"
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting} className="bg-pink-600 text-white hover:bg-pink-700">
-                    {isSubmitting ? 'Saving...' : 'Add Workflow'}
-                  </Button>
+                  <Button type="button" variant="ghost" onClick={() => setShowAddModal(false)} className="text-cyber-gray hover:text-white">Cancel</Button>
+                  <Button type="submit" disabled={isSubmitting} className="bg-pink-600 text-white hover:bg-pink-700">{isSubmitting ? 'Saving...' : 'Add Workflow'}</Button>
                 </div>
               </form>
             </CardContent>
@@ -1816,144 +1716,66 @@ export default function Workflows() {
           <Card className="w-full max-w-5xl border-cyber-border bg-cyber-dark">
             <CardHeader>
               <CardTitle className="text-cyber-white">Bulk Import n8n Workflows</CardTitle>
-              <CardDescription>
-                Paste n8n export JSON, JSON array, or CSV lines (`name,url,description`). Preview before insert.
-              </CardDescription>
+              <CardDescription>Paste n8n export JSON, JSON array, or CSV lines. Preview before insert.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="bulk-base" className="text-cyber-white">
-                    Optional n8n Base URL
-                  </Label>
-                  <Input
-                    id="bulk-base"
-                    value={bulkBaseUrl}
-                    onChange={(event) => setBulkBaseUrl(event.target.value)}
-                    className="border-cyber-border bg-cyber-black text-cyber-white"
-                    placeholder="https://n8n.your-domain.com"
-                  />
-                  <p className="text-[11px] text-cyber-gray">
-                    Needed when importing n8n exports that only include webhook paths.
-                  </p>
+                  <Label htmlFor="bulk-base" className="text-cyber-white">Optional n8n Base URL</Label>
+                  <Input id="bulk-base" value={bulkBaseUrl} onChange={e => setBulkBaseUrl(e.target.value)} className="border-cyber-border bg-cyber-black text-cyber-white" placeholder="https://n8n.your-domain.com" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-cyber-white">Example Formats</Label>
-                  <pre className="h-[124px] overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-3 text-[10px] text-cyber-gray">
-                    {SAMPLE_BULK_INPUT}
-                  </pre>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="border border-cyber-border text-cyber-gray hover:text-cyber-white"
-                    onClick={() => void copyValue(SAMPLE_BULK_INPUT, 'Sample payload')}
-                  >
-                    <Copy className="mr-1.5 h-3.5 w-3.5" />
-                    Copy Sample
-                  </Button>
+                  <pre className="h-[124px] overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-3 text-[10px] text-cyber-gray">{SAMPLE_BULK_INPUT}</pre>
+                  <Button size="sm" variant="ghost" className="border border-cyber-border text-cyber-gray hover:text-cyber-white" onClick={() => void copyValue(SAMPLE_BULK_INPUT, 'Sample payload')}><Copy className="mr-1.5 h-3.5 w-3.5" />Copy Sample</Button>
                 </div>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="bulk-input" className="text-cyber-white">
-                  Bulk Data
-                </Label>
+                <Label htmlFor="bulk-input" className="text-cyber-white">Bulk Data</Label>
                 <div className="flex flex-wrap items-center gap-2">
                   <label className="inline-flex cursor-pointer items-center rounded-md border border-cyber-border px-3 py-1.5 text-xs text-cyber-gray hover:text-cyber-white">
-                    <Upload className="mr-1.5 h-3.5 w-3.5" />
-                    Load File (.json/.csv/.txt)
-                    <input
-                      type="file"
-                      accept=".json,.csv,.txt,application/json,text/csv,text/plain"
-                      className="hidden"
-                      onChange={handleBulkFileUpload}
-                    />
+                    <Upload className="mr-1.5 h-3.5 w-3.5" />Load File
+                    <input type="file" accept=".json,.csv,.txt" className="hidden" onChange={handleBulkFileUpload} />
                   </label>
-                  {bulkFileName && (
-                    <span className="text-[11px] text-cyber-gray">Loaded: {bulkFileName}</span>
-                  )}
+                  {bulkFileName && <span className="text-[11px] text-cyber-gray">Loaded: {bulkFileName}</span>}
                 </div>
-                <textarea
-                  id="bulk-input"
-                  value={bulkInput}
-                  onChange={(event) => setBulkInput(event.target.value)}
-                  rows={10}
-                  className="w-full resize-none rounded-lg border border-cyber-border bg-cyber-black px-3 py-2 font-mono text-xs text-cyber-white focus:border-cyber-green/50 focus:outline-none"
-                  placeholder="Paste n8n JSON export or CSV lines here..."
-                />
+                <textarea id="bulk-input" value={bulkInput} onChange={e => setBulkInput(e.target.value)} rows={10} className="w-full resize-none rounded-lg border border-cyber-border bg-cyber-black px-3 py-2 font-mono text-xs text-cyber-white" placeholder="Paste n8n JSON export or CSV lines here..." />
               </div>
-
               <div className="grid grid-cols-1 gap-3 rounded-lg border border-cyber-border bg-cyber-black/50 p-3 lg:grid-cols-2">
                 <div className="space-y-2">
                   <Label className="text-cyber-white">Automation Agent (for n8n push)</Label>
-                  <select
-                    value={automationAgentId}
-                    onChange={(event) => setAutomationAgentId(event.target.value)}
-                    className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white"
-                  >
+                  <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
                     <option value="">Select agent</option>
-                    {agents.map((agent) => (
-                      <option key={agent.id} value={agent.id}>
-                        {agent.name} {agent.api_key ? '' : '(api key will be generated)'}
-                      </option>
-                    ))}
+                    {agents.map(agent => (<option key={agent.id} value={agent.id}>{agent.name} {agent.api_key ? '' : '(api key will be generated)'}</option>))}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-cyber-white">Remote Import Options</Label>
                   <label className="flex items-center gap-2 text-xs text-cyber-gray">
-                    <input
-                      type="checkbox"
-                      checked={activateRemoteImports}
-                      onChange={(event) => setActivateRemoteImports(event.target.checked)}
-                      className="h-4 w-4 rounded border-cyber-border bg-cyber-black"
-                    />
+                    <input type="checkbox" checked={activateRemoteImports} onChange={e => setActivateRemoteImports(e.target.checked)} className="h-4 w-4 rounded border-cyber-border bg-cyber-black" />
                     Activate on import in n8n
                   </label>
-                  <p className="text-[11px] text-cyber-gray">
-                    Uses <span className="font-mono">agent-automation-bridge</span> so agents can import/export workflows consistently.
-                  </p>
                 </div>
               </div>
-
               <div className="flex flex-wrap gap-2">
-                <Button
-                  onClick={parseBulkPayload}
-                  disabled={isParsingBulk}
-                  variant="outline"
-                  className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
-                >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isParsingBulk ? 'animate-spin' : ''}`} />
-                  {isParsingBulk ? 'Parsing...' : 'Preview Import'}
+                <Button onClick={parseBulkPayload} disabled={isParsingBulk} variant="outline" className="border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10">
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isParsingBulk ? 'animate-spin' : ''}`} />{isParsingBulk ? 'Parsing...' : 'Preview Import'}
                 </Button>
-                <Button
-                  onClick={() => void importBulkWorkflows()}
-                  disabled={isImportingBulk || bulkPreview.length === 0}
-                  className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80"
-                >
-                  <Upload className="mr-2 h-4 w-4" />
-                  {isImportingBulk ? 'Importing...' : `Import ${bulkPreview.length} Workflows`}
+                <Button onClick={() => void importBulkWorkflows()} disabled={isImportingBulk || bulkPreview.length === 0} className="bg-cyber-green text-cyber-black hover:bg-cyber-green/80">
+                  <Upload className="mr-2 h-4 w-4" />{isImportingBulk ? 'Importing...' : `Import ${bulkPreview.length} Workflows`}
                 </Button>
-                <Button
-                  onClick={() => void pushBulkPreviewToN8n()}
-                  disabled={isPushingBulkToN8n || bulkPreview.length === 0}
-                  className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400"
-                >
-                  <Server className="mr-2 h-4 w-4" />
-                  {isPushingBulkToN8n ? 'Pushing To n8n...' : `Push ${bulkPreview.length} To n8n`}
+                <Button onClick={() => void pushBulkPreviewToN8n()} disabled={isPushingBulkToN8n || bulkPreview.length === 0} className="bg-cyan-500 text-cyan-950 hover:bg-cyan-400">
+                  <Server className="mr-2 h-4 w-4" />{isPushingBulkToN8n ? 'Pushing...' : `Push ${bulkPreview.length} To n8n`}
                 </Button>
-                <Button variant="ghost" onClick={resetBulkImport} className="text-cyber-gray hover:text-white">
-                  Cancel
-                </Button>
+                <Button variant="ghost" onClick={resetBulkImport} className="text-cyber-gray hover:text-white">Cancel</Button>
               </div>
-
               {(bulkPreview.length > 0 || bulkWarnings.length > 0) && (
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-cyber-white">Ready To Import ({bulkPreview.length})</p>
                     <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-cyber-border bg-cyber-black p-2">
-                      {bulkPreview.map((entry, index) => (
-                        <div key={`${entry.trigger_url}-${index}`} className="rounded border border-cyber-border/60 bg-cyber-dark p-2">
+                      {bulkPreview.map((entry, i) => (
+                        <div key={`${entry.trigger_url}-${i}`} className="rounded border border-cyber-border/60 bg-cyber-dark p-2">
                           <div className="flex items-center justify-between gap-2">
                             <p className="truncate text-xs font-medium text-cyber-white">{entry.name}</p>
                             <Badge className="bg-cyber-green/20 text-[10px] text-cyber-green">{entry.source}</Badge>
@@ -1963,21 +1785,12 @@ export default function Workflows() {
                       ))}
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-cyber-white">Skipped / Warnings ({bulkWarnings.length})</p>
                     <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-2">
-                      {bulkWarnings.length === 0 && (
-                        <div className="flex items-center gap-2 text-xs text-cyber-green">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          No warnings.
-                        </div>
-                      )}
-                      {bulkWarnings.map((warning, index) => (
-                        <div key={`${warning}-${index}`} className="flex items-start gap-2 text-xs text-yellow-300">
-                          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
-                          <span>{warning}</span>
-                        </div>
+                      {bulkWarnings.length === 0 && (<div className="flex items-center gap-2 text-xs text-cyber-green"><CheckCircle2 className="h-3.5 w-3.5" />No warnings.</div>)}
+                      {bulkWarnings.map((w, i) => (
+                        <div key={`${w}-${i}`} className="flex items-start gap-2 text-xs text-yellow-300"><AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" /><span>{w}</span></div>
                       ))}
                     </div>
                   </div>
@@ -1989,4 +1802,6 @@ export default function Workflows() {
       )}
     </div>
   )
+
 }
+

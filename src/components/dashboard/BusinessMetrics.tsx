@@ -194,6 +194,7 @@ export default function BusinessMetrics({ businesses }: BusinessMetricsProps) {
                     type="number"
                     value={addForm.revenue}
                     onChange={(e) => setAddForm({ ...addForm, revenue: Number(e.target.value) })}
+                    placeholder="0"
                     className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                   />
                 </div>
@@ -203,6 +204,7 @@ export default function BusinessMetrics({ businesses }: BusinessMetricsProps) {
                     type="number"
                     value={addForm.expenses}
                     onChange={(e) => setAddForm({ ...addForm, expenses: Number(e.target.value) })}
+                    placeholder="0"
                     className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                   />
                 </div>

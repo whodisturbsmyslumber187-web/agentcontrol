@@ -416,6 +416,7 @@ export default function Settings() {
               min={5}
               value={autoEnhanceInterval}
               onChange={(e) => setAutoEnhanceInterval(Math.max(5, Number(e.target.value || 30)))}
+              placeholder="30"
               className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white"
             />
           </div>
@@ -438,6 +439,7 @@ export default function Settings() {
             <select
               value={automationAgentId}
               onChange={(e) => setAutomationAgentId(e.target.value)}
+              aria-label="Automation agent"
               className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white"
             >
               <option value="">Select automation agent...</option>
@@ -516,6 +518,7 @@ export default function Settings() {
               <select
                 value={daoProvider}
                 onChange={(e) => setDaoProvider(e.target.value)}
+                aria-label="DAO provider"
                 className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-xs text-cyber-white"
               >
                 <option value="aragon">Aragon</option>

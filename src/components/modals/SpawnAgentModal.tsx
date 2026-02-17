@@ -153,7 +153,7 @@ export default function SpawnAgentModal({ open, onClose, parentAgentId }: SpawnA
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-cyber-border text-cyber-gray">
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-cyber-border text-cyber-gray" aria-label="Close modal" title="Close">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -238,6 +238,7 @@ export default function SpawnAgentModal({ open, onClose, parentAgentId }: SpawnA
                   type="text"
                   value={custom.name}
                   onChange={(e) => setCustom({ ...custom, name: e.target.value })}
+                  placeholder="Agent name"
                   className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                 />
               </div>
@@ -247,6 +248,7 @@ export default function SpawnAgentModal({ open, onClose, parentAgentId }: SpawnA
                   type="text"
                   value={custom.role}
                   onChange={(e) => setCustom({ ...custom, role: e.target.value })}
+                  placeholder="Agent role"
                   className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                 />
               </div>
@@ -285,6 +287,7 @@ export default function SpawnAgentModal({ open, onClose, parentAgentId }: SpawnA
                 value={custom.description}
                 onChange={(e) => setCustom({ ...custom, description: e.target.value })}
                 rows={3}
+                placeholder="What does this agent do?"
                 className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none resize-none"
               />
             </div>

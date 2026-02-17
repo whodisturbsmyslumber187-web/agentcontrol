@@ -308,6 +308,7 @@ export default function PhoneRegistry() {
                       <select
                         value={form.new_agent_role}
                         onChange={e => setForm({ ...form, new_agent_role: e.target.value })}
+                        aria-label="New agent role"
                         className="w-full bg-cyber-dark border border-cyber-border rounded px-2 py-1 text-xs text-cyber-white"
                       >
                          <option value="support">Support</option>

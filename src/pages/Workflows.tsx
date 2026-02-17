@@ -1632,7 +1632,7 @@ export default function Workflows() {
             <CardContent className="space-y-3">
               <div className="grid grid-cols-1 gap-2">
                 <Label className="text-[11px] text-cyber-gray">Automation Agent</Label>
-                <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
+                <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} aria-label="Automation agent" className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
                   <option value="">Select agent</option>
                   {agents.map(agent => (<option key={agent.id} value={agent.id}>{agent.name} {agent.api_key ? '' : '(api key will be generated)'}</option>))}
                 </select>
@@ -1653,7 +1653,7 @@ export default function Workflows() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <Label className="text-[11px] text-cyber-gray">Shell Mode</Label>
-                  <select value={consoleShell} onChange={e => setConsoleShell(e.target.value === 'powershell' ? 'powershell' : 'bash')} className="rounded-md border border-cyber-border bg-cyber-black px-2 py-1 text-xs text-cyber-white">
+                  <select value={consoleShell} onChange={e => setConsoleShell(e.target.value === 'powershell' ? 'powershell' : 'bash')} aria-label="Shell mode" className="rounded-md border border-cyber-border bg-cyber-black px-2 py-1 text-xs text-cyber-white">
                     <option value="bash">bash</option>
                     <option value="powershell">powershell</option>
                   </select>
@@ -1744,7 +1744,7 @@ export default function Workflows() {
               <div className="grid grid-cols-1 gap-3 rounded-lg border border-cyber-border bg-cyber-black/50 p-3 lg:grid-cols-2">
                 <div className="space-y-2">
                   <Label className="text-cyber-white">Automation Agent (for n8n push)</Label>
-                  <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
+                  <select value={automationAgentId} onChange={e => setAutomationAgentId(e.target.value)} aria-label="Automation agent for n8n push" className="w-full rounded-md border border-cyber-border bg-cyber-black px-3 py-2 text-sm text-cyber-white">
                     <option value="">Select agent</option>
                     {agents.map(agent => (<option key={agent.id} value={agent.id}>{agent.name} {agent.api_key ? '' : '(api key will be generated)'}</option>))}
                   </select>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useWebSocket } from '../providers/websocket-provider'
-// @ts-ignore - insforge realtime may not expose exact TS types
 import { 
   LayoutDashboard, 
   Users, 

@@ -87,7 +87,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
               <p className="text-xs text-cyber-gray">Manage settings & API access</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-cyber-border text-cyber-gray">
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-cyber-border text-cyber-gray" aria-label="Close modal" title="Close">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -122,6 +122,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="Agent name"
                     className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                   />
                 </div>
@@ -143,6 +144,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                   type="text"
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
+                  placeholder="Agent role"
                   className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                 />
               </div>
@@ -153,6 +155,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   rows={3}
+                  placeholder="What does this agent do?"
                   className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none resize-none"
                 />
               </div>
@@ -163,6 +166,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                   <select
                     value={form.model}
                     onChange={(e) => setForm({ ...form, model: e.target.value })}
+                    aria-label="Agent model"
                     className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                   >
                     <option value="gpt-4o">GPT-4o</option>
@@ -179,6 +183,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                   <select
                     value={form.status}
                     onChange={(e) => setForm({ ...form, status: e.target.value as Agent['status'] })}
+                    aria-label="Agent status"
                     className="w-full bg-cyber-card border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                   >
                     <option value="active">🟢 Active</option>
@@ -207,6 +212,7 @@ export default function EditAgentModal({ open, onClose, agent }: EditAgentModalP
                       type="text"
                       value={apiKey}
                       readOnly
+                      placeholder="No API key generated"
                       className="w-full bg-cyber-black border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-green font-mono focus:outline-none"
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">

@@ -103,7 +103,26 @@ VITE_INSFORGE_ANON_KEY=<your-anon-key>
 npm run dev
 ```
 
-Opens at `http://localhost:3000`.
+Opens at `http://localhost:5173`.
+
+### Test And Smoke
+
+```bash
+npm run test
+```
+
+For route-level smoke checks, start preview first:
+
+```bash
+npm run build
+npm run preview -- --host 127.0.0.1 --port 4173
+```
+
+Then in another terminal:
+
+```bash
+npm run smoke
+```
 
 ## Self-Register Endpoint (New)
 

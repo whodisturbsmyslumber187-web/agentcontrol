@@ -190,6 +190,7 @@ export default function CronJobs() {
                 <select
                   value={newJob.agent_id}
                   onChange={(e) => setNewJob({ ...newJob, agent_id: e.target.value })}
+                  aria-label="Assign agent"
                   className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white focus:border-cyber-green/50 focus:outline-none"
                 >
                   <option value="">Any Agent</option>

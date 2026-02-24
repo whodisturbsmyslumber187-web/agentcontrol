@@ -132,10 +132,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agentforge/agentforge-os.git"
+    "url": "https://github.com/whodisturbsmyslumber187-web/agentcontrol.git"
   },
   "bugs": {
-    "url": "https://github.com/agentforge/agentforge-os/issues"
+    "url": "https://github.com/whodisturbsmyslumber187-web/agentcontrol/issues"
   },
-  "homepage": "https://agentforge.dev"
+  "homepage": "https://github.com/whodisturbsmyslumber187-web/agentcontrol"
 }

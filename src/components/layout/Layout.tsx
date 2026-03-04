@@ -67,6 +67,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [paletteOpen, setPaletteOpen] = React.useState(false)
   const [paletteQuery, setPaletteQuery] = React.useState('')
   const { isConnected, connectionState } = useWebSocket()
+  const openLobsterBoard = React.useCallback(() => {
+    const url = (localStorage.getItem('agentforge-lobsterboard-url') || 'https://lobsterboard.srv1195681.hstgr.cloud').trim()
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }, [])
 
   const commandActions = React.useMemo<CommandAction[]>(
     () => [
@@ -88,8 +92,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         keywords: 'refresh reload page',
         run: () => window.location.reload(),
       },
+      {
+        id: 'open-lobsterboard',
+        label: 'Open LobsterBoard',
+        keywords: 'lobsterboard templates dashboard builder',
+        run: openLobsterBoard,
+      },
     ],
-    [collapsed, navigate]
+    [collapsed, navigate, openLobsterBoard]
   )
 
   const filteredActions = React.useMemo(() => {

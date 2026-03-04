@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Settings as SettingsIcon, Key, Bell, Database, Brain, Globe, Zap, Search, RefreshCw, Shield, Rocket } from 'lucide-react'
-import { UserButton, useUser } from '@insforge/react'
+import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/use-toast'
 import { useAgentStore } from '../stores/agent-store'
 import {
@@ -56,12 +56,13 @@ const LLM_MODELS = [
 ]
 
 export default function Settings() {
-  const { user } = useUser()
+  const { user, signOut } = useAuth()
   const { toast } = useToast()
   const { agents, fetchAgents } = useAgentStore()
 
   const [defaultModel, setDefaultModel] = useState('openai/gpt-4o-mini')
   const [openclawUrl, setOpenclawUrl] = useState('')
+  const [lobsterboardUrl, setLobsterboardUrl] = useState('')
   const [telegramToken, setTelegramToken] = useState('')
 
   const [openaiKey, setOpenaiKey] = useState('')
@@ -98,6 +99,7 @@ export default function Settings() {
   useEffect(() => {
     setDefaultModel(localStorage.getItem('agentforge-default-model') || 'openai/gpt-4o-mini')
     setOpenclawUrl(localStorage.getItem('agentforge-openclaw-url') || '')
+    setLobsterboardUrl(localStorage.getItem('agentforge-lobsterboard-url') || 'https://lobsterboard.srv1195681.hstgr.cloud')
     setTelegramToken(localStorage.getItem('agentforge-telegram-token') || '')
 
     setOpenaiKey(localStorage.getItem('agentforge-openai-key') || '')
@@ -134,6 +136,7 @@ export default function Settings() {
   const saveSettings = () => {
     localStorage.setItem('agentforge-default-model', defaultModel)
     localStorage.setItem('agentforge-openclaw-url', openclawUrl)
+    localStorage.setItem('agentforge-lobsterboard-url', lobsterboardUrl)
     localStorage.setItem('agentforge-telegram-token', telegramToken)
 
     localStorage.setItem('agentforge-openai-key', openaiKey)
@@ -278,12 +281,17 @@ export default function Settings() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex items-center gap-4">
-            <UserButton />
+          <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-cyber-white">{user?.email || 'Not signed in'}</p>
-              <p className="text-xs text-cyber-gray">Managed by InsForge Auth</p>
+              <p className="text-xs text-cyber-gray">Owner — Single-User System</p>
             </div>
+            <button
+              onClick={signOut}
+              className="px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 text-xs hover:bg-red-500/10 transition-colors"
+            >
+              Sign Out
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -292,7 +300,7 @@ export default function Settings() {
         <CardHeader>
           <CardTitle className="text-cyber-white text-sm">Control Centers</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 gap-2 md:grid-cols-3">
+        <CardContent className="grid grid-cols-1 gap-2 md:grid-cols-4">
           <Link to="/mcp-control" className="rounded-lg border border-cyber-border bg-cyber-dark px-3 py-2 text-sm text-cyber-white hover:border-cyber-green/40">
             MCP Control
             <p className="text-[11px] text-cyber-gray">Deploy MCP stack to all agents</p>
@@ -305,6 +313,15 @@ export default function Settings() {
             OpenClaw Gateway
             <p className="text-[11px] text-cyber-gray">Hostinger SSH/API onboarding</p>
           </Link>
+          <a
+            href={lobsterboardUrl || 'https://lobsterboard.srv1195681.hstgr.cloud'}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg border border-cyber-border bg-cyber-dark px-3 py-2 text-sm text-cyber-white hover:border-cyber-green/40"
+          >
+            LobsterBoard
+            <p className="text-[11px] text-cyber-gray">Open dashboard templates in a new tab</p>
+          </a>
         </CardContent>
       </Card>
 
@@ -396,6 +413,16 @@ export default function Settings() {
               value={openclawUrl}
               onChange={(e) => setOpenclawUrl(e.target.value)}
               placeholder="https://api.openclaw.io/v1"
+              className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-cyber-gray block mb-1">LobsterBoard URL</label>
+            <input
+              type="text"
+              value={lobsterboardUrl}
+              onChange={(e) => setLobsterboardUrl(e.target.value)}
+              placeholder="https://lobsterboard.srv1195681.hstgr.cloud"
               className="w-full bg-cyber-dark border border-cyber-border rounded-lg px-3 py-2 text-sm text-cyber-white"
             />
           </div>

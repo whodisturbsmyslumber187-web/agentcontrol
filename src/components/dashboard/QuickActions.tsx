@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Zap, RefreshCw, Download, Sparkles, Radar, Blocks, ShoppingBag, Link2 } from 'lucide-react'
+import { Zap, RefreshCw, Download, Sparkles, Radar, Blocks, ShoppingBag, Link2, LayoutTemplate } from 'lucide-react'
 import { useAgentStore } from '../../stores/agent-store'
 import { useOpenClawStore } from '../../stores/openclaw-store'
 import { useBusinessStore } from '../../stores/business-store'
@@ -14,6 +14,10 @@ export default function QuickActions() {
   const { fetchBusinesses, businesses } = useBusinessStore()
   const [showSpawn, setShowSpawn] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const openLobsterBoard = () => {
+    const url = (localStorage.getItem('agentforge-lobsterboard-url') || 'https://lobsterboard.srv1195681.hstgr.cloud').trim()
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
 
   const handleRefreshAll = async () => {
     setRefreshing(true)
@@ -74,6 +78,11 @@ export default function QuickActions() {
       label: 'OpenClaw Gateway',
       icon: Link2,
       onClick: () => navigate('/openclaw-gateway'),
+    },
+    {
+      label: 'Open LobsterBoard',
+      icon: LayoutTemplate,
+      onClick: openLobsterBoard,
     },
   ]
 

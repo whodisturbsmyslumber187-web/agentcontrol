@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { InsforgeProvider } from '@insforge/react'
-import { insforge } from './lib/insforge'
+import { AuthProvider } from './contexts/AuthContext'
 import { ThemeProvider } from './components/providers/theme-provider'
 import { TooltipProvider } from './components/ui/tooltip'
 import { WebSocketProvider } from './components/providers/websocket-provider'
@@ -14,7 +13,7 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <InsforgeProvider client={insforge}>
+      <AuthProvider>
         <ThemeProvider defaultTheme="dark" storageKey="agentforge-theme">
           <TooltipProvider>
             <WebSocketProvider>
@@ -25,7 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </WebSocketProvider>
           </TooltipProvider>
         </ThemeProvider>
-      </InsforgeProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from '@insforge/react'
+import { useAuth } from './contexts/AuthContext'
 import Layout from './components/layout/Layout'
 import LoadingScreen from './components/common/LoadingScreen'
 import ErrorBoundary from './components/common/ErrorBoundary'

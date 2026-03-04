@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAuth } from '@insforge/react'
+import { useAuth } from '../../contexts/AuthContext'
 import { useAgentStore } from '../../stores/agent-store'
 import { useOpenClawStore } from '../../stores/openclaw-store'
 import { useBusinessStore } from '../../stores/business-store'

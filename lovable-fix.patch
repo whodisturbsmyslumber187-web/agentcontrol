@@ -1,0 +1,114 @@
+From d21dbd2ce5cb52eace374dbab9d3cd67db88eb01 Mon Sep 17 00:00:00 2001
+From: whodisturbsmyslumber187-web <whodisturbsmyslumber187@gmail.com>
+Date: Tue, 24 Feb 2026 12:15:35 -0500
+Subject: [PATCH] fix: add Lovable.dev compatibility config
+
+- Add components.json for shadcn-ui/Lovable project recognition
+- Add @/ path alias to tsconfig.json and vite.config.ts
+- Add node types to tsconfig.node.json for proper resolution
+- Fix repository URL in package.json (was pointing to wrong repo)
+---
+ components.json    | 19 +++++++++++++++++++
+ package.json       |  6 +++---
+ tsconfig.json      |  6 +++++-
+ tsconfig.node.json |  3 ++-
+ vite.config.ts     |  6 ++++++
+ 5 files changed, 35 insertions(+), 5 deletions(-)
+ create mode 100644 components.json
+
+diff --git a/components.json b/components.json
+new file mode 100644
+index 0000000..7673dba
+--- /dev/null
++++ b/components.json
+@@ -0,0 +1,19 @@
++{
++  "$schema": "https://ui.shadcn.com/schema.json",
++  "style": "default",
++  "rsc": false,
++  "tsx": true,
++  "tailwind": {
++    "config": "tailwind.config.js",
++    "css": "src/index.css",
++    "baseColor": "slate",
++    "cssVariables": true
++  },
++  "aliases": {
++    "components": "@/components",
++    "utils": "@/lib/utils",
++    "ui": "@/components/ui",
++    "lib": "@/lib",
++    "hooks": "@/hooks"
++  }
++}
+diff --git a/package.json b/package.json
+index b4182fa..b8b8bcb 100644
+--- a/package.json
++++ b/package.json
+@@ -132,10 +132,10 @@
+   "license": "MIT",
+   "repository": {
+     "type": "git",
+-    "url": "https://github.com/agentforge/agentforge-os.git"
++    "url": "https://github.com/whodisturbsmyslumber187-web/agentcontrol.git"
+   },
+   "bugs": {
+-    "url": "https://github.com/agentforge/agentforge-os/issues"
++    "url": "https://github.com/whodisturbsmyslumber187-web/agentcontrol/issues"
+   },
+-  "homepage": "https://agentforge.dev"
++  "homepage": "https://github.com/whodisturbsmyslumber187-web/agentcontrol"
+ }
+diff --git a/tsconfig.json b/tsconfig.json
+index 1ce22c2..49d8609 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -15,7 +15,11 @@
+     "noUnusedLocals": false,
+     "noUnusedParameters": false,
+     "noFallthroughCasesInSwitch": true,
+-    "forceConsistentCasingInFileNames": true
++    "forceConsistentCasingInFileNames": true,
++    "baseUrl": ".",
++    "paths": {
++      "@/*": ["./src/*"]
++    }
+   },
+   "include": ["src"],
+   "references": [{ "path": "./tsconfig.node.json" }]
+diff --git a/tsconfig.node.json b/tsconfig.node.json
+index 42872c5..b940375 100644
+--- a/tsconfig.node.json
++++ b/tsconfig.node.json
+@@ -4,7 +4,8 @@
+     "skipLibCheck": true,
+     "module": "ESNext",
+     "moduleResolution": "bundler",
+-    "allowSyntheticDefaultImports": true
++    "allowSyntheticDefaultImports": true,
++    "types": ["node"]
+   },
+   "include": ["vite.config.ts"]
+ }
+diff --git a/vite.config.ts b/vite.config.ts
+index 4eab1f6..a6187ee 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -1,8 +1,14 @@
+ import { defineConfig } from 'vite'
+ import react from '@vitejs/plugin-react'
++import path from 'path'
+ 
+ export default defineConfig({
+   plugins: [react()],
++  resolve: {
++    alias: {
++      '@': path.resolve(__dirname, './src'),
++    },
++  },
+   server: {
+     port: 3000,
+     open: true,
+-- 
+2.52.0.windows.1
+
